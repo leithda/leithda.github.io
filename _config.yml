@@ -80,7 +80,7 @@ theme: next
 deploy:
   type: git
   repo: 
-    gitee: git@gitee.com:leithda/leithda.git,master
+#    gitee: git@gitee.com:leithda/leithda.git,master
     github: git@github.com:leithda/leithda.github.io.git,master
 #  branch: master
 
