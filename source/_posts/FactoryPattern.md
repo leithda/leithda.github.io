@@ -1,0 +1,142 @@
+title: 工厂模式
+categories:
+  - 设计模式
+tags:
+  - 设计模式
+author: 长歌
+date: 2019-9-20
+---
+
+
+
+定义一个创建对象的接口，让其子类决定实例化哪个工厂类，工厂模式使其创建过程延迟到子类进行
+<!-- More -->
+
+# 工厂模式
+## 使用场景
+1. 数据库访问，当用户不知道系统采用哪种数据库时，以及数据库可能发生变化时
+2. 需要根据不同条件创建不同的对象时
+
+
+## 优点
+1. 一个调用者想创建一个对象，只要知道其名称就可以了。
+2. 扩展性高，如果想增加一个产品，只要扩展一个工厂类就可以。
+3. 屏蔽产品的具体实现，调用者只关心产品的接口。
+
+## 缺点
+1. 每次增加实现都需要增加具体实现类，耦合性和复杂性会升高。
+2. 简单对象可以通过new实现，无须使用工厂模式，引入工厂会增加复杂度
+
+## 实现
+### 对象接口
+```java
+public interface Office {
+
+    /**
+     * 启动方法
+     */
+    void bootstrap();
+
+}
+```
+### 实现类
+```java
+public class Word implements Office {
+    @Override
+    public void bootstrap() {
+        System.out.println("Word 启动 <<<<<<<<<<<<");
+        try{
+            Thread.sleep(1000);
+        }catch (Exception e){
+            System.out.println("Word 启动失败!!\n\n");
+            e.printStackTrace();
+        }
+    }
+}
+
+//==========================================================
+public class Excel implements Office {
+    @Override
+    public void bootstrap() {
+        System.out.println("Excel 启动 <<<<<<<<<<<<");
+        try{
+            System.out.println("加载系统配置...");
+            Thread.sleep(500);
+            System.out.println("加载用户变量...");
+            Thread.sleep(500);
+        }catch (Exception e){
+            System.out.println("Excel 启动失败!!\n\n");
+            e.printStackTrace();
+        }
+
+        System.out.println("Excel 启动完成 <<<<<<<<<<<<");
+    }
+}
+
+//===========================================================
+public class PowerPoint implements Office {
+    @Override
+    public void bootstrap() {
+        System.out.println("PowerPoint 启动 <<<<<<<<<<<<");
+        try{
+            System.out.println("图形化界面初始化...");
+            Thread.sleep(300);
+            System.out.println("渲染进行中...");
+            Thread.sleep(700);
+        }catch (Exception e){
+            System.out.println("PowerPoint 启动失败!!\n\n");
+            e.printStackTrace();
+        }
+        System.out.println("PowerPoint 启动成功 <<<<<<<<<<<<");
+    }
+}
+```
+
+### 增加枚举类型
+```java
+/**
+ * Created with IntelliJ IDEA.
+ * User: 长歌
+ * Date: 19-9-20
+ * Description: Office 类型
+ */
+public enum OfficeType {
+    WORD,
+    EXCEL,
+    PPT
+}
+```
+
+### 增加工厂类
+```java
+/**
+ * Created with IntelliJ IDEA.
+ * User: 长歌
+ * Date: 19-9-20
+ * Description: Office 工厂
+ */
+public class OfficeFactory {
+
+    /**
+     * 获取 Office 组件
+     *
+     * @param type 组件类型
+     * @return 组件实例
+     */
+    public static Office getOffice(OfficeType type) {
+        if (type == null) {
+            return null;
+        }
+        switch (type) {
+            case WORD:
+                return new Word();
+            case EXCEL:
+                return new Excel();
+            case PPT:
+                return new PowerPoint();
+            default:
+                throw new RuntimeException("未知参数，无法创建对应实例");
+        }
+    }
+}
+```

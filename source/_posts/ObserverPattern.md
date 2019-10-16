@@ -1,0 +1,134 @@
+title: 观察者模式
+categories:
+  - 设计模式
+tags:
+  - 设计模式
+author: 长歌
+date: 2019-9-12
+---
+
+当对象间存在一对多关系时，则使用观察者模式（Observer Pattern）。比如，当一个对象被修改时，则会自动通知它的依赖对象。观察者模式属于行为型模式。
+<!-- More -->
+# 观察者模式
+
+## 使用场景
+对象间存在一对多关系时，可以使用观察者模式。
+当一个对象被修改时，可以通知依赖于它的其他对象。
+
+## 举个栗子
+1. 拍卖的时候，拍卖师观察最高标价，然后通知给其他竞价者竞价
+ 
+
+## 注意事项
+- Java中已经含有对观察者模式的支持类s
+- 避免循环引用
+- 如果顺序执行，某一观察者错误会导致系统卡壳，一般采用异步方式
+ 
+## 实现
+
+### 被观察类
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: 长歌
+ * Date: 2018/3/27
+ * Time: 23:09
+ * Description: 被观察类
+ */
+
+public class Subject {
+
+    private List<Observer> observers
+            = new ArrayList<Observer>();
+    private int state;
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+        notifyAllObservers();
+    }
+
+    // 添加观察者
+    public void attach(Observer observer){
+        observers.add(observer);
+    }
+
+    public void notifyAllObservers(){
+        for (Observer observer : observers) {
+            observer.update();
+        }
+    }
+}
+```
+### 观察接口
+```java
+/**
+ * Created with IntelliJ IDEA.
+ * User: 长歌
+ * Date: 2018/3/27
+ * Time: 23:09
+ * Description: 观察者接口
+ */
+public abstract class Observer {
+    protected Subject subject;
+    public abstract void update();
+}
+```
+
+### 观察者实例
+```java
+/**
+ * Created with IntelliJ IDEA.
+ * User: 长歌
+ * Date: 2018/3/27
+ * Time: 23:11
+ * Description: 二进制观察者
+ */
+public class BinaryObserver extends Observer {
+
+    public BinaryObserver(Subject subject) {
+        this.subject = subject;
+        this.subject.attach(this);
+    }
+
+    @Override
+    public void update() {
+        System.out.println("Binary String: "
+                + Integer.toBinaryString(subject.getState()));
+    }
+}
+```
+
+### 运行测试
+```java
+/**
+ * Created with IntelliJ IDEA.
+ * User: 长歌
+ * Date: 2018/3/27
+ * Time: 23:15
+ * Description: 测试类
+ */
+public class ObserverPatternDemo {
+
+    public static void main(String[] args) {
+        Subject subject = new Subject();
+
+        new BinaryObserver(subject);    // 二进制
+        new OctalObserver (subject);    // 八进制
+        new HexaObserver(subject);  // 十六进制
+
+        System.out.println("First state change: 15");
+        subject.setState(15);
+
+        System.out.println("Second state change: 10");
+        subject.setState(10);
+    }
+}
+```
