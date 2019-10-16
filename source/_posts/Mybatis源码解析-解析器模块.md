@@ -1,14 +1,13 @@
 title: Mybatis源码解析-解析器模块
 categories:
-  - java
-  - opensource
+  - Java
+  - Mybatis
 tags:
-  - mybatis
+  - 源码
+  - Mybatis
 author: 长歌
 date: 2019-07-03 00:00:00
 ---
-教程来自 [芋道源码](http://www.iocoder.cn/?github)
-- - -
 > 解析器模块主要提供两个功能
 >
 > - 对XPath进行封装，为mybatis初始化时解`mybatis-config.xml`配置文件及映射文件提供支持

@@ -1,9 +1,10 @@
 title: Mybatis源码解析
 categories:
-  - java
-  - opensource
+  - Java
+  - Mybatis
 tags:
-  - mybatis
+  - 源码
+  - Mybatis
 author: 长歌
 date: 2019-07-02 20:35:00
 ---

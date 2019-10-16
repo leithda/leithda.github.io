@@ -1,14 +1,14 @@
 title: Mybatis源码解析-事务模块
 author: 长歌
-tags:
-  - mybatis
 categories:
-  - java
-  - opensource
+  - Java
+  - Mybatis
+tags:
+  - 源码
+  - Mybatis
 date: 2019-07-22 17:03:00
 ---
-教程来自 [芋道源码](http://www.iocoder.cn/?github)
-- - -
+
 > MyBatis 对数据库中的事务进行了抽象，其自身提供了相应的事务接口和简单实现。
 
 > 在很多场景中，MyBatis 会与 Spring 框架集成，并由 Spring 框架管理事务。

@@ -1,14 +1,13 @@
 title: Mybatis源码解析-异常模块
 author: 长歌
-tags:
-  - mybatis
 categories:
-  - java
-  - opensource
+  - Java
+  - Mybatis
+tags:
+  - 源码
+  - Mybatis
 date: 2019-07-09 02:41:00
 ---
-教程来自 [芋道源码](http://www.iocoder.cn/?github)
-- - -
 对应 `exceptions` 包。
 
 > 定义了 MyBatis 专有的 PersistenceException 和 TooManyResultsException 异常。
