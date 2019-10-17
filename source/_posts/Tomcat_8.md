@@ -1104,3 +1104,23 @@ stop
 Stopping wrapper Primitive
 Stopping wrapper Modern
 ```
+
+### 启动流程简介
+#### 启动流程
+- 连接器初始化
+1. `#connector.initialize`方法，开启`ServerSocket`并赋值给`connector.serverSocket`
+2. `#connector.start`方法，启动`HttpConnector`线程，并且创建最小数量`HttpProcessor`
+3. `#context.start`方法，启动容器，启动子容器，进行生命周期事件声明
+
+#### 处理请求(建议debug模式走一遍)
+1. 启动`HttpConnector`线程时，监听`socket`请求，如果收到请求，实例化一个`HttpProcessor`实例，并将`socket`注册到`HttpProcessor`中。
+2. `HttpProcessor`创建时，会开启`HttpProcessor`线程，`#run`方法中，如果`socket`不为空，会调用`#process`方法进行处理，
+    解析请求，生成`request`和`response`对象并调用`#Container.invoke`方法
+3. `#Container.invoke`方法会调用`SimplePipeline`对象的`#invoke`方法
+4. `#SimplePipeline.invoke`会调用内部类`StandardPipelineValveContext`的`#invokeNext`方法，它会依次调用一般处理器，最后调用基本处理器`StandardContextValve`
+5. `StandardContextValve`基本处理器的`#invoke`方法内部会根据请求信息找到对应的`Wrapper`容器，并调用`Wrapper`的`#invoke`方法
+6. `SimpleWrapper`的`#invoke`方法也调用`SimplePipeline`的`#invoke`方法，`SimpleWrapper`构造方法中设置`SimplePepeline`的基本处理器为`SimpleWrapperValve`
+所以执行基本处理器的`SimpleWrapperValve`的`invoke`方法
+7. `SimpleWrapperValue`中的`#invoke`方法会调用`#SimpleWrapper.allocate`,进而调用`#loadServlet`方法
+8. `#SimpleWrapper.loadServlet`方法中,首先获取`WebappLoader`，然后通过loader获取`WebappClassLoader`，然后调用`#WebappClassLoader`的`#loadClass`方法加载`Serlvet`
+9. 最后调用`#Servlet.service`方法进行`Servlet`处理
