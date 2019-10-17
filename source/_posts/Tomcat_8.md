@@ -617,4 +617,486 @@ public class SimpleContextConfig implements LifecycleListener {
 }
 ```
 
-- 
+### 使用前面章节的类
+- SimplePipiline
+```java
+/**
+ * Created with IntelliJ IDEA.
+ * User: 长歌
+ * Date: 2019/10/16
+ * Description: 流水线 Copyed from package chapter7.SimplePipeline
+ */
+public class SimplePipeline implements Pipeline, Lifecycle {
+
+    public SimplePipeline(Container container) {
+        setContainer(container);
+    }
+
+    // The basic Valve (if any) associated with this Pipeline.
+    protected Valve basic = null;
+    // The Container with which this Pipeline is associated.
+    protected Container container = null;
+    // the array of Valves
+    protected Valve valves[] = new Valve[0];
+
+    public void setContainer(Container container) {
+        this.container = container;
+    }
+
+    public Valve getBasic() {
+        return basic;
+    }
+
+    public void setBasic(Valve valve) {
+        this.basic = valve;
+        ((Contained) valve).setContainer(container);
+    }
+
+    public void addValve(Valve valve) {
+        if (valve instanceof Contained)
+            ((Contained) valve).setContainer(this.container);
+
+        synchronized (valves) {
+            Valve results[] = new Valve[valves.length + 1];
+            System.arraycopy(valves, 0, results, 0, valves.length);
+            results[valves.length] = valve;
+            valves = results;
+        }
+    }
+
+    public Valve[] getValves() {
+        return valves;
+    }
+
+    public void invoke(Request request, Response response)
+            throws IOException, ServletException {
+        // Invoke the first Valve in this pipeline for this request
+        (new StandardPipelineValveContext()).invokeNext(request, response);
+    }
+
+    public void removeValve(Valve valve) {
+    }
+
+    // implementation of the Lifecycle interface's methods
+    public void addLifecycleListener(LifecycleListener listener) {
+    }
+
+    public LifecycleListener[] findLifecycleListeners() {
+        return null;
+    }
+
+    public void removeLifecycleListener(LifecycleListener listener) {
+    }
+
+    public synchronized void start() throws LifecycleException {
+    }
+
+    public void stop() throws LifecycleException {
+    }
+
+    // this class is copied from org.apache.catalina.core.StandardPipeline class's
+    // StandardPipelineValveContext inner class.
+    protected class StandardPipelineValveContext implements ValveContext {
+        protected int stage = 0;
+
+        public String getInfo() {
+            return null;
+        }
+
+        public void invokeNext(Request request, Response response)
+                throws IOException, ServletException {
+            int subscript = stage;
+            stage = stage + 1;
+            // Invoke the requested Valve for the current request thread
+            if (subscript < valves.length) {
+                valves[subscript].invoke(request, response, this);
+            } else if ((subscript == valves.length) && (basic != null)) {
+                basic.invoke(request, response, this);
+            } else {
+                throw new ServletException("No valve");
+            }
+        }
+    } // end of inner class
+
+}
+```
+
+- SimpleWrapper
+```java
+/**
+ * Created with IntelliJ IDEA.
+ * User: 长歌
+ * Date: 2019/10/16
+ * Description: 包装类 Copyed from package chapter7.SimpleWrapper
+ */
+public class SimpleWrapper implements Wrapper, Pipeline, Lifecycle {
+
+    public SimpleWrapper() {
+        pipeline.setBasic(new SimpleWrapperValve());
+    }
+
+    // the servlet instance
+    private Servlet instance = null;
+    private String servletClass;
+    private Loader loader;
+    private String name;
+    protected LifecycleSupport lifecycle = new LifecycleSupport(this);
+    private SimplePipeline pipeline = new SimplePipeline(this);
+    protected Container parent = null;
+    protected boolean started = false;
+
+    public synchronized void addValve(Valve valve) {
+        pipeline.addValve(valve);
+    }
+
+    public Servlet allocate() throws ServletException {
+        // Load and initialize our instance if necessary
+        if (instance == null) {
+            try {
+                instance = loadServlet();
+            } catch (ServletException e) {
+                throw e;
+            } catch (Throwable e) {
+                throw new ServletException("Cannot allocate a servlet instance", e);
+            }
+        }
+        return instance;
+    }
+
+    public Servlet loadServlet() throws ServletException {
+        if (instance != null)
+            return instance;
+
+        Servlet servlet = null;
+        String actualClass = servletClass;
+        if (actualClass == null) {
+            throw new ServletException("servlet class has not been specified");
+        }
+
+        Loader loader = getLoader();
+        // Acquire an instance of the class loader to be used
+        if (loader == null) {
+            throw new ServletException("No loader.");
+        }
+        ClassLoader classLoader = loader.getClassLoader();
+
+        // Load the specified servlet class from the appropriate class loader
+        Class classClass = null;
+        try {
+            if (classLoader != null) {
+                classClass = classLoader.loadClass(actualClass);
+            }
+        } catch (ClassNotFoundException e) {
+            throw new ServletException("Servlet class not found");
+        }
+        // Instantiate and initialize an instance of the servlet class itself
+        try {
+            servlet = (Servlet) classClass.newInstance();
+        } catch (Throwable e) {
+            throw new ServletException("Failed to instantiate servlet");
+        }
+
+        // Call the initialization method of this servlet
+        try {
+            servlet.init(null);
+        } catch (Throwable f) {
+            throw new ServletException("Failed initialize servlet.");
+        }
+        return servlet;
+    }
+
+    // ... 省略 getter/setter
+
+    public void invoke(Request request, Response response)
+            throws IOException, ServletException {
+        pipeline.invoke(request, response);
+    }
+
+    public boolean isUnavailable() {
+        return false;
+    }
+
+    public void load() throws ServletException {
+    }
+
+    public Container map(Request request, boolean update) {
+        return null;
+    }
+
+    public void removeChild(Container child) {
+    }
+
+    public void removeContainerListener(ContainerListener listener) {
+    }
+
+    public void removeMapper(Mapper mapper) {
+    }
+
+    public void removeInitParameter(String name) {
+    }
+
+    public void removeInstanceListener(InstanceListener listener) {
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+    }
+
+    public void removeSecurityReference(String name) {
+    }
+
+    public void unavailable(UnavailableException unavailable) {
+    }
+
+    public void unload() throws ServletException {
+    }
+
+    // method implementations of Pipeline
+    public Valve getBasic() {
+        return pipeline.getBasic();
+    }
+
+    public void setBasic(Valve valve) {
+        pipeline.setBasic(valve);
+    }
+
+    public Valve[] getValves() {
+        return pipeline.getValves();
+    }
+
+    public void removeValve(Valve valve) {
+        pipeline.removeValve(valve);
+    }
+
+    // implementation of the Lifecycle interface's methods
+    public void addLifecycleListener(LifecycleListener listener) {
+    }
+
+    public LifecycleListener[] findLifecycleListeners() {
+        return null;
+    }
+
+    public void removeLifecycleListener(LifecycleListener listener) {
+    }
+
+    public synchronized void start() throws LifecycleException {
+        System.out.println("Starting Wrapper " + name);
+        if (started)
+            throw new LifecycleException("Wrapper already started");
+
+        // Notify our interested LifecycleListeners
+        lifecycle.fireLifecycleEvent(BEFORE_START_EVENT, null);
+        started = true;
+
+        // Start our subordinate components, if any
+        if ((loader != null) && (loader instanceof Lifecycle))
+            ((Lifecycle) loader).start();
+
+        // Start the Valves in our pipeline (including the basic), if any
+        if (pipeline instanceof Lifecycle)
+            ((Lifecycle) pipeline).start();
+
+        // Notify our interested LifecycleListeners
+        lifecycle.fireLifecycleEvent(START_EVENT, null);
+        // Notify our interested LifecycleListeners
+        lifecycle.fireLifecycleEvent(AFTER_START_EVENT, null);
+    }
+
+    public void stop() throws LifecycleException {
+        System.out.println("Stopping wrapper " + name);
+        // Shut down our servlet instance (if it has been initialized)
+        try {
+            instance.destroy();
+        } catch (Throwable t) {
+        }
+        instance = null;
+        if (!started)
+            throw new LifecycleException("Wrapper " + name + " not started");
+        // Notify our interested LifecycleListeners
+        lifecycle.fireLifecycleEvent(BEFORE_STOP_EVENT, null);
+
+        // Notify our interested LifecycleListeners
+        lifecycle.fireLifecycleEvent(STOP_EVENT, null);
+        started = false;
+
+        // Stop the Valves in our pipeline (including the basic), if any
+        if (pipeline instanceof Lifecycle) {
+            ((Lifecycle) pipeline).stop();
+        }
+
+        // Stop our subordinate components, if any
+        if ((loader != null) && (loader instanceof Lifecycle)) {
+            ((Lifecycle) loader).stop();
+        }
+
+        // Notify our interested LifecycleListeners
+        lifecycle.fireLifecycleEvent(AFTER_STOP_EVENT, null);
+    }
+}
+
+```
+
+- SimpleWrapperValue
+```java
+/**
+ * Created with IntelliJ IDEA.
+ * User: 长歌
+ * Date: 2019/10/16
+ * Description: 包装器处理器 Copyed from package chapter7.SimpleWrapperValve
+ */
+public class SimpleWrapperValve implements Valve, Contained {
+
+    protected Container container;
+
+    public void invoke(Request request, Response response, ValveContext valveContext)
+            throws IOException, ServletException {
+
+        SimpleWrapper wrapper = (SimpleWrapper) getContainer();
+        ServletRequest sreq = request.getRequest();
+        ServletResponse sres = response.getResponse();
+        Servlet servlet = null;
+        HttpServletRequest hreq = null;
+        if (sreq instanceof HttpServletRequest)
+            hreq = (HttpServletRequest) sreq;
+        HttpServletResponse hres = null;
+        if (sres instanceof HttpServletResponse)
+            hres = (HttpServletResponse) sres;
+
+        // Allocate a servlet instance to process this request
+        try {
+            servlet = wrapper.allocate();
+            if (hres != null && hreq != null) {
+                servlet.service(hreq, hres);
+            } else {
+                servlet.service(sreq, sres);
+            }
+        } catch (ServletException e) {
+        }
+    }
+
+    public String getInfo() {
+        return null;
+    }
+
+    public Container getContainer() {
+        return container;
+    }
+
+    public void setContainer(Container container) {
+        this.container = container;
+    }
+}
+
+```
+
+### 启动类
+```java
+package cn.leithda.htw.chapter8.startup;
+
+
+import cn.leithda.htw.chapter8.core.SimpleContextConfig;
+import cn.leithda.htw.chapter8.core.SimpleWrapper;
+import org.apache.catalina.*;
+import org.apache.catalina.connector.http.HttpConnector;
+import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.loader.WebappClassLoader;
+import org.apache.catalina.loader.WebappLoader;
+import org.apache.naming.resources.ProxyDirContext;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: 长歌
+ * Date: 19-10-16
+ * Description: 启动类
+ */
+public final class Bootstrap {
+
+    public static void main(String[] args) {
+        //invoke: http://localhost:8080/Modern or  http://localhost:8080/Primitive
+        // 设置环境变量
+        System.setProperty("catalina.base", System.getProperty("user.dir"));
+
+        // 创建连接器
+        Connector connector = new HttpConnector();
+
+        // 创建servlet容器Primitive（最小的servlet容器，代表一个servlet）
+        Wrapper wrapper1 = new SimpleWrapper();
+        wrapper1.setName("Primitive");
+        wrapper1.setServletClass("PrimitiveServlet");
+
+        // 创建servlet容器Modern（最小的servlet容器，代表一个servlet）
+        Wrapper wrapper2 = new SimpleWrapper();
+        wrapper2.setName("Modern");
+        wrapper2.setServletClass("ModernServlet");
+
+        // 创建一个web应用程序
+        Context context = new StandardContext();
+        // StandardContext's start method adds a default mapper
+        context.setPath("/myApp");
+        context.setDocBase("myApp");
+
+        context.addChild(wrapper1);
+        context.addChild(wrapper2);
+
+        // context.addServletMapping(pattern, name);
+        // 添加映射器，负责查找context示例中的子容器来处理http请求
+        context.addServletMapping("/Primitive", "Primitive");
+        context.addServletMapping("/Modern", "Modern");
+
+        // add ContextConfig. This listener is important because it configures
+        // StandardContext (sets configured to true), otherwise StandardContext
+        // won't start
+        // 添加context生命周期监听器
+        LifecycleListener listener = new SimpleContextConfig();
+        ((Lifecycle) context).addLifecycleListener(listener);
+
+        // here is our loader
+        // 添加类加载器
+        Loader loader = new WebappLoader();
+        // associate the loader with the Context
+        context.setLoader(loader);
+
+        //将连接器和context容器关联
+        connector.setContainer(context);
+
+        try {
+            // 连接器初始化
+            connector.initialize();
+
+            // 启动连接器
+            ((Lifecycle) connector).start();
+
+            //启动容器（web应用程序启动）
+            ((Lifecycle) context).start();
+            // now we want to know some details about WebappLoader
+
+            WebappClassLoader classLoader = (WebappClassLoader) loader.getClassLoader();
+            System.out.println("Resources' docBase: " + ((ProxyDirContext) classLoader.getResources()).getDocBase());
+            String[] repositories = classLoader.findRepositories();
+            for (int i = 0; i < repositories.length; i++) {
+                System.out.println("  repository: " + repositories[i]);
+            }
+
+            // make the application wait until we press a key.
+            System.in.read();
+            System.out.println("Shutdowning...");
+            ((Lifecycle) context).stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+- 创建`ModernServlet`和`PrimitiveServlet`并将class文件输出到`myApp/WEB-INF/classes文件夹下`
+- 启动后，控制台打印信息如下(PS:访问链接`http://localhost:8080/Modern` or `http://localhost:8080/Primitive` 无响应，class文件忘记重新编译了，后续修改)
+```shell
+HttpConnector Opening server socket on all host IP addresses
+HttpConnector[8080] Starting background thread
+WebappLoader[/myApp]: Deploying class repositories to work directory D:\work\Github\code_warehouse\java\started\how-tomcat-works\work\_\_\myApp
+WebappLoader[/myApp]: Deploy class files /WEB-INF/classes to D:\work\Github\code_warehouse\java\started\how-tomcat-works\myApp\WEB-INF\classes
+Starting Wrapper Primitive
+Starting Wrapper Modern
+StandardManager[/myApp]: Seeding random number generator class java.security.SecureRandom
+StandardManager[/myApp]: Seeding of random number generator has been completed
+Resources' docBase: D:\work\Github\code_warehouse\java\started\how-tomcat-works\myApp
+  repository: /WEB-INF/classes/
+```
