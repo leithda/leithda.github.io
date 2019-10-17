@@ -1087,16 +1087,20 @@ public final class Bootstrap {
 }
 ```
 - 创建`ModernServlet`和`PrimitiveServlet`并将class文件输出到`myApp/WEB-INF/classes文件夹下`
-- 启动后，控制台打印信息如下(PS:访问链接`http://localhost:8080/Modern` or `http://localhost:8080/Primitive` 无响应，class文件忘记重新编译了，后续修改)
-```shell
+- 启动后，控制台打印信息如下. 其中包含首先访问`http://localhost:8080/Modern`,然后控制台输入`stop`停止服务器
+```verilog
 HttpConnector Opening server socket on all host IP addresses
 HttpConnector[8080] Starting background thread
-WebappLoader[/myApp]: Deploying class repositories to work directory D:\work\Github\code_warehouse\java\started\how-tomcat-works\work\_\_\myApp
-WebappLoader[/myApp]: Deploy class files /WEB-INF/classes to D:\work\Github\code_warehouse\java\started\how-tomcat-works\myApp\WEB-INF\classes
+WebappLoader[/myApp]: Deploying class repositories to work directory /home/leithda/source/github/code_warehouse/java/started/how-tomcat-works/work/_/_/myApp
+WebappLoader[/myApp]: Deploy class files /WEB-INF/classes to /home/leithda/source/github/code_warehouse/java/started/how-tomcat-works/myApp/WEB-INF/classes
 Starting Wrapper Primitive
 Starting Wrapper Modern
 StandardManager[/myApp]: Seeding random number generator class java.security.SecureRandom
 StandardManager[/myApp]: Seeding of random number generator has been completed
-Resources' docBase: D:\work\Github\code_warehouse\java\started\how-tomcat-works\myApp
+Resources' docBase: /home/leithda/source/github/code_warehouse/java/started/how-tomcat-works/myApp
   repository: /WEB-INF/classes/
+ModernServlet -- init
+stop
+Stopping wrapper Primitive
+Stopping wrapper Modern
 ```
