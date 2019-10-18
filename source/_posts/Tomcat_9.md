@@ -269,9 +269,10 @@ public interface Manager {
 
 ### 解析获取requestedSessionId
 
-- 当我们调用`#Request.getSession()`时
+- 当我们调用`#Request.getSession()`时,最终调用`#HttpRequestBase.doGetSession`方法，代码如下：
 
 ```java
+// HttpRequestBase.java
     private HttpSession doGetSession(boolean create) {
         if (this.context == null) {
             return null;
@@ -357,6 +358,7 @@ public interface Manager {
 - 从`cookie`中获取sessionId代码如下:
 
 ```java
+// CoyoteAdapter.java
     protected void parseSessionCookiesId(org.apache.catalina.connector.Request request) {
         Context context = request.getMappingData().context;
         if (context == null || context.getServletContext().getEffectiveSessionTrackingModes().contains(SessionTrackingMode.COOKIE)) {
@@ -392,7 +394,7 @@ public interface Manager {
 ### `findSession`查找`Session`
 
 ```java
-
+//  ManagerBase.java
     protected HashMap sessions = new HashMap();
 
     public Session findSession(String id) throws IOException {
@@ -413,6 +415,7 @@ public interface Manager {
 ### `createSession`创建`Session`
 
 ```java
+//  ManagerBase.java
     public Session createSession() {
         Session session = null;
         ArrayList var2 = this.recycled;
@@ -449,6 +452,7 @@ public interface Manager {
 - `<1>`处，调用`#generateSessionId`方法生成`session`的`Id`
 
 ```java
+//  ManagerBase.java
     protected synchronized String generateSessionId() {
         Random random = this.getRandom();
         byte[] bytes = new byte[16];
