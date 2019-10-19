@@ -1,9 +1,28 @@
-title: about
+title: 关于
 date: 2019-07-04 22:48:18
 ---
 
 {% blockquote %}
-时光似流水<br/> &nbsp;&nbsp;&nbsp;&nbsp;爱非指间沙
+非淡泊无以明志<br/> &nbsp;&nbsp;&nbsp;&nbsp;非宁静无以致远
 {% endblockquote %}
 
-- javaCoder一枚，主学java,副业无数
+## 关于我
+
+### 简介 
+主修`Java`，入门两年的小菜鸟，本科计算机科学与技术，毕业于[沈阳航空航天大学]( https://www.sau.edu.cn/ )
+
+### 面板
+
+| 技能   | 熟练程度 |
+| ------ | -------- |
+| Java   | 三年     |
+| MySQL  | 掌握     |
+| Oracle | 掌握     |
+| Vue    | 初学     |
+| 算法   | 初学     |
+
+### 技能点(坚持点亮中)
+![菜鸟技能树](./技能树.png)
+
+## 关于未来
+希望能够成为更好的自己，加油~~~
