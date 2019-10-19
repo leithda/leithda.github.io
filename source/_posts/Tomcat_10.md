@@ -242,3 +242,309 @@ public final class LoginConfig {
 
 - 对应的类结构如图:
 {% asset_img Authenticator.png 验证器类结构%}
+
+
+
+## 测试
+
+### SimpleContextConfig
+
+```java
+public class SimpleContextConfig implements LifecycleListener {
+
+    private Context context;
+
+    /**
+     * 监听方法
+     * @param event 事件
+     */
+    public void lifecycleEvent(LifecycleEvent event) {
+        if (Lifecycle.START_EVENT.equals(event.getType())) {
+            context = (Context) event.getLifecycle();
+            authenticatorConfig();
+            context.setConfigured(true);
+        }
+    }
+
+    /**
+     * 验证器配置
+     */
+    private synchronized void authenticatorConfig() {
+        // 是否配置过滤参数
+        SecurityConstraint constraints[] = context.findConstraints();
+        if ((constraints == null) || (constraints.length == 0))
+            return;
+        // 是否进行验证器配置
+        LoginConfig loginConfig = context.getLoginConfig();
+        if (loginConfig == null) {
+            loginConfig = new LoginConfig("NONE", null, null, null);
+            context.setLoginConfig(loginConfig);
+        }
+
+        // 如果已经设置了验证器直接返回
+        Pipeline pipeline = ((StandardContext) context).getPipeline();
+        if (pipeline != null) {
+            Valve basic = pipeline.getBasic();
+            if ((basic != null) && (basic instanceof Authenticator))
+                return;
+            Valve valves[] = pipeline.getValves();
+            for (int i = 0; i < valves.length; i++) {
+                if (valves[i] instanceof Authenticator)
+                    return;
+            }
+        }
+        else { // no Pipeline, cannot install authenticator valve
+            return;
+        }
+
+        // Context是否配置验证器
+        if (context.getRealm() == null) {
+            return;
+        }
+
+        // 确定需要配置的验证器类名
+        String authenticatorName = "org.apache.catalina.authenticator.BasicAuthenticator";
+        // 实例化验证器并安装
+        Valve authenticator = null;
+        try {
+            Class authenticatorClass = Class.forName(authenticatorName);
+            authenticator = (Valve) authenticatorClass.newInstance();
+            ((StandardContext) context).addValve(authenticator);
+            System.out.println("Added authenticator valve to Context");
+        }
+        catch (Throwable t) {
+        }
+    }
+
+```
+
+- 监听器类，当触发`START`事件时，进行验证器配置，增加`BasicAuthenticator`到流水线
+
+### BasicAuthenticator
+
+```java
+// BasicAuthenticator.java
+
+	public boolean authenticate(HttpRequest request, HttpResponse response, LoginConfig config) throws IOException {
+        Principal principal = ((HttpServletRequest)request.getRequest()).getUserPrincipal();
+        if (principal != null) {
+            if (this.debug >= 1) {
+                this.log("Already authenticated '" + principal.getName() + "'");
+            }
+
+            return true;
+        } else {
+			// ...省略部分代码
+            principal = this.context.getRealm().authenticate(username, password);	// <1>
+            if (principal != null) {
+                this.register(request, response, principal, "BASIC", username, password);
+                return true;
+            } else {
+                String realmName = config.getRealmName();
+                if (realmName == null) {
+                    realmName = hreq.getServerName() + ":" + hreq.getServerPort();
+                }
+
+                hres.setHeader("WWW-Authenticate", "Basic realm=\"" + realmName + "\"");
+                hres.setStatus(401);
+                return false;
+            }
+        }
+    }
+
+```
+
+- `<1>`处，调用容器配置的验证器进行权限验证
+
+### SimpleRealm
+
+```java
+public class SimpleRealm implements Realm {
+
+    public SimpleRealm() {
+        createUserDatabase();
+    }
+
+    private Container container;
+    private ArrayList users = new ArrayList();
+
+    public Container getContainer() {
+        return container;
+    }
+
+    public void setContainer(Container container) {
+        this.container = container;
+    }
+
+    public String getInfo() {
+        return "A simple Realm implementation";
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+    }
+
+    public Principal authenticate(String username, String credentials) {
+        System.out.println("SimpleRealm.authenticate()");
+        if (username==null || credentials==null)
+            return null;
+        User user = getUser(username, credentials);
+        if (user==null)
+            return null;
+        return new GenericPrincipal(this, user.username, user.password, user.getRoles());
+    }
+
+    public Principal authenticate(String username, byte[] credentials) {
+        return null;
+    }
+
+    public Principal authenticate(String username, String digest, String nonce,
+                                  String nc, String cnonce, String qop, String realm, String md5a2) {
+        return null;
+    }
+
+    public Principal authenticate(X509Certificate certs[]) {
+        return null;
+    }
+
+    public boolean hasRole(Principal principal, String role) {
+        if ((principal == null) || (role == null) ||
+                !(principal instanceof GenericPrincipal))
+            return (false);
+        GenericPrincipal gp = (GenericPrincipal) principal;
+        if (!(gp.getRealm() == this))
+            return (false);
+        boolean result = gp.hasRole(role);
+        return result;
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+    }
+
+    private User getUser(String username, String password) {
+        Iterator iterator = users.iterator();
+        while (iterator.hasNext()) {
+            User user = (User) iterator.next();
+            if (user.username.equals(username) && user.password.equals(password))
+                return user;
+        }
+        return null;
+    }
+
+    private void createUserDatabase() {
+        User user1 = new User("admin", "admin");
+        user1.addRole("manager");
+        user1.addRole("programmer");
+        User user2 = new User("cindy", "bamboo");
+        user2.addRole("programmer");
+
+        users.add(user1);
+        users.add(user2);
+    }
+
+    class User {
+
+        public User(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
+
+        public String username;
+        public ArrayList roles = new ArrayList();
+        public String password;
+
+        public void addRole(String role) {
+            roles.add(role);
+        }
+        public ArrayList getRoles() {
+            return roles;
+        }
+    }
+}
+```
+
+- `#authenticate`方法，验证方法，验证通过返回`Principal`对象
+
+### Bootstrap1
+
+```java
+public final class Bootstrap1 {
+    public static void main(String[] args) {
+
+        //invoke: http://localhost:8080/Modern or  http://localhost:8080/Primitive
+
+        System.setProperty("catalina.base", System.getProperty("user.dir"));
+        Connector connector = new HttpConnector();
+        Wrapper wrapper1 = new SimpleWrapper();
+        wrapper1.setName("Primitive");
+        wrapper1.setServletClass("PrimitiveServlet");
+        Wrapper wrapper2 = new SimpleWrapper();
+        wrapper2.setName("Modern");
+        wrapper2.setServletClass("ModernServlet");
+
+        Context context = new StandardContext();
+        // StandardContext's start method adds a default mapper
+        context.setPath("/myApp");
+        context.setDocBase("myApp");
+
+        // 添加事件监听器
+        LifecycleListener listener = new SimpleContextConfig();
+        ((Lifecycle) context).addLifecycleListener(listener);	// <1>
+
+        context.addChild(wrapper1);
+        context.addChild(wrapper2);
+
+        Loader loader = new WebappLoader();
+        context.setLoader(loader);
+        // context.addServletMapping(pattern, name);
+        context.addServletMapping("/Primitive", "Primitive");
+        context.addServletMapping("/Modern", "Modern");
+        // add ContextConfig. This listener is important because it configures
+        // StandardContext (sets configured to true), otherwise StandardContext
+        // won't start
+
+        // 添加安全链接集合	<2>
+        SecurityCollection securityCollection = new SecurityCollection();
+        securityCollection.addPattern("/");
+        securityCollection.addMethod("GET");
+
+        // 设置安全规则 <3>
+        SecurityConstraint constraint = new SecurityConstraint();
+        constraint.addCollection(securityCollection);
+        constraint.addAuthRole("manager");
+        LoginConfig loginConfig = new LoginConfig();
+        loginConfig.setRealmName("Simple Realm");
+        
+        // 设置验证器	<4>
+        Realm realm = new SimpleRealm();
+        context.setRealm(realm);
+        context.addConstraint(constraint);
+        context.setLoginConfig(loginConfig);
+
+        connector.setContainer(context);
+
+        try {
+            connector.initialize();
+            ((Lifecycle) connector).start();
+            ((Lifecycle) context).start();
+
+            // make the application wait until we press a key.
+            System.in.read();
+            ((Lifecycle) context).stop();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+- `<1>`处，添加自定义事件监听器，当容器启动时，增加`BasicAuthenticator`到容器内置流水线中。
+
+- `<2>`处，增加安全连接集合
+- `<3>`处，设置安全规则
+- `<4>`处，设置自定义验证器到容器
+
+### 验证
+
+启动`Bootstrap1`,访问`http://localhost:8080/Modern`
+
