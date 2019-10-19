@@ -534,3 +534,164 @@ public void setId(String id) {
     }
 ```
 - 如果session失效或者过期，调用session的`#expire`方法
+
+## 测试
+### 测试代码
+- 对第八章 Tomcat 加载器代码做如下修改。
+#### `SimpleWrapperValve`
+```java
+    public void invoke(Request request, Response response, ValveContext valveContext)
+            throws IOException, ServletException {
+
+        SimpleWrapper wrapper = (SimpleWrapper) getContainer();
+        ServletRequest sreq = request.getRequest();
+        ServletResponse sres = response.getResponse();
+        Servlet servlet = null;
+        HttpServletRequest hreq = null;
+        if (sreq instanceof HttpServletRequest)
+            hreq = (HttpServletRequest) sreq;
+        HttpServletResponse hres = null;
+        if (sres instanceof HttpServletResponse)
+            hres = (HttpServletResponse) sres;
+
+        //-- new addition -----------------------------------
+        Context context = (Context) wrapper.getParent();    // <1>
+        request.setContext(context);
+        //-------------------------------------
+        // Allocate a servlet instance to process this request
+        try {
+            servlet = wrapper.allocate();
+            if (hres!=null && hreq!=null) {
+                servlet.service(hreq, hres);
+            }
+            else {
+                servlet.service(sreq, sres);
+            }
+        }
+        catch (ServletException e) {
+        }
+    }
+```
+- 调用`servlet`方法处理前，将`Wrapper`的父容器`Context`传入到`request`中。
+
+#### `Bootstrap`
+```java
+public final class Bootstrap {
+    public static void main(String[] args) {
+
+        //invoke: http://localhost:8080/myApp/Session
+        // 设置环境变量
+        System.setProperty("catalina.base", System.getProperty("user.dir"));
+
+        // 创建连接器
+        Connector connector = new HttpConnector();
+
+        // 创建servlet容器Session（最小的servlet容器，代表一个servlet）
+        Wrapper wrapper1 = new SimpleWrapper();
+        wrapper1.setName("Session");
+        wrapper1.setServletClass("SessionServlet");
+
+        // 创建一个web应用程序
+        Context context = new StandardContext();
+        // StandardContext's start method adds a default mapper
+        context.setPath("/myApp");
+        context.setDocBase("myApp");
+
+        context.addChild(wrapper1);
+
+        // context.addServletMapping(pattern, name);
+        // note that we must use /myApp/Session, not just /Session
+        // because the /myApp section must be the same as the path, so the cookie will
+        // be sent back.
+        // 添加映射器，负责查找context示例中的子容器来处理http请求
+        context.addServletMapping("/myApp/Session", "Session");
+
+        // add ContextConfig. This listener is important because it configures
+        // StandardContext (sets configured to true), otherwise StandardContext
+        // won't start
+        // 添加context生命周期监听器
+        LifecycleListener listener = new SimpleContextConfig();
+        ((Lifecycle) context).addLifecycleListener(listener);
+
+        // here is our loader
+        // 添加类加载器
+        Loader loader = new WebappLoader();
+        // associate the loader with the Context
+        context.setLoader(loader);
+
+        //将连接器和context容器关联
+        connector.setContainer(context);
+
+        // add a Manager
+        Manager manager = new StandardManager();
+        context.setManager(manager);
+
+        try {
+            //连接器初始化
+            connector.initialize();
+
+            // 启动连接器
+            ((Lifecycle) connector).start();
+
+            //启动容器（web应用程序启动）
+            ((Lifecycle) context).start();
+
+            // make the application wait until we press a key.
+            System.in.read();
+
+            //关闭容器（web应用程序启动）
+            ((Lifecycle) context).stop();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+#### `myApp/WEB-INF/classes`下新增`SessionServlet.class`测试
+```java
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+public class SessionServlet extends HttpServlet {
+    public SessionServlet() {
+    }
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("SessionServlet -- service");
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        out.println("<html>");
+        out.println("<head><title>SessionServlet</title></head>");
+        out.println("<body>");
+        String value = request.getParameter("value");
+        HttpSession session = request.getSession(true);
+        out.println("<br>the previous value is " + (String)session.getAttribute("value"));
+        out.println("<br>the current value is " + value);
+        session.setAttribute("value", value);
+        out.println("<br><hr>");
+        out.println("<form>");
+        out.println("New Value: <input name=value>");
+        out.println("<input type=submit>");
+        out.println("</form>");
+        out.println("</body>");
+        out.println("</html>");
+    }
+}
+```
+
+### 执行测试
+- 开启服务访问`http://localhost:8080/myApp/Session?value=leithda`
+- 首先输入`first`，然后另起一个窗口进行访问，可以获取到刚才输入通过session保存下来的值。效果如图:
+{% asset_img tomcat_9.png Tomcat Session%}
