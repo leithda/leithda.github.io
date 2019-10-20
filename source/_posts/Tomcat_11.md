@@ -341,6 +341,14 @@ final class StandardWrapperValve extends ValveBase {
         return "org.apache.catalina.core.StandardWrapperValve/1.0";
     }
 
+    /**
+     * 处理器处理方法
+     *
+     * @param      request           Http请求对象
+     * @param      response          Http响应对象
+     * @param      valveContext      处理器上下文对象
+     *
+     */
     public void invoke(Request request, Response response, ValveContext valveContext) throws IOException, ServletException {
         boolean unavailable = false;
         Throwable throwable = null;
@@ -379,7 +387,7 @@ final class StandardWrapperValve extends ValveBase {
 
         try {
             if (!unavailable) {
-                servlet = wrapper.allocate();
+                servlet = wrapper.allocate();   // <1> 获取 servlet 实例
             }
         } catch (ServletException var19) {
             this.log(sm.getString("standardWrapper.allocateException", wrapper.getName()), var19);
@@ -407,7 +415,7 @@ final class StandardWrapperValve extends ValveBase {
             servlet = null;
         }
 
-        ApplicationFilterChain filterChain = this.createFilterChain(request, servlet);
+        ApplicationFilterChain filterChain = this.createFilterChain(request, servlet);  // <2> 获取过滤链
 
         try {
             String jspFile = wrapper.getJspFile();
@@ -418,7 +426,7 @@ final class StandardWrapperValve extends ValveBase {
             }
 
             if (servlet != null && filterChain != null) {
-                filterChain.doFilter(sreq, sres);   // <1>
+                filterChain.doFilter(sreq, sres);   // <3> 执行过滤方法
             }
 
             sreq.removeAttribute("org.apache.catalina.jsp_file");
@@ -451,7 +459,7 @@ final class StandardWrapperValve extends ValveBase {
 
         try {
             if (filterChain != null) {
-                filterChain.release();
+                filterChain.release();  // <4> 释放过滤链
             }
         } catch (Throwable var23) {
             this.log(sm.getString("standardWrapper.releaseFilters", wrapper.getName()), var23);
@@ -463,7 +471,7 @@ final class StandardWrapperValve extends ValveBase {
 
         try {
             if (servlet != null) {
-                wrapper.deallocate(servlet);
+                wrapper.deallocate(servlet);    // <5> 释放servlet 
             }
         } catch (Throwable var22) {
             this.log(sm.getString("standardWrapper.deallocateException", wrapper.getName()), var22);
@@ -474,7 +482,7 @@ final class StandardWrapperValve extends ValveBase {
         }
 
         try {
-            if (servlet != null && wrapper.getAvailable() == 9223372036854775807L) {
+            if (servlet != null && wrapper.getAvailable() == 9223372036854775807L) {    // <6> 如果servlet 无法使用
                 wrapper.unload();
             }
         } catch (Throwable var21) {
@@ -633,4 +641,287 @@ final class StandardWrapperValve extends ValveBase {
     }
 }
 ```
-- 
+- `<1>`处，调用`#allocate()`方法获取`servlet`实例
+- `<2>`处，调用`#createFilterChain`方法获取过滤链
+- `<3>`处，调用过滤链的`#doFilter()`方法，包括`#servlet.service()`方法
+- `<4>`处，释放过滤链
+- `<5>`处，释放`servlet`，`countAllocated--`,如果是`STM servlet`，将`servlet`加入实例池
+- `<6>`处，如果`servlet`无法使用了，调用包装器的`#unload()`方法
+
+#### FilterDef
+```java
+public final class FilterDef {
+    private String description = null;
+    /**
+     * 展示名称
+     */
+    private String displayName = null;
+    /**
+     * 实现接口的过滤器全限定名
+     */
+    private String filterClass = null;
+    /**
+     * 过滤器名称，保证唯一
+     */
+    private String filterName = null;
+    /**
+     * 与此过滤器关联的大图标
+     */
+    private String largeIcon = null;
+    /**
+     * 初始化参数
+     */
+    private Map parameters = new HashMap();
+    /**
+     * 与此过滤器关联的小图标
+     */
+    private String smallIcon = null;
+
+    public FilterDef() {
+    }
+
+    // Getter or Setter
+
+    /**
+     * 添加初始化参数
+     *
+     * @param      name   参数名称
+     * @param      value  参数值
+     */
+    public void addInitParameter(String name, String value) {
+        this.parameters.put(name, value);
+    }
+
+    public String toString() {
+        StringBuffer sb = new StringBuffer("FilterDef[");
+        sb.append("filterName=");
+        sb.append(this.filterName);
+        sb.append(", filterClass=");
+        sb.append(this.filterClass);
+        sb.append("]");
+        return sb.toString();
+    }
+}
+```
+- 一个`FilterDef`表示一个过滤器定义，每一个属性都表示一个可以在过滤器中出现的子元素
+
+#### ApplicationFilterConfig
+```java
+final class ApplicationFilterConfig implements FilterConfig {
+    private Context context = null;
+    private Filter filter = null;
+    private FilterDef filterDef = null;
+
+    public ApplicationFilterConfig(Context context, FilterDef filterDef) throws ClassCastException, ClassNotFoundException, IllegalAccessException, InstantiationException, ServletException {
+        this.context = context;
+        this.setFilterDef(filterDef);
+    }
+
+    public String getFilterName() {
+        return this.filterDef.getFilterName();
+    }
+
+    public String getInitParameter(String name) {
+        Map map = this.filterDef.getParameterMap();
+        return map == null ? null : (String)map.get(name);
+    }
+
+    public Enumeration getInitParameterNames() {
+        Map map = this.filterDef.getParameterMap();
+        return map == null ? new Enumerator(new ArrayList()) : new Enumerator(map.keySet());
+    }
+
+    public ServletContext getServletContext() {
+        return this.context.getServletContext();
+    }
+
+    public String toString() {
+        StringBuffer sb = new StringBuffer("ApplicationFilterConfig[");
+        sb.append("name=");
+        sb.append(this.filterDef.getFilterName());
+        sb.append(", filterClass=");
+        sb.append(this.filterDef.getFilterClass());
+        sb.append("]");
+        return sb.toString();
+    }
+
+    Filter getFilter() throws ClassCastException, ClassNotFoundException, IllegalAccessException, InstantiationException, ServletException {
+        if (this.filter != null) {
+            return this.filter;
+        } else {
+            String filterClass = this.filterDef.getFilterClass();
+            ClassLoader classLoader = null;
+            if (filterClass.startsWith("org.apache.catalina.")) {
+                classLoader = this.getClass().getClassLoader();
+            } else {
+                classLoader = this.context.getLoader().getClassLoader();
+            }
+
+            ClassLoader oldCtxClassLoader = Thread.currentThread().getContextClassLoader();
+            Class clazz = classLoader.loadClass(filterClass);
+            this.filter = (Filter)clazz.newInstance();
+            this.filter.init(this);
+            return this.filter;
+        }
+    }
+
+    FilterDef getFilterDef() {
+        return this.filterDef;
+    }
+
+    void release() {
+        if (this.filter != null) {
+            this.filter.destroy();
+        }
+
+        this.filter = null;
+    }
+
+    void setFilterDef(FilterDef filterDef) throws ClassCastException, ClassNotFoundException, IllegalAccessException, InstantiationException, ServletException {
+        this.filterDef = filterDef;
+        if (filterDef == null) {
+            if (this.filter != null) {
+                this.filter.destroy();
+            }
+
+            this.filter = null;
+        } else {
+            Filter var2 = this.getFilter();
+        }
+    }
+}
+```
+- `ApplicationFilterConfig`负责管理web应用程序启动时创建的过滤器实例
+- `#getFilter()`方法负责加载过滤器并初始化过滤器
+
+#### ApplicationFilterChain
+```java
+final class ApplicationFilterChain implements FilterChain {
+    private ArrayList filters = new ArrayList();
+    private Iterator iterator = null;
+    private Servlet servlet = null;
+    private static final StringManager sm = StringManager.getManager("org.apache.catalina.core");
+    private InstanceSupport support = null;
+
+    public ApplicationFilterChain() {
+    }
+
+    public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
+        if (System.getSecurityManager() != null) {
+            final ServletRequest req = request;
+            final ServletResponse res = response;
+
+            try {
+                AccessController.doPrivileged(new PrivilegedExceptionAction() {
+                    public Object run() throws ServletException, IOException {
+                        ApplicationFilterChain.this.internalDoFilter(req, res);
+                        return null;
+                    }
+                });
+            } catch (PrivilegedActionException var7) {
+                Exception e = var7.getException();
+                if (e instanceof ServletException) {
+                    throw (ServletException)e;
+                }
+
+                if (e instanceof IOException) {
+                    throw (IOException)e;
+                }
+
+                if (e instanceof RuntimeException) {
+                    throw (RuntimeException)e;
+                }
+
+                throw new ServletException(e.getMessage(), e);
+            }
+        } else {
+            this.internalDoFilter(request, response);
+        }
+
+    }
+
+    private void internalDoFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
+        if (this.iterator == null) {
+            this.iterator = this.filters.iterator();
+        }
+
+        if (this.iterator.hasNext()) {
+            ApplicationFilterConfig filterConfig = (ApplicationFilterConfig)this.iterator.next();
+            Filter filter = null;
+
+            try {
+                filter = filterConfig.getFilter();
+                this.support.fireInstanceEvent("beforeFilter", filter, request, response);
+                filter.doFilter(request, response, this);
+                this.support.fireInstanceEvent("afterFilter", filter, request, response);
+            } catch (IOException var9) {
+                if (filter != null) {
+                    this.support.fireInstanceEvent("afterFilter", filter, request, response, var9);
+                }
+
+                throw var9;
+            } catch (ServletException var10) {
+                if (filter != null) {
+                    this.support.fireInstanceEvent("afterFilter", filter, request, response, var10);
+                }
+
+                throw var10;
+            } catch (RuntimeException var11) {
+                if (filter != null) {
+                    this.support.fireInstanceEvent("afterFilter", filter, request, response, var11);
+                }
+
+                throw var11;
+            } catch (Throwable var12) {
+                if (filter != null) {
+                    this.support.fireInstanceEvent("afterFilter", filter, request, response, var12);
+                }
+
+                throw new ServletException(sm.getString("filterChain.filter"), var12);
+            }
+        } else {
+            try {
+                this.support.fireInstanceEvent("beforeService", this.servlet, request, response);
+                if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
+                    this.servlet.service((HttpServletRequest)request, (HttpServletResponse)response);
+                } else {
+                    this.servlet.service(request, response);
+                }
+
+                this.support.fireInstanceEvent("afterService", this.servlet, request, response);
+            } catch (IOException var13) {
+                this.support.fireInstanceEvent("afterService", this.servlet, request, response, var13);
+                throw var13;
+            } catch (ServletException var14) {
+                this.support.fireInstanceEvent("afterService", this.servlet, request, response, var14);
+                throw var14;
+            } catch (RuntimeException var15) {
+                this.support.fireInstanceEvent("afterService", this.servlet, request, response, var15);
+                throw var15;
+            } catch (Throwable var16) {
+                this.support.fireInstanceEvent("afterService", this.servlet, request, response, var16);
+                throw new ServletException(sm.getString("filterChain.servlet"), var16);
+            }
+        }
+    }
+
+    void addFilter(ApplicationFilterConfig filterConfig) {
+        this.filters.add(filterConfig);
+    }
+
+    void release() {
+        this.filters.clear();
+        this.iterator = this.iterator;
+        this.servlet = null;
+    }
+
+    void setServlet(Servlet servlet) {
+        this.servlet = servlet;
+    }
+
+    void setSupport(InstanceSupport support) {
+        this.support = support;
+    }
+}
+```
+- 重点关注它的`#doFilter()`方法，最终调用`#internalDoFilter()`方法，方法中，如果当前过滤器不是链中最后一个过滤器,调用`#this.doFilter()`执行过滤，否则调用`#servlet.service()`的方法
