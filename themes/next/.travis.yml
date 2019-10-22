@@ -1,14 +1,12 @@
 language: node_js
-node_js: node
+#node_js: node
+node_js: lts/*
 
 cache:
   directories:
     - node_modules
 
 install: npm install
-
-before_script:
-  - npm install -g gulp
 
 addons:
   browserstack:
