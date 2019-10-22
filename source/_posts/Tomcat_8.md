@@ -453,7 +453,8 @@ public class ResourceEntry {
             this.log("Lifecycle error : CL stopped");
             throw new ClassNotFoundException(name);
         } else {
-            clazz = this.findLoadedClass0(name);    // <1>
+            // <1> 现在本地 cache 查找该类是否已经加载
+            clazz = this.findLoadedClass0(name); 
             if (clazz != null) {
                 if (this.debug >= 3) {
                     this.log("  Returning class from cache");
@@ -465,7 +466,8 @@ public class ResourceEntry {
 
                 return clazz;
             } else {
-                clazz = this.findLoadedClass(name); // <2> 
+                // <2> 从系统类加载器的 cache 中查找是否已经加载
+                clazz = this.findLoadedClass(name); 
                 if (clazz != null) {
                     if (this.debug >= 3) {
                         this.log("  Returning class from cache");
@@ -478,7 +480,8 @@ public class ResourceEntry {
                     return clazz;
                 } else {
                     try {
-                        clazz = this.system.loadClass(name);    // <3>
+                        // <3> 尝试使用 系统类加载器加载.
+                        clazz = this.system.loadClass(name); 
                         if (clazz != null) {
                             if (resolve) {
                                 this.resolveClass(clazz);
@@ -489,8 +492,8 @@ public class ResourceEntry {
                     } catch (ClassNotFoundException var11) {
                     }
 
-
-                    if (this.securityManager != null) { // <4> 
+					// <4> 安全检查
+                    if (this.securityManager != null) {
                         int i = name.lastIndexOf(46);
                         if (i >= 0) {
                             try {
@@ -505,9 +508,10 @@ public class ResourceEntry {
                         }
                     }
 
+                    // <5> 使用双亲委托模型 或者 制定了特殊规则的包(javax,org.w3c.dom等)
                     boolean delegateLoad = this.delegate || this.filter(name);
                     ClassLoader loader;
-                    if (delegateLoad) { // <5>
+                    if (delegateLoad) {
                         if (this.debug >= 3) {
                             this.log("  Delegating to parent classloader");
                         }
@@ -539,6 +543,7 @@ public class ResourceEntry {
                     }
 
                     try {
+                        // <6> 尝试在本地目录搜索 class 并加载
                         clazz = this.findClass(name);
                         if (clazz != null) {
                             if (this.debug >= 3) {
@@ -554,7 +559,8 @@ public class ResourceEntry {
                     } catch (ClassNotFoundException var8) {
                     }
 
-                    if (!delegateLoad) {    // <6>
+                    // <7> 不使用双亲委派模型加载且不是特殊类
+                    if (!delegateLoad) {    
                         if (this.debug >= 3) {
                             this.log("  Delegating to parent classloader");
                         }
@@ -581,25 +587,26 @@ public class ResourceEntry {
                         }
                     }
 
-                    throw new ClassNotFoundException(name); // <7>
+                    throw new ClassNotFoundException(name); // <8>
                 }
             }
         }
     }
 ```
-- `<1>`处，判断目标类是否加载过，代码如下:
+- `<1>`处，判断目标类是否被缓存，代码如下:
 ```java
     protected Class findLoadedClass0(String name) {
         ResourceEntry entry = (ResourceEntry)this.resourceEntries.get(name);
         return entry != null ? entry.loadedClass : null;
     }
 ```
-- `<2>`处，每个类加载器都维护有自己的一份已加载类名字空间，该方法就是在该名字空间中寻找指定的类是否已存在，如果存在就返回给类的引用，否则就返回 null
-- `<3>`处，调用系统加载器加载目标类
-- `<4>`处，如果使用安全管理器，判断目标类是否允许加载，如果不允许，抛出`ClassNotFound`异常
-- `<5>`处，如果使用委派模式，使用父加载器(没有则使用系统加载器)加载目标类
-- `<6>`处，如果在当前的源中找不到目标类并且没有使用委派标志,使用父类加载器。如果父类加载器为 null,使用系统加载器
-- `<7>`处，如果最终目标类仍然找不到,抛出 ClassNotFoundException 异常
+- `<2>`处，系统加载器都维护有自己的一份已加载类名字空间，该方法就是在该名字空间中寻找指定的类是否已存在，如果存在就返回给类的引用，否则就返回 null
+- `<3>`处，调用系统加载器加载目标类，先调用系统加载器保证JRE中的类不被覆盖，**如果找不到表示JRE核心类中没有这个类**
+- `<4>`处，如果使用安全管理器，判断目标类所在目录是否有权限，如果不允许，抛出`ClassNotFound`异常
+- `<5>`处，使用了双亲委派模型或者是配置的特殊包下的类，使用父加载器`WebappLoader`(为空时使用系统加载器)加载
+- `<6>`处，尝试在本地目录WEB应用目录下搜索这个类
+- `<7>`处，如果在当前的源中找不到目标类并且没有使用委派标志,使用父类加载器``WebappLoader``。如果父类加载器为 null,使用系统加载器。
+- `<8>`处，如果最终目标类仍然找不到,抛出 ClassNotFoundException 异常
 
 ## 应用程序
 
@@ -1105,7 +1112,7 @@ Stopping wrapper Primitive
 Stopping wrapper Modern
 ```
 
-### 启动流程简介
+### 处理流程简介
 #### 启动流程
 - 连接器初始化
 1. `#connector.initialize`方法，开启`ServerSocket`并赋值给`connector.serverSocket`
