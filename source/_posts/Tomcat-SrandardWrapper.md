@@ -9,7 +9,7 @@ author: 长歌
 date: 2019-10-20
 ---
 
-主要介绍了`StandardWrapper`如何实例化servlet
+主要介绍了标准包装器`StandardWrapper`如何实例化servlet
 <!-- More -->
 
 ## 请求处理过程
