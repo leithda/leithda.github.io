@@ -18,10 +18,10 @@ date: 2019-10-20
 
 - 连接器接收到请求，创建请求和响应对象
 - 连接器调用`StandardContext`的`#invoke`方法
-- `StandardContext`的`#invoke`方法调用流水线的`#invoke`方法，所以`StandardContext`的流水线会调用`StandardContextValue`的`#invoke`方法
-- `StandardContextValue`的`#invoke`方法会找到合适的`Wrapper`对请求服务并调用包装器的`#invoke`方法
+- `StandardContext`的`#invoke`方法调用流水线的`#invoke`方法，所以`StandardContext`的流水线会调用`StandardContextValve`的`#invoke`方法
+- `StandardContextValve`的`#invoke`方法会找到合适的`Wrapper`对请求服务并调用包装器的`#invoke`方法
 - `StandardWrapper`是包装器的标准实现,`StandardWrapper`对象的`#invoke`方法调用流水线的`#invoke`方法
-- `StandardWrapper`流水线的基本阀门是`StandardWrapperValue`。因此`StandardWrapperValue`的`#invoke`方法会被调用
+- `StandardWrapper`流水线的基本阀门是`StandardWrapperValve`。因此`StandardWrapperValve`的`#invoke`方法会被调用
 - `StandardWrapperValve`的`#invoke`方法会调用包装器的`#allocate`方法获得一个`servlet`实例
 - 当一个`servlet`需要被加载的时候，方法`#allocate`调用方法`#load`来加载一个`servlet`
 - 方法`#load`会调用`servlet`的`#init`方法
@@ -37,7 +37,7 @@ public interface SingleThreadModel {
 - 实现该接口的`servlet`可以保证不会有两个线程同时使用`servlet`的`#service`方法，**PS:**1. 只保证`#service`方法的线程安全，不能保证整个`servlet`是线程安全的 2. 已经废弃，Servlet2.3 和 Servlet 2.4 的容器还支持此接口
 
 ## StandardWrapper
-- 一个`StandardWrapper`对象的主要职责是：加载它表示的`servlet`并分配它一个实例。调用`#service`方法交给`StandardWrapperValue`去完成
+- 一个`StandardWrapper`对象的主要职责是：加载它表示的`servlet`并分配它一个实例。调用`#service`方法交给`StandardWrapperValve`去完成
 - 加载`servlet`时，如果没有实现`SingleThreadModel`接口，`StandardWrapper`加载给`servlet`一次，对于以后的请求返回相同的实例即可。`StandardWrapper`假设`servlet`的`#service`方法是线程安全的，所以没有创建`servlet`的多个实例，线程安全需要开发者自己解决。
 - 对于 `STM servlet`,`StandardWrapper`必须保证不能同时有两个线程提交`STM servlet`的`#service`方法
 
@@ -686,10 +686,10 @@ public final class FilterDef {
      * 添加初始化参数
      *
      * @param      name   参数名称
-     * @param      value  参数值
+     * @param      Valve  参数值
      */
-    public void addInitParameter(String name, String value) {
-        this.parameters.put(name, value);
+    public void addInitParameter(String name, String Valve) {
+        this.parameters.put(name, Valve);
     }
 
     public String toString() {
