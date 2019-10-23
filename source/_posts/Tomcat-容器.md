@@ -446,7 +446,7 @@ public class SimpleWrapper implements Wrapper, Pipeline {
  * Created with IntelliJ IDEA.
  * User: 长歌
  * Date: 19-10-9
- * Description: 基本处理器
+ * Description: 基本阀门
  */
 public class SimpleWrapperValve implements Valve, Contained {
 
@@ -456,7 +456,7 @@ public class SimpleWrapperValve implements Valve, Contained {
      * 处理方法
      * @param request 请求对象
      * @param response 响应对象
-     * @param valveContext 处理器上下文对象
+     * @param valveContext 阀门上下文对象
      */
     public void invoke(Request request, Response response, ValveContext valveContext)
             throws IOException, ServletException {
@@ -499,7 +499,7 @@ public class SimpleWrapperValve implements Valve, Contained {
 
 ```
 
-- 基础处理器，流水线作业的最后一个步骤会调用此处理器的`#invoke`方法
+- 基础阀门，流水线作业的最后一个步骤会调用此阀门的`#invoke`方法
 
 ### `ClientIPLoggerValve`
 
@@ -508,7 +508,7 @@ public class SimpleWrapperValve implements Valve, Contained {
  * Created with IntelliJ IDEA.
  * User: 长歌
  * Date: 19-10-9
- * Description: IP处理器
+ * Description: IP阀门
  */
 public class ClientIPLoggerValve implements Valve, Contained {
 
@@ -526,7 +526,7 @@ public class ClientIPLoggerValve implements Valve, Contained {
     }
 
     public String getInfo() {
-        return "IP处理器";
+        return "IP阀门";
     }
 
     public Container getContainer() {
@@ -540,7 +540,7 @@ public class ClientIPLoggerValve implements Valve, Contained {
 
 ```
 
-- 示例处理器之一，用于打印请求IP信息
+- 示例阀门之一，用于打印请求IP信息
 
 ### `HeaderLoggerValve`
 
@@ -549,7 +549,7 @@ public class ClientIPLoggerValve implements Valve, Contained {
  * Created with IntelliJ IDEA.
  * User: 长歌
  * Date: 19-10-9
- * Description: 请求头 处理器
+ * Description: 请求头 阀门
  */
 public class HeaderLoggerValve implements Valve, Contained {
 
@@ -579,7 +579,7 @@ public class HeaderLoggerValve implements Valve, Contained {
     }
 
     public String getInfo() {
-        return "请求头处理器";
+        return "请求头阀门";
     }
 
     public Container getContainer() {
@@ -592,7 +592,7 @@ public class HeaderLoggerValve implements Valve, Contained {
 }
 ```
 
-- 示例处理器之二，用于打印Http请求头部信息
+- 示例阀门之二，用于打印Http请求头部信息
 
 ### `Bootstrap`
 
@@ -619,7 +619,7 @@ public class Bootstrap1 {
         wrapper.setServletClass("ModernServlet");
         wrapper.setLoader(new SimpleLoader());
 
-        // 实例化处理器并添加
+        // 实例化阀门并添加
         Valve valve1 = new HeaderLoggerValve();
         Valve valve2 = new ClientIPLoggerValve();
         ((Pipeline) wrapper).addValve(valve1);

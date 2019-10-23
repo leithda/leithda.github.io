@@ -21,8 +21,8 @@ date: 2019-10-20
 - `StandardContext`的`#invoke`方法调用流水线的`#invoke`方法，所以`StandardContext`的流水线会调用`StandardContextValue`的`#invoke`方法
 - `StandardContextValue`的`#invoke`方法会找到合适的`Wrapper`对请求服务并调用包装器的`#invoke`方法
 - `StandardWrapper`是包装器的标准实现,`StandardWrapper`对象的`#invoke`方法调用流水线的`#invoke`方法
-- `StandardWrapper`流水线的基本处理器是`StandardWrapperValue`。因此`StandardWrapperValue`的`#invoke`方法会被调用
-- `StandardWrapperValue`的`#invoke`方法会调用包装器的`#allocate`方法获得一个`servlet`实例
+- `StandardWrapper`流水线的基本阀门是`StandardWrapperValue`。因此`StandardWrapperValue`的`#invoke`方法会被调用
+- `StandardWrapperValve`的`#invoke`方法会调用包装器的`#allocate`方法获得一个`servlet`实例
 - 当一个`servlet`需要被加载的时候，方法`#allocate`调用方法`#load`来加载一个`servlet`
 - 方法`#load`会调用`servlet`的`#init`方法
 
@@ -326,7 +326,7 @@ public final class StandardWrapperFacade implements ServletConfig {
 ```
 - 外观类，保证安全，方法内部调用`StandardWrapper`相关方法
 
-### StandardWrapperValue
+### StandardWrapperValve
 ```java
 final class StandardWrapperValve extends ValveBase {
     private int debug = 0;
@@ -342,11 +342,11 @@ final class StandardWrapperValve extends ValveBase {
     }
 
     /**
-     * 处理器处理方法
+     * 阀门处理方法
      *
      * @param      request           Http请求对象
      * @param      response          Http响应对象
-     * @param      valveContext      处理器上下文对象
+     * @param      valveContext      阀门上下文对象
      *
      */
     public void invoke(Request request, Response response, ValveContext valveContext) throws IOException, ServletException {

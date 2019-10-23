@@ -13,7 +13,7 @@ date: 2019-10-18
 <!-- More -->
 
 ## 介绍
-一个`servlet`通过一个`authenticator`的处理器进行安全性限制，容器启动时，`authenticator`被添加到容器的流水线上
+一个`servlet`通过一个`authenticator`的阀门进行安全性限制，容器启动时，`authenticator`被添加到容器的流水线上
 
 ## (域)Realm
 ```java
@@ -226,7 +226,7 @@ public final class LoginConfig {
 ## Authenticator
 - `org.apache.catalina.Authenticator`接口用于表示一个验证器。接口内无方法，只是一个标志，使用时使用`#instanceof`检查组件是否为验证器
 
-- Catalina提供了Authenticator接口的基本实现:`org.apache.catalina.authenticator.AuthenticatorBase`.除了实现接口，这个类还继承了`ValueBase`类，这个类也是一个处理器。
+- Catalina提供了Authenticator接口的基本实现:`org.apache.catalina.authenticator.AuthenticatorBase`.除了实现接口，这个类还继承了`ValueBase`类，这个类也是一个阀门。
 
 - `org.apache.catalina.authenticator`包下还有几个其他实现类：
 

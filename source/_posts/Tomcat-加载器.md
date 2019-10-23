@@ -942,13 +942,13 @@ public class SimpleWrapper implements Wrapper, Pipeline, Lifecycle {
 
 ```
 
-- SimpleWrapperValue
+- SimpleWrapperValve
 ```java
 /**
  * Created with IntelliJ IDEA.
  * User: 长歌
  * Date: 2019/10/16
- * Description: 包装器处理器 Copyed from package chapter7.SimpleWrapperValve
+ * Description: 包装器阀门 Copyed from package chapter7.SimpleWrapperValve
  */
 public class SimpleWrapperValve implements Valve, Contained {
 
@@ -1124,10 +1124,10 @@ Stopping wrapper Modern
 2. `HttpProcessor`创建时，会开启`HttpProcessor`线程，`#run`方法中，如果`socket`不为空，会调用`#process`方法进行处理，
     解析请求，生成`request`和`response`对象并调用`#Container.invoke`方法
 3. `#Container.invoke`方法会调用`SimplePipeline`对象的`#invoke`方法
-4. `#SimplePipeline.invoke`会调用内部类`StandardPipelineValveContext`的`#invokeNext`方法，它会依次调用一般处理器，最后调用基本处理器`StandardContextValve`
-5. `StandardContextValve`基本处理器的`#invoke`方法内部会根据请求信息找到对应的`Wrapper`容器，并调用`Wrapper`的`#invoke`方法
-6. `SimpleWrapper`的`#invoke`方法也调用`SimplePipeline`的`#invoke`方法，`SimpleWrapper`构造方法中设置`SimplePepeline`的基本处理器为`SimpleWrapperValve`
-所以执行基本处理器的`SimpleWrapperValve`的`invoke`方法
-7. `SimpleWrapperValue`中的`#invoke`方法会调用`#SimpleWrapper.allocate`,进而调用`#loadServlet`方法
+4. `#SimplePipeline.invoke`会调用内部类`StandardPipelineValveContext`的`#invokeNext`方法，它会依次调用一般阀门，最后调用基本阀门`StandardContextValve`
+5. `StandardContextValve`基本处阀门的`#invoke`方法内部会根据请求信息找到对应的`Wrapper`容器，并调用`Wrapper`的`#invoke`方法
+6. `SimpleWrapper`的`#invoke`方法也调用`SimplePipeline`的`#invoke`方法，`SimpleWrapper`构造方法中设置`SimplePepeline`的基本阀门为`SimpleWrapperValve`
+所以执行基本阀门的`SimpleWrapperValve`的`invoke`方法
+7. `SimpleWrapperValve`中的`#invoke`方法会调用`#SimpleWrapper.allocate`,进而调用`#loadServlet`方法
 8. `#SimpleWrapper.loadServlet`方法中,首先获取`WebappLoader`，然后通过loader获取`WebappClassLoader`，然后调用`#WebappClassLoader`的`#loadClass`方法加载`Serlvet`
 9. 最后调用`#Servlet.service`方法进行`Servlet`处理
