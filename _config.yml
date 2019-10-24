@@ -15,7 +15,7 @@ timezone:
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: http://leithda.top
 root: /
-permalink: :subcatalog/:category/:abbrlink.html  # 此处可以自己设置，也可以直接使用 :/abbrlink
+permalink: :subcatalog/:abbrlink.html  # 此处可以自己设置，也可以直接使用 :/abbrlink
 permalink_defaults:
   subcatalog : detail
 
@@ -86,7 +86,7 @@ theme: next
 deploy:
   type: git
   repo: 
-    gitee: git@gitee.com:leithda/leithda.git,master
+    # gitee: git@gitee.com:leithda/leithda.git,master
     github: git@github.com:leithda/leithda.github.io.git,master
 #  branch: master
 
@@ -102,3 +102,13 @@ sitemap:
   path: sitemap.xml
 baidusitemap:
   path: baidusitemap.xml
+# Extensions
+## Plugins: http://hexo.io/plugins/
+#RSS订阅
+plugin:
+- hexo-generator-feed
+#Feed Atom
+feed:
+type: atom
+path: atom.xml
+limit: 20
