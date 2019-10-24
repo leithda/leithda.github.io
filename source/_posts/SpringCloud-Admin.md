@@ -1,3 +1,4 @@
+---
 title: Spring Cloud 之 Admin-微服务监控
 categories:
   - Java
@@ -7,7 +8,8 @@ tags:
   - 微服务
   - Spring Cloud
 author: 长歌
-date: 2019-9-29 20:30:00
+abbrlink: 1287611694
+date: 2019-09-29 20:30:00
 ---
 
 Spring Boot Adm in 用于管理和监控一个或者多个 Spring Boot 程序。 Spring Boot Admin 分 为 Server 端和 Client 端， Client 端可以通过 Http 向 Server 端注册，也可以结合 Spring Cloud 的服务注册组件 Eureka 进行注册。 Spring Boot Admin 提供了用 AngularJs 编写的 Ul 界面，用 于管理和监控。其中监控内容包括 Spring Boot 的监控组件 Actuator 的各个 Http 节点，也支持 更高级的功能，包括 Turbine 、 Jmx 、 Loglevel 等。

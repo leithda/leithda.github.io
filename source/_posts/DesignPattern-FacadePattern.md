@@ -1,9 +1,11 @@
+---
 title: 外观模式
 categories:
   - 设计模式
 tags:
   - 设计模式
 author: 长歌
+abbrlink: 4158556840
 date: 2019-10-11 19:33:00
 ---
 

@@ -1,3 +1,4 @@
+---
 title: Tomcat-容器
 categories:
   - Java
@@ -7,6 +8,7 @@ tags:
   - Tomcat
 author: 长歌
 date: 2019-10-9
+abbrlink: 3459939477
 ---
 
 容器是一个处理用户 servlet 请求并返回对象给 web 用户的模块。`org.apache.catalina.Container` 接口定义了容器的形式,有四种容器:`Engine`(引擎), `Host`(主机), `Context`(上下文), 和 `Wrapper`(包装器)

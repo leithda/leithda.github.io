@@ -13,10 +13,16 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://leithda.gitee.io/
+url: http://leithda.top
 root: /
-permalink: :year/:month/:day/:title/
+permalink: :subcatalog/:category/:abbrlink.html  # 此处可以自己设置，也可以直接使用 :/abbrlink
 permalink_defaults:
+  subcatalog : detail
+
+#abbrlinks
+abbrlink:
+  alg: crc32   #算法： crc16(default) and crc32
+  rep: dec     #进制： dec(default) and hex
 
 # Directory
 source_dir: source
@@ -54,7 +60,7 @@ index_generator:
   order_by: -date
   
 # Category & Tag
-default_category: uncategorized
+default_category: default
 category_map:
 tag_map:
 
@@ -90,3 +96,9 @@ search:
   field: post
   format: html
   limit: 10000
+
+# 自动生成sitemap
+sitemap:
+  path: sitemap.xml
+baidusitemap:
+  path: baidusitemap.xml

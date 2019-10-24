@@ -1,3 +1,4 @@
+---
 title: Spring Cloud 之 Config-配置中心
 categories:
   - Java
@@ -7,7 +8,8 @@ tags:
   - 微服务
   - Spring Cloud
 author: 长歌
-date: 2019-9-27 20:30:00
+abbrlink: 1798410625
+date: 2019-09-27 20:30:00
 ---
 
 分布式配置中心Spring Cloud Config

@@ -1,3 +1,4 @@
+---
 title: Tomcat-连接器
 categories:
   - Java
@@ -7,6 +8,7 @@ tags:
   - Tomcat
 author: 长歌
 date: 2019-9-24
+abbrlink: 2076341340
 ---
 
 Catalina 中有两个主要的模块：连接器和容器。本章中你将会写一个可以创建更好的处理请求和响应对象的连接器。

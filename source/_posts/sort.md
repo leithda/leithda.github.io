@@ -1,3 +1,4 @@
+---
 title: 排序算法
 categories:
   - 算法
@@ -6,6 +7,7 @@ tags:
   - 排序算法
 author: 长歌
 date: 2019-9-30
+abbrlink: 1935562633
 ---
 
 必会的排序算法

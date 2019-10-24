@@ -1,3 +1,4 @@
+---
 title: Spring Cloud 之 Eureka-服务注册与发现
 categories:
   - Java
@@ -7,7 +8,8 @@ tags:
   - 微服务
   - Spring Cloud
 author: 长歌
-date: 2019-9-12 
+date: 2019-9-12
+abbrlink: 518531817
 ---
 
 > Eureka 是一个用于服务发现与注册的组件

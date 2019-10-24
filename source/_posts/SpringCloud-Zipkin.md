@@ -1,3 +1,4 @@
+---
 title: Spring Cloud 之 Zipkin-链路追踪
 categories:
   - Java
@@ -7,7 +8,8 @@ tags:
   - 微服务
   - Spring Cloud
 author: 长歌
-date: 2019-9-29 7:45:00
+abbrlink: 3833359923
+date: 2019-09-29 07:45:00
 ---
 
 在分布式系统中提供链路追踪

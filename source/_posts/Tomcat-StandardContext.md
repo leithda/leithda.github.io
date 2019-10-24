@@ -1,3 +1,4 @@
+---
 title: Tomcat-StandardContext
 categories:
   - Java
@@ -6,7 +7,8 @@ tags:
   - 源码
   - Tomcat
 author: 长歌
-date: 2019-10-22
+abbrlink: 1923304143
+date: 2019-10-22 00:00:00
 ---
 
 标准上下文容器`StandardContext`对象的初始化和配置,然后讨论跟其相关的类`StandardContextMapper`(Tomcat 4)和 `ContextConfig` 类

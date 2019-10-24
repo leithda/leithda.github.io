@@ -1,3 +1,4 @@
+---
 title: 工厂模式
 categories:
   - 设计模式
@@ -5,6 +6,7 @@ tags:
   - 设计模式
 author: 长歌
 date: 2019-9-20
+abbrlink: 1417187187
 ---
 
 

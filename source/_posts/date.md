@@ -1,3 +1,4 @@
+---
 title: Java8 中处理日期和时间示例
 categories:
   - Java
@@ -5,7 +6,8 @@ categories:
 tags:
   - 日期
 author: 长歌
-date: 2019-10-14
+abbrlink: 2517593741
+date: 2019-10-14 00:00:00
 ---
 
 Java8 中新增了几个关于日期和时间处理的类，主要有`LocalDate`、`LocalTime`等。可以更好的进行关于日期和时间的处理。

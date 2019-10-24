@@ -1,3 +1,4 @@
+---
 title: Tomcat-加载器
 categories:
   - Java
@@ -6,7 +7,8 @@ tags:
   - 源码
   - Tomcat
 author: 长歌
-date: 2019-10-16
+abbrlink: 4141534283
+date: 2019-10-16 00:00:00
 ---
 
 - 前面介绍的加载器实例，加载的`servlet`实例可以使用`classpath`下的任何类和类库，这样是不安全的，`servlet`应该只允许 访问`WEB-INF`目录及子目录下的类及`WEB-INF/lib`下的类库

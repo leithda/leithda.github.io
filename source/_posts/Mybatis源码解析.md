@@ -1,3 +1,4 @@
+---
 title: Mybatis源码解析
 categories:
   - Java
@@ -6,6 +7,7 @@ tags:
   - 源码
   - Mybatis
 author: 长歌
+abbrlink: 3692374944
 date: 2019-07-02 20:35:00
 ---
 FROM [芋道源码](http://www.iocoder.cn/?github)

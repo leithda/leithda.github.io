@@ -1,3 +1,4 @@
+---
 title: Mybatis源码解析-异常模块
 author: 长歌
 categories:
@@ -6,6 +7,7 @@ categories:
 tags:
   - 源码
   - Mybatis
+abbrlink: 1783791857
 date: 2019-07-09 02:41:00
 ---
 对应 `exceptions` 包。

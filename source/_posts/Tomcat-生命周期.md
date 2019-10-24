@@ -1,3 +1,4 @@
+---
 title: Tomcat-生命周期
 categories:
   - Java
@@ -6,7 +7,8 @@ tags:
   - 源码
   - Tomcat
 author: 长歌
-date: 2019-10-11
+abbrlink: 1950977268
+date: 2019-10-11 00:00:00
 ---
 
 Catalina 由多个组件组成,当 Catalina 启动的时候,这些组件也会启动。当Catalina 停止的时候,这些组件也必须有机会被清除。例如,当一个容器停止 工作的时候,它必须唤醒所有加载的 servlet 的 destroy 方法,而 session 管理 器要保存 session 到二级存储器中。保持组件启动和停止一致的的机制通过实现 org.apache.catalina.Lifecycle 接口来实现

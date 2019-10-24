@@ -1,3 +1,4 @@
+---
 title: Tomcat-一个Web服务器
 categories:
   - Java
@@ -6,7 +7,8 @@ tags:
   - 源码
   - Tomcat
 author: 长歌
-date: 2019-9-23 18:45:00
+abbrlink: 1975698977
+date: 2019-09-23 18:45:00
 ---
 
 本章说明 java web 服务器是如何工作的。Web 服务器也成为超文本传输协议(HTTP)服务器，因为它使用 HTTP 来跟客户端进行通信的，这通常是个web 浏览器。一个基于 java 的 web 服务器 使用两个重要的类：java.net.Socket 和 java.net.ServerSocket，并通过 HTTP 消息进行通信。 因此这章就自然是从 HTTP 和这两个类的讨论开始的

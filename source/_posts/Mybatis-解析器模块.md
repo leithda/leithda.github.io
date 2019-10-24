@@ -1,3 +1,4 @@
+---
 title: Mybatis源码解析-解析器模块
 categories:
   - Java
@@ -6,6 +7,7 @@ tags:
   - 源码
   - Mybatis
 author: 长歌
+abbrlink: 3510268826
 date: 2019-07-03 00:00:00
 ---
 > 解析器模块主要提供两个功能

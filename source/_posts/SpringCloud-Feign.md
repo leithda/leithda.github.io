@@ -1,3 +1,4 @@
+---
 title: Spring Cloud 之 Feign-声明式调用
 categories:
   - Java
@@ -8,6 +9,7 @@ tags:
   - Spring Cloud
 author: 长歌
 date: 2019-9-20
+abbrlink: 874139413
 ---
 Feign是Netflix开发的声明式、模板化的HTTP客户端， Feign可以帮助我们更快捷、优雅地调用HTTP API。
 

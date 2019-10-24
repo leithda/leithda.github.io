@@ -1,3 +1,4 @@
+---
 title: Mybatis源码解析-反射模块
 categories:
   - Java
@@ -6,6 +7,7 @@ tags:
   - 源码
   - Mybatis
 author: 长歌
+abbrlink: 2532778738
 date: 2019-07-04 23:13:00
 ---
 

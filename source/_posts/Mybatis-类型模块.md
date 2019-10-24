@@ -1,3 +1,4 @@
+---
 title: Mybatis源码解析-类型模块
 author: 长歌
 categories:
@@ -6,6 +7,7 @@ categories:
 tags:
   - 源码
   - Mybatis
+abbrlink: 2139696773
 date: 2019-08-07 17:13:00
 ---
 ① MyBatis 为简化配置文件提供了别名机制，该机制是类型转换模块的主要功能之一。

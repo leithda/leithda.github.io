@@ -1,3 +1,4 @@
+---
 title: Mybatis源码解析-事务模块
 author: 长歌
 categories:
@@ -6,6 +7,7 @@ categories:
 tags:
   - 源码
   - Mybatis
+abbrlink: 3506020362
 date: 2019-07-22 17:03:00
 ---
 

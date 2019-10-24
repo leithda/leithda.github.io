@@ -1,3 +1,4 @@
+---
 title: Tomcat-日志系统
 categories:
   - Java
@@ -6,7 +7,8 @@ tags:
   - 源码
   - Tomcat
 author: 长歌
-date: 2019-10-14
+abbrlink: 3784073105
+date: 2019-10-14 00:00:00
 ---
 
 日志系统是一个记录信息的组件。在 Catalina 中，日志系统是一个相对简单的跟容器相关联的组件。Tomcat 在 `org.apache.catalina.logger` 包中提供了多个不同的日志系统

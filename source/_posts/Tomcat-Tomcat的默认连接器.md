@@ -1,3 +1,4 @@
+---
 title: Tomcat-Tomcat的默认连接器
 categories:
   - Java
@@ -7,6 +8,7 @@ tags:
   - Tomcat
 author: 长歌
 date: 2019-9-29
+abbrlink: 479209129
 ---
 
 Tomcat 连接器是一个可以插入 servlet 容器的独立模块,已经存在相当多的连接器了,

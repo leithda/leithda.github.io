@@ -1,3 +1,4 @@
+---
 title: Tomcat-一个简单的Servlet容器
 categories:
   - Java
@@ -6,7 +7,8 @@ tags:
   - 源码
   - Tomcat
 author: 长歌
-date: 2019-9-23 19:35:00
+abbrlink: 991341650
+date: 2019-09-23 19:35:00
 ---
 
 本章主要介绍了通过静态资源处理器及Servlet处理器分别处理静态资源及简单Servlet的请求信息。

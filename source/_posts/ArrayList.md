@@ -1,3 +1,4 @@
+---
 title: ArrayList源码分析
 categories:
   - Java
@@ -6,6 +7,7 @@ tags:
   - 源码
 author: 长歌
 date: 2019-9-9
+abbrlink: 3276972275
 ---
 
 ArrayList 是一个数组队列，相当于动态数组。与Java中的数组相比，它的容量能动态增长。它集成于AbstractList，实现了`List`,`RandomAccess`,`Cloneable`,`java.io.Serializable`这些接口

@@ -1,3 +1,4 @@
+---
 title: Tomcat-StandardWrapper
 categories:
   - Java
@@ -6,7 +7,8 @@ tags:
   - 源码
   - Tomcat
 author: 长歌
-date: 2019-10-20
+abbrlink: 1604995939
+date: 2019-10-20 00:00:00
 ---
 
 主要介绍了标准包装器`StandardWrapper`如何实例化servlet

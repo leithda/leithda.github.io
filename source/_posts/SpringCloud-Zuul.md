@@ -1,3 +1,4 @@
+---
 title: Spring Cloud 之 Zuul-路由网关
 categories:
   - Java
@@ -7,7 +8,8 @@ tags:
   - 微服务
   - Spring Cloud
 author: 长歌
-date: 2019-9-27 07:30:00
+abbrlink: 1996565447
+date: 2019-09-27 07:30:00
 ---
 
 智能路由网关组件Zuul，用于构建边界服务（Edge Service），致力于动态路由、过滤、监控、弹性伸缩和安全
