@@ -258,7 +258,8 @@ public class ThirdThread implements Callable<Integer> {
              * 获取线程池中的有效线程数，如果数量是0，则执行addWorker方法
              * 这里传入的参数表示：
              * 1. 第一个参数为 null ,表示在线程池中创建一个线程，但不去启动
-             * 2. 第二个参数为 false ,将线程池的有限线程数量的上限设置为 maximumPoolSize,添加线程时根据maximumPoolSize 判断。
+             * 2. 第二个参数为 false ,将线程池的有限线程数量的上限设置为 maximumPoolSize,
+             *     添加线程时根据maximumPoolSize 判断。
              * 如果判断 workCount 大于0，则直接返回，在workQueue中新增的command会在将来的某个时刻被执行
              */
             else if (workerCountOf(recheck) == 0)
@@ -268,8 +269,8 @@ public class ThirdThread implements Callable<Integer> {
          * 如果执行到这里，有两种情况：
          * 1. 线程池已经不是RUNNING状态；
          * 2. 线程池时RUNNIING状态，但workerCount >= corePoolSize 并且 workQueue已满。
-         * 这时，再次调用addWorker方法，但第二个参数传入为false，将线程池的有限线程数量的上限设置为maximumPoolSize
-         * 如果失败则拒绝该任务
+         * 这时，再次调用addWorker方法，但第二个参数传入为false，将线程池的有限线程数量的上限设置
+         * 为maximumPoolSize，如果失败则拒绝该任务
          */
         else if (!addWorker(command, false))
             reject(command);
