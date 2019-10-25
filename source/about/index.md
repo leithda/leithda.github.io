@@ -4,8 +4,10 @@ date: 2019-07-04 22:48:18
 comments: false
 ---
 
-{% blockquote %}
-非淡泊无以明志<br/> &nbsp;&nbsp;&nbsp;&nbsp;非宁静无以致远
+
+{% blockquote%}
+非淡泊无以明志
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;非宁静无以致远
 {% endblockquote %}
 
 ## 关于我
@@ -17,14 +19,17 @@ comments: false
 
 | 技能   | 熟练程度 |
 | ------ | -------- |
-| Java   | 三年     |
-| MySQL  | 掌握     |
-| Oracle | 掌握     |
-| Vue    | 初学     |
-| 算法   | 初学     |
+| Java   | <i class="fa fa-battery-2" aria-hidden="true"></i>     |
+| MySQL  | <i class="fa fa-battery-1" aria-hidden="true"></i>    |
+| Oracle | <i class="fa fa-battery-1" aria-hidden="true"></i>    |
+| Vue    | <i class="fa fa-battery-0" aria-hidden="true"></i>     |
+| 算法   |  <i class="fa fa-battery-0" aria-hidden="true"></i>    |
 
-### 技能点(坚持点亮中)
+### 技能点(点亮ing)
 ![菜鸟技能树](./技能树.png)
 
-## 关于未来
-希望能够成为更好的自己，加油~~~
+## 关于发展方向
+主修java，目标全栈
+
+---
+成为更好的自己，come on ~~~
