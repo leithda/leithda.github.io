@@ -7,14 +7,11 @@ tags:
   - P2P
   - 视频
 author: 长歌
-password: lmd19930317
-abstract: 加密文章，非请勿入~
-message: 请输入名字首字母加生日
 abbrlink: 2077499524
 date: 2019-10-26 17:00:00
 ---
 
-密码文件
+关于mTreebone-DenaCastApp的解析
 <!-- more -->
 # DenaCastApp
 ## 头文件

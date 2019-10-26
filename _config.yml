@@ -116,3 +116,9 @@ limit: 20
 # Hexo 安全
 encrypt:
     enabel: true
+
+# hexo-admin authentification
+admin:
+  username: leithda
+  password_hash: $2a$10$Qd.Q5KcmNx3/6uluaqY2KuP9xoyej6MVjVWZbcjeAkxViprKvYgLq
+  secret: my super secret phrase
