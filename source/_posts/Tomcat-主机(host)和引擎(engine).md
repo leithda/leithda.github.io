@@ -17,3 +17,35 @@ date: 2019-10-26 00:00:00
 - 但是在tomcat的实际部署中，总会使用一个Host容器，原因如下：    Engine容器表示Catalina的整个Servlet引擎，如果使用了Engine容器，那么它总是处于容器层级的最顶层，添加到Engine容中的子容器通常是`org.apache.cataline.Host`或者`Context`的实现。默认情况下Tomcat会使用一个Engine容器并使用一个Host容器作为其子容器
 
 <!-- More -->
+
+## Host 接口
+```java
+public interface Host extends Container {
+    String ADD_ALIAS_EVENT = "addAlias";
+    String REMOVE_ALIAS_EVENT = "removeAlias";
+
+    String getAppBase();
+
+    void setAppBase(String var1);
+
+    boolean getAutoDeploy();
+
+    void setAutoDeploy(boolean var1);
+
+    void addDefaultContext(DefaultContext var1);
+
+    String getName();
+
+    void setName(String var1);
+
+    void importDefaultContext(Context var1);
+
+    void addAlias(String var1);
+
+    String[] findAliases();
+
+    Context map(String var1);
+
+    void removeAlias(String var1);
+}
+```

@@ -46,7 +46,7 @@ date: 2019-10-14 00:00:00
                 - [x] [安全](../detail/3630618985.html)
                 - [x] [StandardWrapper](../detail/1604995939.html)
                 - [x] [StandardContext](../detail/1923304143.html)
-                - [ ] [主机(host)和引擎(engine)]()
+                - [ ] [主机(host)和引擎(engine)](../detail/700695093.html)
                 - [ ] [服务器和服务]()
                 - [ ] [Digester]()
                 - [ ] [关闭钩子]()
