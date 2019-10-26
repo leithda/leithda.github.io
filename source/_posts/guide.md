@@ -33,7 +33,7 @@ date: 2019-10-14 00:00:00
 
         - opensource(开源代码)
             - [Tomcat(Hot Tomcat Worls)](../categories/Java/Tomcat)
-                - [ ] [编码前准备]()
+                - [x] [编码前准备](../detail/1805298928.html)
                 - [x] [一个简单的Web服务器](../detail/1975698977.html)
                 - [x] [一个简单的Servlet容器](../detail/991341650.html)
                 - [x] [连接器](../detail/2076341340.html)
