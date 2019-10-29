@@ -49,3 +49,79 @@ public interface Host extends Container {
     void removeAlias(String var1);
 }
 ```
+- 最重要的是`#map()`方法，找到合适的`Context`来处理请求
+
+## StandardHost
+
+### 构造函数
+```java
+    // StandardHost.java
+
+    public StandardHost() {
+        this.pipeline.setBasic(new StandardHostValve());
+    }
+```
+- 在构造方法中加入基本阀门`StandardHostValve`
+
+### start
+```java
+    // StandardHost.java
+
+    private String errorReportValveClass = "org.apache.catalina.valves.ErrorReportValve";
+
+    public synchronized void start() throws LifecycleException {
+        if (this.errorReportValveClass != null && !this.errorReportValveClass.equals("")) {
+            try {
+                Valve valve = (Valve)Class.forName(this.errorReportValveClass).newInstance();
+                this.addValve(valve);
+            } catch (Throwable var2) {
+                this.log(ContainerBase.sm.getString("standardHost.invalidErrorReportValveClass", this.errorReportValveClass));
+            }
+        }
+
+        this.addValve(new ErrorDispatcherValve());
+        super.start();
+    }
+```
+- `#start`方法中加入两个一般阀门`errorReportValveClass`和`ErrorDispatcherValve`
+
+### invoke
+- 由于`StandardHost`没有实现`#invoke()`方法,所以调用它的父类`ContainerBase`的`#invoke()`方法，转而调用基本阀门的`#invoke`方法，调用`#Standard.map()`方法获得一个合适的上下文处理器处理请求。
+- `StandardHost`的`#map()`方法如下:
+  ```java
+    // StandardHost.java
+
+    public Context map(String uri) {
+        if (uri == null) {
+            return null;
+        } else {
+            Context context = null;
+            String mapuri = uri;
+
+            while(true) {
+                context = (Context)this.findChild(mapuri);
+                if (context != null) {
+                    break;
+                }
+                int slash = mapuri.lastIndexOf(47);
+                if (slash < 0) {
+                    break;
+                }
+                mapuri = mapuri.substring(0, slash);
+            }
+
+            if (context == null) {
+                context = (Context)this.findChild("");
+            }
+
+            if (context == null) {
+                this.log(ContainerBase.sm.getString("standardHost.mappingError", uri));
+                return null;
+            } else {
+                return context;
+            }
+        }
+    }
+  ```
+
+## StandardDefaultMapper
