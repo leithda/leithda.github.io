@@ -15,7 +15,8 @@ date: 2019-10-26 17:00:00
 应用程序主类，程序的初始化及消息的处理都由这个类完成
 <!-- more -->
 # DenaCastApp
-## 头文件
+## 头文件 
+### DenaCastApp.h
 ```c++
 #include "BufferMap.h"
 #include "VideoMessage_m.h"
@@ -225,8 +226,8 @@ protected:
 ```
 
 ## 源文件
-
-### 初始化方法
+### DenaCastApp.cc
+#### 初始化方法
 
 ```c
 // 初始化基类属性
@@ -308,7 +309,7 @@ void DenaCastApp::initializeApp(int stage)
 }
 ```
 
-### 处理定时器消息
+#### 处理定时器消息
 ```c++
 void DenaCastApp::handleTimerEvent(cMessage* msg)
 {
@@ -385,7 +386,7 @@ void DenaCastApp::handleTimerEvent(cMessage* msg)
 }
 ```
 
-### 处理子节点消息
+#### 处理子节点消息
 ```c++
 // 处理下层消息
 void DenaCastApp::handleLowerMessage(cMessage* msg)
@@ -583,7 +584,7 @@ void DenaCastApp::handleLowerMessage(cMessage* msg)
 }
 ```
 
-### 处理上层消息
+#### 处理上层消息
 ```c++
 void DenaCastApp::handleUpperMessage(cMessage* msg)
 {
@@ -621,7 +622,7 @@ void DenaCastApp::handleUpperMessage(cMessage* msg)
 }
 ```
 
-### 更新邻居节点
+#### 更新邻居节点
 ```c++
 // 更新邻居节点列表
 void DenaCastApp::updateNeighborBMList(BufferMapMessage* BufferMap_Recieved)
@@ -653,7 +654,7 @@ void DenaCastApp::updateNeighborBMList(BufferMapMessage* BufferMap_Recieved)
 }
 ```
 
-### 删除发送帧元素
+#### 删除发送帧元素
 ```c++
 /**
  * 删除发送帧中元素
@@ -673,7 +674,7 @@ void DenaCastApp::deleteElement(int frameNum, std::vector<int>& sendframes)
 }
 ```
 
-### 应用结束
+#### 应用结束
 ```c++
 // 应用结束
 void DenaCastApp::finishApp()
@@ -707,6 +708,34 @@ void DenaCastApp::finishApp()
     if (frameCount >0) {
         stat_PlaybackLag = sumPlaybackLag/frameCount;
         globalStatistics->addStdDev("DenaCastApp: Playback Lag", stat_PlaybackLag);
+    }
+}
+```
+
+### Scheduling.cc
+#### 选择接受方调度算法
+```c++
+// Scheduling.cc
+
+/**
+ * [DenaCastApp::selectRecieverSideScheduling 选择接受方调度算法]
+ */
+void DenaCastApp::selectRecieverSideScheduling()
+{ // Receive
+    switch(receiverSideSchedulingNumber)  // 接收方调度号
+    {
+    case 1:
+        coolStreamingScheduling();  //
+        break;
+    case 2:
+        recieverSideScheduling2();
+        break;
+    case 3:
+        recieverSideScheduling3();
+        break;
+    default:
+        recieverSideScheduling2();
+        break;
     }
 }
 ```
