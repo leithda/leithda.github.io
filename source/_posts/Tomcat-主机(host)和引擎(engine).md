@@ -124,4 +124,146 @@ public interface Host extends Container {
     }
   ```
 
-## StandardDefaultMapper
+## StandardHostMapper
+- `StandardHost`的父类`ContainerBase`使用`#addDefaultMapper()`方法创建一个默认映射器。
+```java
+    // ContainerBase.java
+    protected void addDefaultMapper(String mapperClass) {
+        if (mapperClass != null) {
+            if (this.mappers.size() < 1) {
+                try {
+                    Class clazz = Class.forName(mapperClass);
+                    Mapper mapper = (Mapper)clazz.newInstance();
+                    mapper.setProtocol("http");
+                    this.addMapper(mapper);
+                } catch (Exception var4) {
+                    this.log(sm.getString("containerBase.addDefaultMapper", mapperClass), var4);
+                }
+
+            }
+        }
+    }
+```
+- `mapperClass`由`StandardHost`指定`private String mapperClass = "org.apache.catalina.core.StandardHostMapper";`
+- `StandardHost`的`#start()`方法的最后调用`super.start()`方法，
+- `StandardHostMapper`中最重要的方法是`#map()`方法.
+```java
+    // StandardHostMapper.java
+
+    public Container map(Request request, boolean update) {
+        if (update && request.getContext() != null) {
+            return request.getContext();
+        } else {
+            String uri = ((HttpRequest)request).getDecodedRequestURI();
+            Context context = this.host.map(uri);
+            if (update) {
+                request.setContext(context);
+                if (context != null) {
+                    ((HttpRequest)request).setContextPath(context.getPath());
+                } else {
+                    ((HttpRequest)request).setContextPath((String)null);
+                }
+            }
+
+            return context;
+        }
+    }
+```
+
+## StandardHostValve
+```java
+    public void invoke(Request request, Response response, ValveContext valveContext) throws IOException, ServletException {
+        if (request.getRequest() instanceof HttpServletRequest && response.getResponse() instanceof HttpServletResponse) {
+            StandardHost host = (StandardHost)this.getContainer();
+            Context context = (Context)host.map(request, true); // <1> 
+            if (context == null) {
+                ((HttpServletResponse)response.getResponse()).sendError(500, sm.getString("standardHost.noContext"));
+            } else {
+                Thread.currentThread().setContextClassLoader(context.getLoader().getClassLoader());
+                HttpServletRequest hreq = (HttpServletRequest)request.getRequest();
+                String sessionId = hreq.getRequestedSessionId();
+                if (sessionId != null) {
+                    Manager manager = context.getManager();
+                    if (manager != null) {
+                        Session session = manager.findSession(sessionId);
+                        if (session != null && session.isValid()) {
+                            session.access();   // <2>
+                        }
+                    }
+                }
+
+                context.invoke(request, response);  // <3>
+            }
+        }
+    }
+```
+- `<1>`处，调用`StandardHost`的`#map()`方法获取一个合适的上下文
+- `<2>`处，调用`Session`的`#access()`方法更新`Session`的最后进入时间
+- `<3>`处，调用`Host`的`#invoke()`方法，处理请求
+
+## Engine
+```java
+public interface Engine extends Container {
+    String getDefaultHost();
+
+    void setDefaultHost(String var1);
+
+    String getJvmRoute();
+
+    void setJvmRoute(String var1);
+
+    Service getService();
+
+    void setService(Service var1);
+
+    void addDefaultContext(DefaultContext var1);
+
+    void importDefaultContext(Context var1);
+}
+```
+
+## StandardEngine
+### 构造函数
+```java
+    // StandardEngine.java
+    public StandardEngine() {
+        this.pipeline.setBasic(new StandardEngineValve());
+    }
+```
+- 在构造函数中设置基本阀门
+
+### 添加子容器
+```java
+    // StandardEngine.java
+
+    public void addChild(Container child) {
+        if (!(child instanceof Host)) {
+            throw new IllegalArgumentException(ContainerBase.sm.getString("standardEngine.notHost"));
+        } else {
+            super.addChild(child);
+        }
+    }
+```
+- 添加非`Host`子容器的时候，会报错
+
+### StandardEngineValve
+```java
+    // StandardEngineValve.java
+
+    public void invoke(Request request, Response response, ValveContext valveContext) throws IOException, ServletException {
+        if (request.getRequest() instanceof HttpServletRequest && response.getResponse() instanceof HttpServletResponse) {
+            HttpServletRequest hrequest = (HttpServletRequest)request;
+            if ("HTTP/1.1".equals(hrequest.getProtocol()) && hrequest.getServerName() == null) {
+                ((HttpServletResponse)response.getResponse()).sendError(400, sm.getString("standardEngine.noHostHeader", request.getRequest().getServerName()));
+            } else {
+                StandardEngine engine = (StandardEngine)this.getContainer();
+                Host host = (Host)engine.map(request, true);
+                if (host == null) {
+                    ((HttpServletResponse)response.getResponse()).sendError(400, sm.getString("standardEngine.noHost", request.getRequest().getServerName()));
+                } else {
+                    host.invoke(request, response);
+                }
+            }
+        }
+    }
+```
