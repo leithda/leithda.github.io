@@ -18,6 +18,7 @@ date: 2019-10-26 00:00:00
 
 <!-- More -->
 
+# Host
 ## Host 接口
 ```java
 public interface Host extends Container {
@@ -86,7 +87,7 @@ public interface Host extends Container {
 - `#start`方法中加入两个一般阀门`errorReportValveClass`和`ErrorDispatcherValve`
 
 ### invoke
-- 由于`StandardHost`没有实现`#invoke()`方法,所以调用它的父类`ContainerBase`的`#invoke()`方法，转而调用基本阀门的`#invoke`方法，调用`#Standard.map()`方法获得一个合适的上下文处理器处理请求。
+- 由于`StandardHost`没有实现`#invoke()`方法,所以调用它的父类`ContainerBase`的`#invoke()`方法，转而调用基本阀门的`#invoke`方法，调用`#StandardHost.map()`方法获得一个合适的上下文处理器处理请求。
 - `StandardHost`的`#map()`方法如下:
   ```java
     // StandardHost.java
@@ -201,7 +202,8 @@ public interface Host extends Container {
 - `<2>`处，调用`Session`的`#access()`方法更新`Session`的最后进入时间
 - `<3>`处，调用`Host`的`#invoke()`方法，处理请求
 
-## Engine
+# Engine
+## Engine 接口
 ```java
 public interface Engine extends Container {
     String getDefaultHost();
@@ -221,7 +223,6 @@ public interface Engine extends Container {
     void importDefaultContext(Context var1);
 }
 ```
-
 ## StandardEngine
 ### 构造函数
 ```java
@@ -267,3 +268,183 @@ public interface Engine extends Container {
         }
     }
 ```
+
+# 应用程序
+## 测试 Host
+### 上下文监听器
+```java
+public class SimpleContextConfig implements LifecycleListener {
+
+    public void lifecycleEvent(LifecycleEvent event) {
+        if (Lifecycle.START_EVENT.equals(event.getType())) {
+            Context context = (Context) event.getLifecycle();
+            context.setConfigured(true);
+        }
+    }
+}
+```
+### 启动类
+```java
+public class Bootstrap1 {
+    public static void main(String[] args) {
+        //invoke: http://localhost:8080/app1/Primitive or http://localhost:8080/app1/Modern
+        System.setProperty("catalina.base", System.getProperty("user.dir"));
+        Connector connector = new HttpConnector();
+
+        Wrapper wrapper1 = new StandardWrapper();
+        wrapper1.setName("Primitive");
+        wrapper1.setServletClass("PrimitiveServlet");
+        Wrapper wrapper2 = new StandardWrapper();
+        wrapper2.setName("Modern");
+        wrapper2.setServletClass("ModernServlet");
+
+        Context context = new StandardContext();
+        // StandardContext's start method adds a default mapper
+        context.setPath("/app1");
+        context.setDocBase("app1");
+
+        context.addChild(wrapper1);
+        context.addChild(wrapper2);
+
+        LifecycleListener listener = new SimpleContextConfig();
+        ((Lifecycle) context).addLifecycleListener(listener);
+
+        Host host = new StandardHost();
+        host.addChild(context);
+        host.setName("localhost");
+        host.setAppBase("webapps");
+
+        Loader loader = new WebappLoader();
+        context.setLoader(loader);
+        // context.addServletMapping(pattern, name);
+        context.addServletMapping("/Primitive", "Primitive");
+        context.addServletMapping("/Modern", "Modern");
+
+        connector.setContainer(host);
+        try {
+            connector.initialize();
+            ((Lifecycle) connector).start();
+            ((Lifecycle) host).start();
+
+            // make the application wait until we press a key.
+            System.in.read();
+            ((Lifecycle) host).stop();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+### web项目路径
+- 在项目根路径下创建`webapps`文件夹,对应文件如下：
+```bash
+webapps
+└── app1
+    └── WEB-INF
+        ├── classes
+        │   ├── ModernServlet.class
+        │   ├── PrimitiveServlet.class
+        │   └── SessionServlet.class
+        └── web.xml
+```
+- 其中`web.xml`内容如下：
+```xml
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <servlet>
+    <servlet-name>Modern</servlet-name>
+    <servlet-class>ModernServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Primitive</servlet-name>
+    <servlet-class>PrimitiveServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Modern</servlet-name>
+    <url-pattern>/Modern</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Primitive</servlet-name>
+    <url-pattern>/Primitive</url-pattern>
+  </servlet-mapping>
+</web-app>
+```
+
+## 测试 Engine
+### 启动类
+
+```java
+public class Bootstrap2 {
+    public static void main(String[] args) {
+        //invoke: http://localhost:8080/app1/Primitive or http://localhost:8080/app1/Modern
+        System.setProperty("catalina.base", System.getProperty("user.dir"));
+        Connector connector = new HttpConnector();
+
+        Wrapper wrapper1 = new StandardWrapper();
+        wrapper1.setName("Primitive");
+        wrapper1.setServletClass("PrimitiveServlet");
+        Wrapper wrapper2 = new StandardWrapper();
+        wrapper2.setName("Modern");
+        wrapper2.setServletClass("ModernServlet");
+
+        Context context = new StandardContext();
+        // StandardContext's start method adds a default mapper
+        context.setPath("/app1");
+        context.setDocBase("app1");
+
+        context.addChild(wrapper1);
+        context.addChild(wrapper2);
+
+        LifecycleListener listener = new SimpleContextConfig();
+        ((Lifecycle) context).addLifecycleListener(listener);
+
+        Host host = new StandardHost();
+        host.addChild(context);
+        host.setName("localhost");
+        host.setAppBase("webapps");
+
+        Loader loader = new WebappLoader();
+        context.setLoader(loader);
+        // context.addServletMapping(pattern, name);
+        context.addServletMapping("/Primitive", "Primitive");
+        context.addServletMapping("/Modern", "Modern");
+
+        Engine engine = new StandardEngine();
+        engine.addChild(host);
+        engine.setDefaultHost("localhost");
+
+        connector.setContainer(engine);
+        try {
+            connector.initialize();
+            ((Lifecycle) connector).start();
+            ((Lifecycle) engine).start();
+
+            // make the application wait until we press a key.
+            System.in.read();
+            ((Lifecycle) engine).stop();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+## 启动流程
+1. `Bootstrap2`中`Engine.start()`,然后`#StandardEngine.start()`方法中调用父类`ContainerBase.start()`方法，加载默认映射器`StandardEngineMapper`，然后启动组件(加载器,日志，定时器等)，然后启动子容器`StandardHost`.
+2. `#StandardHost.start()`方法中，加入阀门`errorReportValveClass`，然后调用`#super.start()`调用父类的`start()`方法，加载默认映射器`StandardHostMapper`，启动组件，启动子容器`StandardContext`
+3. `#StandardContext.start()`方法中，设置资源路径，设置加载器，设置管理器，加载映射器`org.apache.catalina.util.CharsetMapper`，设置工作目录`localhost/app1`
+4. 如果`3`中没有发生错误，继续启动，加载默认映射器`org.apache.catalina.core.StandardContextMapper`,启动组件，启动第一个子容器`StandardWrapper(Modern)`
+5. 包装器的`#start()`的方法中同样调用父类`ContainerBase`的`#start()`方法完成启动。启动组件，启动子容器，启动包装器流水线`PipeLine`，如果阀门实现了生命周期接口，启动阀门，处理完成返回
+6. 承接第4步，当第一个子容器`StandardWrapper(Modern)`启动完成后启动第二个子容器`StandardWrapper(Primitive)`,过程忽略
+7. 之后启动`StandardContext`的流水线作业，完成后启动上下文容器的管理器`StandardManager`，然后上下文设置欢迎文件,启动监听器，启动过滤器，设置可用标志
+8.启动 `Host`的流水线，启动`Engine`的流水线
+
+- 这里完全跟着调试代码写的，后续优化 TODO
