@@ -447,7 +447,7 @@ public class Bootstrap2 {
 7. 之后启动`StandardContext`的流水线作业，完成后启动上下文容器的管理器`StandardManager`，然后上下文设置欢迎文件,启动监听器，启动过滤器，设置可用标志
 8.启动 `Host`的流水线，启动`Engine`的流水线
 
-- 这里完全跟着调试代码写的，后续优化 TODO
+- 时序图大体如下：
 {% mermaid sequenceDiagram %}
 participant a as bootstrap
 participant b as Engine
@@ -461,31 +461,31 @@ Note right of c: 加入阀门errorReportValveClass<br>启动组件<br>启动子�
 c->>d:Context.start()
 Note right of d: 设置资源路径<br>设置加载器<br>设置管理器<br>设置工作目录<br>
 d->>e:Wrapper.start()
-Note right of e:pipeline.start()
-e-->>d:end
-
+Note right of e:pipeline.start()<br>启动阀门
+e-->>d:start() end
+Note over d: pipeline.start()<br>manager.start()<br>设置欢迎文件<br>listener.start()<br>filter.start()<br>设置可用
+d-->>c: start() end
+Note over c: pipeline.start()
+c-->>b: start() end
+Note over b: pipeline.start()
+b-->>a: startup end
 {% endmermaid %}
 
+## 处理请求流程
+- 时序图如下:
 {% mermaid sequenceDiagram %}
-participant Alice
-participant Bob
-participant John as John<br/>Second Line
-Alice ->> Bob: Hello Bob, how are you?
-Bob-->>John: How about you John?
-Bob--x Alice: I am good thanks!
-Bob-x John: I am good thanks!
-Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
-Bob-->Alice: Checking with John...
-alt either this
-Alice->>John: Yes
-else or this
-Alice->>John: No
-else or this will happen
-Alice->John: Maybe
-end
-par this happens in parallel
-Alice -->> Bob: Parallel message 1
-and
-Alice -->> John: Parallel message 2
-end
+participant a as HttpProcessor
+participant b as StandardEngine
+participant c as StandardHost
+participant d as StandardContext
+participant e as StandardWrapper
+Note left of a: receive request
+a->>b: getContainer().invoke()
+Note right of b: Pipeline.invoke()
+b->>c: engine.map().invoke()
+Note right of c: Pipeline.invoke()
+c->>d: host.map().invoke()
+Note right of d: Pipeline.invoke()
+d->>e: context.map().invoke()
+Note right of e: Pipeline.invoke()<br>FilterChain.doFilter()<br>servlet.service
 {% endmermaid %}
