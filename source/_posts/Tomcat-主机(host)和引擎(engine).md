@@ -20,6 +20,7 @@ date: 2019-10-26 00:00:00
 
 # Host
 ## Host 接口
+
 ```java
 public interface Host extends Container {
     String ADD_ALIAS_EVENT = "addAlias";
@@ -50,11 +51,12 @@ public interface Host extends Container {
     void removeAlias(String var1);
 }
 ```
+
 - 最重要的是`#map()`方法，找到合适的`Context`来处理请求
 
 ## StandardHost
-
 ### 构造函数
+
 ```java
     // StandardHost.java
 
@@ -62,9 +64,11 @@ public interface Host extends Container {
         this.pipeline.setBasic(new StandardHostValve());
     }
 ```
+
 - 在构造方法中加入基本阀门`StandardHostValve`
 
 ### start
+
 ```java
     // StandardHost.java
 
@@ -84,12 +88,14 @@ public interface Host extends Container {
         super.start();
     }
 ```
+
 - `#start`方法中加入两个一般阀门`errorReportValveClass`和`ErrorDispatcherValve`
 
 ### invoke
 - 由于`StandardHost`没有实现`#invoke()`方法,所以调用它的父类`ContainerBase`的`#invoke()`方法，转而调用基本阀门的`#invoke`方法，调用`#StandardHost.map()`方法获得一个合适的上下文处理器处理请求。
 - `StandardHost`的`#map()`方法如下:
-  ```java
+  
+```java
     // StandardHost.java
 
     public Context map(String uri) {
@@ -123,10 +129,11 @@ public interface Host extends Container {
             }
         }
     }
-  ```
+```
 
 ## StandardHostMapper
 - `StandardHost`的父类`ContainerBase`使用`#addDefaultMapper()`方法创建一个默认映射器。
+
 ```java
     // ContainerBase.java
     protected void addDefaultMapper(String mapperClass) {
@@ -145,9 +152,11 @@ public interface Host extends Container {
         }
     }
 ```
+
 - `mapperClass`由`StandardHost`指定`private String mapperClass = "org.apache.catalina.core.StandardHostMapper";`
 - `StandardHost`的`#start()`方法的最后调用`super.start()`方法，
 - `StandardHostMapper`中最重要的方法是`#map()`方法.
+
 ```java
     // StandardHostMapper.java
 
@@ -172,6 +181,7 @@ public interface Host extends Container {
 ```
 
 ## StandardHostValve
+
 ```java
     public void invoke(Request request, Response response, ValveContext valveContext) throws IOException, ServletException {
         if (request.getRequest() instanceof HttpServletRequest && response.getResponse() instanceof HttpServletResponse) {
@@ -198,12 +208,14 @@ public interface Host extends Container {
         }
     }
 ```
+
 - `<1>`处，调用`StandardHost`的`#map()`方法获取一个合适的上下文
 - `<2>`处，调用`Session`的`#access()`方法更新`Session`的最后进入时间
 - `<3>`处，调用`Host`的`#invoke()`方法，处理请求
 
 # Engine
 ## Engine 接口
+
 ```java
 public interface Engine extends Container {
     String getDefaultHost();
@@ -223,17 +235,21 @@ public interface Engine extends Container {
     void importDefaultContext(Context var1);
 }
 ```
+
 ## StandardEngine
 ### 构造函数
+
 ```java
     // StandardEngine.java
     public StandardEngine() {
         this.pipeline.setBasic(new StandardEngineValve());
     }
 ```
+
 - 在构造函数中设置基本阀门
 
 ### 添加子容器
+
 ```java
     // StandardEngine.java
 
@@ -245,9 +261,11 @@ public interface Engine extends Container {
         }
     }
 ```
+
 - 添加非`Host`子容器的时候，会报错
 
 ### StandardEngineValve
+
 ```java
     // StandardEngineValve.java
 
@@ -272,6 +290,7 @@ public interface Engine extends Container {
 # 应用程序
 ## 测试 Host
 ### 上下文监听器
+
 ```java
 public class SimpleContextConfig implements LifecycleListener {
 
@@ -283,7 +302,9 @@ public class SimpleContextConfig implements LifecycleListener {
     }
 }
 ```
+
 ### 启动类
+
 ```java
 public class Bootstrap1 {
     public static void main(String[] args) {
@@ -349,7 +370,9 @@ webapps
         │   └── SessionServlet.class
         └── web.xml
 ```
+
 - 其中`web.xml`内容如下：
+
 ```xml
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
