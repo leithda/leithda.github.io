@@ -448,3 +448,44 @@ public class Bootstrap2 {
 8.启动 `Host`的流水线，启动`Engine`的流水线
 
 - 这里完全跟着调试代码写的，后续优化 TODO
+{% mermaid sequenceDiagram %}
+participant a as bootstrap
+participant b as Engine
+participant c as Host
+participant d as Context
+participant e as Wrapper
+a->>b:Engine.start()
+Note right of b: 启动组件<br/>启动子容器
+b->>c:Host.start()
+Note right of c: 加入阀门errorReportValveClass<br>启动组件<br>启动子容器
+c->>d:Context.start()
+Note right of d: 设置资源路径<br>设置加载器<br>设置管理器<br>设置工作目录<br>
+d->>e:Wrapper.start()
+Note right of e:pipeline.start()
+e-->>d:end
+
+{% endmermaid %}
+
+{% mermaid sequenceDiagram %}
+participant Alice
+participant Bob
+participant John as John<br/>Second Line
+Alice ->> Bob: Hello Bob, how are you?
+Bob-->>John: How about you John?
+Bob--x Alice: I am good thanks!
+Bob-x John: I am good thanks!
+Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
+Bob-->Alice: Checking with John...
+alt either this
+Alice->>John: Yes
+else or this
+Alice->>John: No
+else or this will happen
+Alice->John: Maybe
+end
+par this happens in parallel
+Alice -->> Bob: Parallel message 1
+and
+Alice -->> John: Parallel message 2
+end
+{% endmermaid %}

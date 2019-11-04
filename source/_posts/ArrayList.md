@@ -127,8 +127,8 @@ public class ArrayList<E> extends AbstractList<E>
 
     /**
     * 集合的数组缓冲，如果构造的是默认集合，首次添加元素时，将会扩容为默认容量10
-    * transient: 如果elementData的长度为为10，元素个数实际为5时，用于确保数组不会Java自动序列化机制序列化,ArrayList定义了
-    * writeObject及readObject对数组进行更为灵活的序列化
+    * transient: 如果elementData的长度为为10，元素个数实际为5时，用于确保数组不会Java自动序列化机
+    * 制序列化,ArrayList定义了writeObject及readObject对数组进行更为灵活的序列化
     */
     transient Object[] elementData; // non-private to simplify nested class access
 
@@ -205,8 +205,8 @@ public class ArrayList<E> extends AbstractList<E>
             // larger than default for default empty table. It's already
             // supposed to be at default size.
             : DEFAULT_CAPACITY;
-            /* 如果集合元素是默认集合DEFAULTCAPACITY_EMPTY_ELEMENTDATA，则最小展开为DEFAULT_CAPACITY
-            否则 minExpand = 0
+            /* 如果集合元素是默认集合DEFAULTCAPACITY_EMPTY_ELEMENTDATA，则最小
+            * 展开为DEFAULT_CAPACITY 否则 minExpand = 0
             */
 
         if (minCapacity > minExpand) {
@@ -233,7 +233,8 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * 集合允许分配的最大的尺寸，有些虚拟机会在集合中保留一些头部信息，申请更大的空间可能会产生OutOfMemoryError错误
+     * 集合允许分配的最大的尺寸，有些虚拟机会在集合中保留一些头部信息，申请更大的空间可能
+     * 会产生OutOfMemoryError错误
      */
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 
@@ -424,7 +425,8 @@ public class ArrayList<E> extends AbstractList<E>
 
         modCount++;
         E oldValue = elementData(index);
-        int numMoved = size - index - 1;    // 需要移动元素的数量(为0[删除集合最后一个元素]时无需移动集合)
+        // 需要移动元素的数量(为0[删除集合最后一个元素]时无需移动集合)
+        int numMoved = size - index - 1;    
         if (numMoved > 0)
             System.arraycopy(elementData, index+1, elementData, index,
                              numMoved);
