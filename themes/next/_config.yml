@@ -189,6 +189,7 @@ site_state: true
 social:
   GitHub: https://github.com/leithda || github
   E-Mail: mailto:leithda@163.com || envelope
+  豆瓣: https://www.douban.com/people/leithda/ || globe
   #Weibo: https://weibo.com/yourname || weibo
   #Google: https://plus.google.com/yourname || google
   #Twitter: https://twitter.com/yourname || twitter
@@ -388,7 +389,7 @@ codeblock:
     # Show text copy result.
     show_result: false
     # Available values: default | flat | mac
-    style: mac
+    style: flat
 
 back2top:
   enable: true

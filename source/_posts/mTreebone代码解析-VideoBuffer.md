@@ -97,10 +97,13 @@ public:
 ```c++
 #include "VideoBuffer.h"
 
-// 类构造函数
-// NumOfBFrame：I和P之间或两个P帧之间的B帧数
- // BufferSize：缓冲区中可用的块数
- // GopSize：每组图片的帧数
+/**
+ * [VideoBuffer::VideoBuffer 类构造函数]
+ * @param NumOfBFrame [I和P之间或两个P帧之间的B帧数]
+ * @param BufferSize  [缓冲区大小]
+ * @param ChunkSize   [缓冲区中可用的块数]
+ * @param GopSize     [每组图片的帧数]
+ */
 VideoBuffer::VideoBuffer(int NumOfBFrame,int BufferSize, int ChunkSize, int GopSize)
 {
     gopSize = GopSize;
@@ -150,41 +153,64 @@ std::ostream& operator<<(std::ostream& os, const VideoBuffer& v)
     return os;
 }
 
-// 将缓冲区移动一个块（一个块将被删除，新的空块将添加）
+/**
+ * [VideoBuffer::shiftChunkBuf 移动块缓冲区]
+ */
 void VideoBuffer::shiftChunkBuf()
 {
     for(int j=0 ; j < 1 ; j++)
     {
+        /**
+         * 将所有块前移1位，块[0]删除
+         */
         for(int i=0 ; i < bufferSize-1 ; i++)
         {
             chunkBuffer[i] = chunkBuffer[i+1];
         }
+        // 设置最后一块
         Chunk ch;
-        ch.setValues(chunkSize);
-        ch.setChunkNumber(chunkBuffer[bufferSize-2].getChunkNumber()+1);
+        ch.setValues(chunkSize);    // 视频帧数量
+        // 设置块编号为远最后视频块编号+1
+        ch.setChunkNumber(chunkBuffer[bufferSize-2].getChunkNumber()+1);    
         chunkBuffer[bufferSize-1] = ch;
     }
 }
 
-// 根据帧号在缓冲区中设置帧
-// vFrame：视频帧设置
+/**
+ * [VideoBuffer::setFrame 设置视频帧]
+ * @param vFrame [视频帧]
+ */
 void VideoBuffer::setFrame(VideoFrame vFrame)
 {
+    /**
+     * 举个栗子： 当前缓冲区状态[16,17,18,19,20] 每块可用帧数为5
+     * 要设置的视频帧编号为 112 所属块编号应该为 112/5 = 22
+     * 将缓冲区前移直到[19,20,21,22,23] 此时应加入的块下标为 22-19 = 3
+     * chunkBuffer[3].setFrame(vFrame)
+     */
+    // 计算新加入的视频帧所属块编号
     int ExtractedChunkNum = vFrame.getFrameNumber()/(chunkSize);
+
+    // 如果块编号大于当前倒数第二块的编号，往前移动缓冲区，直到等于
     while(ExtractedChunkNum > chunkBuffer[bufferSize-2].getChunkNumber())
             shiftChunkBuf();
 
+    // 如果块编号大于等于第一块编号，并且小于等于最后一块编号
     if(ExtractedChunkNum >=  chunkBuffer[0].getChunkNumber() &&
             ExtractedChunkNum <= chunkBuffer[bufferSize-1].getChunkNumber())
     {
+        // 块数组中相应的块加入这个视频帧
         chunkBuffer[ExtractedChunkNum - chunkBuffer[0].getChunkNumber()].setFrame(vFrame);
+        // 如果最后设置的帧编号小于这个帧，赋值为它
         if(lastSetFrame < vFrame.getFrameNumber())
             lastSetFrame = vFrame.getFrameNumber();
+        // 如果加入帧的这个块已经加载完成，设置最后修改的块编号为此块编号
         if(chunkBuffer[ExtractedChunkNum - chunkBuffer[0].getChunkNumber()].isComplete())
             lastSetChunk = ExtractedChunkNum;
     }
     /*else
-        std::cout << "(ChunkBuffer::setFrame) ChunkBuffer Out of boundary!!!!!!!!" << std::endl;*/
+        std::cout << "(ChunkBuffer::setFrame) ChunkBuffer
+    Out of boundary!!!!!!!!" << std::endl;*/
 }
 
 // 根据给定的帧编号给出视频帧

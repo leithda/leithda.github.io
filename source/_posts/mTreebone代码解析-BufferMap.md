@@ -28,7 +28,7 @@ protected:
     short int bufferSize; // 视频缓冲区中存在的块数
 public:
     bool* buffermap;  // 布尔数组，显示视频缓冲区中块的可用性
-    short int* chunkNumbers; // 与buffermap的每个位相关联的数字数组
+    short int* chunkNumbers; //  视频缓冲区中的块的编号
     /*
      * 根据其编号查找块
      *
@@ -94,12 +94,16 @@ void BufferMap::setLastSetChunk(int LastSetChunk)
 
 ### 初始化变量的默认值
 ```c++
+/**
+ * [BufferMap::setValues 初始化方法]
+ * @param BufferSize [缓冲区可用块数]
+ */
 void BufferMap::setValues(int BufferSize)
 {
-    bufferSize = BufferSize;   // 视频缓冲区中可用的块数
-    lastSetChunk = 0;          // 缓冲区中设置的最后一个块
-    buffermap = new bool[bufferSize];    // 布尔数组，显示视频缓冲区中块的可用性
-    chunkNumbers = new short int[bufferSize];   // 与buffermap的每个位相关联的数字数组
+    bufferSize = BufferSize;
+    lastSetChunk = 0;
+    buffermap = new bool[bufferSize];
+    chunkNumbers = new short int[bufferSize];
     for(int i = 0 ; i < bufferSize ; i++)
     {
         buffermap[i] = false;
@@ -143,11 +147,11 @@ std::ostream& operator<<(std::ostream& os, const BufferMap& b)
 ### 获取下一个未设置的块
 ```c++
 /**
- * [BufferMap::getNextUnsetChunk 检索未在播放顺序中设置的下一个块]
- * @param  sendFrames     [保持请求的块但不在缓冲区中的向量（应排除他们）]
- * @param  notInNeighbors [之前返回的块，但他们在邻居中不可用]
- * @param  playbackPoint  [正在播放的帧]
- * @return                [要检查请求的块号]
+ * [BufferMap::getNextUnsetChunk 查找缓冲区中下一个未设置的帧编号]
+ * @param  sendFrames     [请求中的块]
+ * @param  notInNeighbors [有返回但不在邻居节点中的块]
+ * @param  playbackPoint  [正在播放的帧编号]
+ * @return                [帧编号]
  */
 int BufferMap::getNextUnsetChunk(std::vector<int>& sendFrames ,
                 std::vector<int>& notInNeighbors, int playbackPoint)
@@ -155,17 +159,22 @@ int BufferMap::getNextUnsetChunk(std::vector<int>& sendFrames ,
     int unSetChunk = -1;
     bool c1 = true;
     bool c2 = true;
+    // 遍历缓冲区
     for(int i=0 ; i<bufferSize ; i++)
     {
         unSetChunk = chunkNumbers[i];
+        // 如果正在播放的块比当前块编号大
         if(playbackPoint > unSetChunk)
             continue;
         c1=true;
         c2=true;
+        // 如果当前块不可用
         if(!buffermap[i])
         {
+          
             for (unsigned int k=0; k!=sendFrames.size(); k++)
             {
+                // 判断是否请求过  
                 if (sendFrames[k] == unSetChunk)
                 {
                     c1=false;
@@ -174,14 +183,15 @@ int BufferMap::getNextUnsetChunk(std::vector<int>& sendFrames ,
             }
             if(c1)
                 for (unsigned int k=0; k!=notInNeighbors.size(); k++)
-                {
+                {  
+                    // 判断是否收到过此块的响应
                     if (notInNeighbors[k] == unSetChunk)
                     {
                         c2=false;
                         break;
                     }
                 }
-            if(c1 && c2)
+            if(c1 && c2)    // 未请求过，并且也没有返回过响应数据。表明真的未设置
                 return unSetChunk;
         }
     }
