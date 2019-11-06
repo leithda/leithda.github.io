@@ -1,0 +1,133 @@
+---
+title: 责任链模式
+categories:
+  - 设计模式
+tags:
+  - 设计模式
+author: 长歌
+abbrlink: 1644716670
+date: 2019-11-06 00:00:00
+---
+
+顾名思义，责任链模式(Chain of Responsibility Pattern) 为请求创建了一个接收者对象的链。这种模式给予请求的类型，对请求的发送者和接收者进行解耦。这种类型的设计模式属于行为型模式。
+<!-- More -->
+责任链（Chain Of Responsibility）
+===
+
+## Class Diagram
+
+
+## Implementation
+
+```java
+/**
+ * Created with IntelliJ IDEA.
+ * User: 长歌
+ * Date: 2019/11/6
+ * Description: 抽象日志组件
+ */
+public abstract class AbstractLogger {
+    public static int INFO = 1;
+    public static int DEBUG = 2;
+    public static int ERROR = 3;
+
+    protected int level;
+
+    //责任链中的下一个元素
+    protected AbstractLogger nextLogger;
+
+    public void setNextLogger(AbstractLogger nextLogger) {
+        this.nextLogger = nextLogger;
+    }
+
+    public void logMessage(int level, String message) {
+        if (this.level <= level) {
+            write(message);
+        }
+        if (nextLogger != null) {
+            nextLogger.logMessage(level, message);
+        }
+    }
+
+    abstract protected void write(String message);
+}
+
+
+public class ConsoleLogger extends AbstractLogger {
+    public ConsoleLogger(int level){
+        this.level = level;
+    }
+
+    protected void write(String message) {
+        System.out.println("Standard Console::Logger: " + message);
+    }
+}
+
+
+public class ErrorLogger extends AbstractLogger {
+    public ErrorLogger(int level){
+        this.level = level;
+    }
+
+    protected void write(String message) {
+        System.out.println("Error Console::Logger: " + message);
+    }
+}
+
+
+public class FileLogger extends AbstractLogger {
+
+    public FileLogger(int level){
+        this.level = level;
+    }
+
+    protected void write(String message) {
+        System.out.println("File::Logger: " + message);
+    }
+}
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: 长歌
+ * Date: 2019/11/6
+ * Description: 日志工厂类
+ */
+public class LoggerFactroy {
+
+    private LoggerFactroy(){}
+
+    public static AbstractLogger getLogger(){
+        AbstractLogger logger = new ErrorLogger(AbstractLogger.ERROR);
+        AbstractLogger fileLogger = new FileLogger(AbstractLogger.DEBUG);
+        AbstractLogger consoleLogger = new ConsoleLogger(AbstractLogger.INFO);
+
+        logger.setNextLogger(fileLogger);
+        fileLogger.setNextLogger(consoleLogger);
+        return logger;
+    }
+}
+```
+
+### 测试类
+
+```java
+public class ChainOfResponsibilityPatternTest {
+
+    @Test
+    public void test() throws Exception {
+        AbstractLogger logger = LoggerFactroy.getLogger();
+        logger.logMessage(AbstractLogger.INFO, "This is an information.");
+
+        logger.logMessage(AbstractLogger.DEBUG,
+                "This is a debug level information.");
+
+        logger.logMessage(AbstractLogger.ERROR,
+                "This is an error information.");
+    }
+}
+```
+
+## Example
+
+- [javax.servlet.Filter#doFilter()](https://docs.oracle.com/javaee/7/api/javax/servlet/Filter.html#doFilter-javax.servlet.ServletRequest-javax.servlet.ServletResponse-javax.servlet.FilterChain-)
+- [Tomcat.Pipeline.invoke()](../detail/3459939477.html#流水线任务PipeLining-Task解析)

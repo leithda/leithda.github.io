@@ -99,8 +99,8 @@ date: 2019-10-14 00:00:00
                 - [ ] [Builder Pattern[建造者模式]]()
                 - [ ] [Prototype Pattern[原型模式]]()
             - 行为型
-                - [ ] [Chain of Responsibility Pattern[责任链模式]]()
-                - [ ] [Command Pattern[命令模式]]()
+                - [x] [Chain of Responsibility Pattern[责任链模式]](../detail/1644716670.html)
+                - [x] [Command Pattern[命令模式]](../detail/256138576.html)
                 - [ ] [Interpreter Pattern[解释器模式]]()
                 - [ ] [Iterator Pattern[迭代器模式]]()
                 - [ ] [Mediator Pattern[中介者模式]]()
