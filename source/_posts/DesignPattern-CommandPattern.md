@@ -13,6 +13,10 @@ date: 2019-11-06 21:00:00
 <!-- More -->
 
 ## Class Diagram
+- Command：命令接口
+- Receiver：命令接收者，也就是命令真正的执行者
+- Invoker：组织命令
+
 {% asset_img Command-Diagram.png UML类图 %}
 
 ## Implementation
@@ -65,7 +69,7 @@ public class LightOffCommand implements Command {
 }
 ```
 
-### 命令执行者(遥控器)
+### 命令组织者(遥控器)
 ```java
 public class Invoker {
     private Command[] onCommands;
@@ -112,3 +116,6 @@ public class CommandTest {
     }
 }
 ```
+## Example
+- [java.lang.Runnable](https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html)
+- [Netflix Hystrix](https://github.com/Netflix/Hystrix/wiki)
