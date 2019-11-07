@@ -95,7 +95,7 @@ date: 2019-10-14 00:00:00
             - 创建型
                 - [x] [Single Pattern[单例模式]](../detail/4049607742.html)
                 - [x] [Factory Pattern[工厂模式]](../detail/1417187187.html)
-                - [ ] [Abstract Factory Pattern[抽象工厂]]()
+                - [x] [Abstract Factory Pattern[抽象工厂]](../detail/2506759259.html)
                 - [ ] [Builder Pattern[建造者模式]]()
                 - [ ] [Prototype Pattern[原型模式]]()
             - 行为型
