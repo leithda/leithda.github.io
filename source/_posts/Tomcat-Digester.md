@@ -410,3 +410,353 @@ public class EmployeeRuleSet extends RuleSetBase {
 ```
 
 ## ContextConfig
+- ContextConfig是一个监听器,在一个实际的`Tomcat`部署中，`StandardContext`的标准监听器是`org.apache.catalina.startup.ContextConfig`类的实例。它会给上下文安装一个证书阀门，更重要的是它会读取并解析`web.xml`文件。将其中的xml元素转化为Java对象。默认的`web.xml`定义了默认的`Servlet`映射，并映射了`MIME`类型的文件扩展，定义了`Session`的实效时间，欢迎文件列表等。
+- 在启动类中，必须初始化`ContextConfig`并添加到上下文对象中
+```java
+LifecycleListener listener = new ContextConfig();
+((Lifecycle) context).addLifecycleListener(listener);
+```
+- `StandardContext`每次触发事件时都会调用`#ContextConfig.lifecycleEvent()`,代码如下:
+```java
+    // org.apache.catalina.startup.ContextConfig
+
+    public void lifecycleEvent(LifecycleEvent event) {
+        try {
+            this.context = (Context)event.getLifecycle();
+            if (this.context instanceof StandardContext) {
+                int contextDebug = ((StandardContext)this.context).getDebug();
+                if (contextDebug > this.debug) {
+                    this.debug = contextDebug;
+                }
+            }
+        } catch (ClassCastException var3) {
+            this.log(sm.getString("contextConfig.cce", event.getLifecycle()), var3);
+            return;
+        }
+
+        if (event.getType().equals("start")) {
+            this.start();   // <1>
+        } else if (event.getType().equals("stop")) {
+            this.stop();    // <2>
+        }
+
+    }
+```
+- `<1>`处，当事件为`START_EVENT`(即start)时，调用自身的`#start()`方法。代码如下：
+    ```java
+        private synchronized void start() {
+        if (this.debug > 0) {
+            this.log(sm.getString("contextConfig.start"));
+        }
+
+        this.context.setConfigured(false);
+        this.ok = true;
+        Container container = this.context.getParent();
+        if (!this.context.getOverride()) {
+            if (container instanceof Host) {
+                ((Host)container).importDefaultContext(this.context);
+                container = container.getParent();
+            }
+
+            if (container instanceof Engine) {
+                ((Engine)container).importDefaultContext(this.context);
+            }
+        }
+
+        this.defaultConfig();   // <1>
+        this.applicationConfig();   // <2> 
+        if (this.ok) {
+            this.validateSecurityRoles();
+        }
+
+        if (this.ok) {
+            try {
+                this.tldScan();
+            } catch (Exception var5) {
+                this.log(var5.getMessage(), var5);
+                this.ok = false;
+            }
+        }
+
+        if (this.ok) {
+            this.certificatesConfig();
+        }
+
+        if (this.ok) {
+            this.authenticatorConfig();
+        }
+
+        if (this.debug >= 1 && this.context instanceof ContainerBase) {
+            this.log("Pipline Configuration:");
+            Pipeline pipeline = ((ContainerBase)this.context).getPipeline();
+            Valve[] valves = null;
+            if (pipeline != null) {
+                valves = pipeline.getValves();
+            }
+
+            if (valves != null) {
+                for(int i = 0; i < valves.length; ++i) {
+                    this.log("  " + valves[i].getInfo());
+                }
+            }
+
+            this.log("======================");
+        }
+
+        if (this.ok) {
+            this.context.setConfigured(true);
+        } else {
+            this.log(sm.getString("contextConfig.unavailable"));
+            this.context.setConfigured(false);
+        }
+
+    }
+    ```
+    - `<1>`处，读取并解析`%CATALINA_HOME%/conf`下的`web.xml`
+    - `<2>`处，读取并解析应用目录下`/WEB-INF/web.xml`文件
+
+### defaultConfig
+```java
+private void defaultConfig() {
+    File file = new File("conf/web.xml");
+    if (!file.isAbsolute()) {
+        file = new File(System.getProperty("catalina.base"), "conf/web.xml");
+    }
+
+    FileInputStream stream = null;
+
+    try {
+        stream = new FileInputStream(file.getCanonicalPath());
+        stream.close();
+        stream = null;
+    } catch (FileNotFoundException var25) {
+        this.log(sm.getString("contextConfig.defaultMissing"));
+        return;
+    } catch (IOException var26) {
+        this.log(sm.getString("contextConfig.defaultMissing"), var26);
+        return;
+    }
+
+    Digester var3 = webDigester;
+    synchronized(var3) {    // <1>
+        try {
+            InputSource is = new InputSource("file://" + file.getAbsolutePath());
+            stream = new FileInputStream(file);
+            is.setByteStream(stream);
+            webDigester.setDebug(this.getDebug());
+            if (this.context instanceof StandardContext) {
+                ((StandardContext)this.context).setReplaceWelcomeFiles(true);
+            }
+
+            webDigester.clear();
+            webDigester.push(this.context);
+            webDigester.parse(is);
+        } catch (SAXParseException var21) {
+            this.log(sm.getString("contextConfig.defaultParse"), var21);
+            this.log(sm.getString("contextConfig.defaultPosition", "" + var21.getLineNumber(), "" + var21.getColumnNumber()));
+            this.ok = false;
+        } catch (Exception var22) {
+            this.log(sm.getString("contextConfig.defaultParse"), var22);
+            this.ok = false;
+        } finally {
+            try {
+                if (stream != null) {
+                    stream.close();
+                }
+            } catch (IOException var20) {
+                this.log(sm.getString("contextConfig.defaultClose"), var20);
+            }
+
+        }
+
+    }
+}
+```
+- `<1>`处，加锁解析`web.xml`文件
+
+### applicationConfig
+```java
+    private void applicationConfig() {
+        InputStream stream = null;
+        ServletContext servletContext = this.context.getServletContext();
+        if (servletContext != null) {
+            stream = servletContext.getResourceAsStream("/WEB-INF/web.xml");
+        }
+
+        if (stream == null) {
+            this.log(sm.getString("contextConfig.applicationMissing"));
+        } else {
+            Digester var3 = webDigester;
+            synchronized(var3) {
+                try {
+                    URL url = servletContext.getResource("/WEB-INF/web.xml");
+                    InputSource is = new InputSource(url.toExternalForm());
+                    is.setByteStream(stream);
+                    webDigester.setDebug(this.getDebug());
+                    if (this.context instanceof StandardContext) {
+                        ((StandardContext)this.context).setReplaceWelcomeFiles(true);
+                    }
+
+                    webDigester.clear();
+                    webDigester.push(this.context);
+                    webDigester.parse(is);
+                } catch (SAXParseException var19) {
+                    this.log(sm.getString("contextConfig.applicationParse"), var19);
+                    this.log(sm.getString("contextConfig.applicationPosition", "" + var19.getLineNumber(), "" + var19.getColumnNumber()));
+                    this.ok = false;
+                } catch (Exception var20) {
+                    this.log(sm.getString("contextConfig.applicationParse"), var20);
+                    this.ok = false;
+                } finally {
+                    try {
+                        if (stream != null) {
+                            stream.close();
+                        }
+                    } catch (IOException var18) {
+                        this.log(sm.getString("contextConfig.applicationClose"), var18);
+                    }
+
+                }
+
+            }
+        }
+    }
+```
+
+### 创建`WebDigester`
+- 在`ContextConfig`中，存在一个`WebDigester`类.`private static Digester webDigester = createWebDigester();`，代码如下:
+```java
+    private static Digester createWebDigester() {
+        URL url = null;
+        Digester webDigester = new Digester();
+        webDigester.setValidating(true);
+        url = (class$org$apache$catalina$startup$ContextConfig == null ? (class$org$apache$catalina$startup$ContextConfig = class$("org.apache.catalina.startup.ContextConfig")) : class$org$apache$catalina$startup$ContextConfig).getResource("/javax/servlet/resources/web-app_2_2.dtd");
+        webDigester.register("-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN", url.toString());
+        url = (class$org$apache$catalina$startup$ContextConfig == null ? (class$org$apache$catalina$startup$ContextConfig = class$("org.apache.catalina.startup.ContextConfig")) : class$org$apache$catalina$startup$ContextConfig).getResource("/javax/servlet/resources/web-app_2_3.dtd");
+        webDigester.register("-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN", url.toString());
+        webDigester.addRuleSet(new WebRuleSet());   // <1>
+        return webDigester;
+    }
+```
+- 熟读前面介绍应该知道`WebRuleSet`是`Rule`的子类，并且知道它的工作方式。代码如下:
+```java
+public class WebRuleSet extends RuleSetBase {
+    protected String prefix;
+
+    public WebRuleSet() {
+        this("");
+    }
+
+    public WebRuleSet(String prefix) {
+        this.prefix = null;
+        this.namespaceURI = null;
+        this.prefix = prefix;
+    }
+
+    public void addRuleInstances(Digester digester) {
+        digester.addRule(this.prefix + "web-app", new SetPublicIdRule(digester, "setPublicId"));
+        digester.addCallMethod(this.prefix + "web-app/context-param", "addParameter", 2);
+        digester.addCallParam(this.prefix + "web-app/context-param/param-name", 0);
+        digester.addCallParam(this.prefix + "web-app/context-param/param-value", 1);
+        digester.addCallMethod(this.prefix + "web-app/display-name", "setDisplayName", 0);
+        digester.addRule(this.prefix + "web-app/distributable", new SetDistributableRule(digester));
+        digester.addObjectCreate(this.prefix + "web-app/ejb-local-ref", "org.apache.catalina.deploy.ContextLocalEjb");
+        digester.addSetNext(this.prefix + "web-app/ejb-local-ref", "addLocalEjb", "org.apache.catalina.deploy.ContextLocalEjb");
+        digester.addCallMethod(this.prefix + "web-app/ejb-local-ref/description", "setDescription", 0);
+        digester.addCallMethod(this.prefix + "web-app/ejb-local-ref/ejb-link", "setLink", 0);
+        digester.addCallMethod(this.prefix + "web-app/ejb-local-ref/ejb-ref-name", "setName", 0);
+        digester.addCallMethod(this.prefix + "web-app/ejb-local-ref/ejb-ref-type", "setType", 0);
+        digester.addCallMethod(this.prefix + "web-app/ejb-local-ref/local", "setLocal", 0);
+        digester.addCallMethod(this.prefix + "web-app/ejb-local-ref/local-home", "setHome", 0);
+        digester.addObjectCreate(this.prefix + "web-app/ejb-ref", "org.apache.catalina.deploy.ContextEjb");
+        digester.addSetNext(this.prefix + "web-app/ejb-ref", "addEjb", "org.apache.catalina.deploy.ContextEjb");
+        digester.addCallMethod(this.prefix + "web-app/ejb-ref/description", "setDescription", 0);
+        digester.addCallMethod(this.prefix + "web-app/ejb-ref/ejb-link", "setLink", 0);
+        digester.addCallMethod(this.prefix + "web-app/ejb-ref/ejb-ref-name", "setName", 0);
+        digester.addCallMethod(this.prefix + "web-app/ejb-ref/ejb-ref-type", "setType", 0);
+        digester.addCallMethod(this.prefix + "web-app/ejb-ref/home", "setHome", 0);
+        digester.addCallMethod(this.prefix + "web-app/ejb-ref/remote", "setRemote", 0);
+        digester.addObjectCreate(this.prefix + "web-app/env-entry", "org.apache.catalina.deploy.ContextEnvironment");
+        digester.addSetNext(this.prefix + "web-app/env-entry", "addEnvironment", "org.apache.catalina.deploy.ContextEnvironment");
+        digester.addCallMethod(this.prefix + "web-app/env-entry/description", "setDescription", 0);
+        digester.addCallMethod(this.prefix + "web-app/env-entry/env-entry-name", "setName", 0);
+        digester.addCallMethod(this.prefix + "web-app/env-entry/env-entry-type", "setType", 0);
+        digester.addCallMethod(this.prefix + "web-app/env-entry/env-entry-value", "setValue", 0);
+        digester.addObjectCreate(this.prefix + "web-app/error-page", "org.apache.catalina.deploy.ErrorPage");
+        digester.addSetNext(this.prefix + "web-app/error-page", "addErrorPage", "org.apache.catalina.deploy.ErrorPage");
+        digester.addCallMethod(this.prefix + "web-app/error-page/error-code", "setErrorCode", 0);
+        digester.addCallMethod(this.prefix + "web-app/error-page/exception-type", "setExceptionType", 0);
+        digester.addCallMethod(this.prefix + "web-app/error-page/location", "setLocation", 0);
+        digester.addObjectCreate(this.prefix + "web-app/filter", "org.apache.catalina.deploy.FilterDef");
+        digester.addSetNext(this.prefix + "web-app/filter", "addFilterDef", "org.apache.catalina.deploy.FilterDef");
+        digester.addCallMethod(this.prefix + "web-app/filter/description", "setDescription", 0);
+        digester.addCallMethod(this.prefix + "web-app/filter/display-name", "setDisplayName", 0);
+        digester.addCallMethod(this.prefix + "web-app/filter/filter-class", "setFilterClass", 0);
+        digester.addCallMethod(this.prefix + "web-app/filter/filter-name", "setFilterName", 0);
+        digester.addCallMethod(this.prefix + "web-app/filter/large-icon", "setLargeIcon", 0);
+        digester.addCallMethod(this.prefix + "web-app/filter/small-icon", "setSmallIcon", 0);
+        digester.addCallMethod(this.prefix + "web-app/filter/init-param", "addInitParameter", 2);
+        digester.addCallParam(this.prefix + "web-app/filter/init-param/param-name", 0);
+        digester.addCallParam(this.prefix + "web-app/filter/init-param/param-value", 1);
+        digester.addObjectCreate(this.prefix + "web-app/filter-mapping", "org.apache.catalina.deploy.FilterMap");
+        digester.addSetNext(this.prefix + "web-app/filter-mapping", "addFilterMap", "org.apache.catalina.deploy.FilterMap");
+        digester.addCallMethod(this.prefix + "web-app/filter-mapping/filter-name", "setFilterName", 0);
+        digester.addCallMethod(this.prefix + "web-app/filter-mapping/servlet-name", "setServletName", 0);
+        digester.addCallMethod(this.prefix + "web-app/filter-mapping/url-pattern", "setURLPattern", 0);
+        digester.addCallMethod(this.prefix + "web-app/listener/listener-class", "addApplicationListener", 0);
+        digester.addObjectCreate(this.prefix + "web-app/login-config", "org.apache.catalina.deploy.LoginConfig");
+        digester.addSetNext(this.prefix + "web-app/login-config", "setLoginConfig", "org.apache.catalina.deploy.LoginConfig");
+        digester.addCallMethod(this.prefix + "web-app/login-config/auth-method", "setAuthMethod", 0);
+        digester.addCallMethod(this.prefix + "web-app/login-config/realm-name", "setRealmName", 0);
+        digester.addCallMethod(this.prefix + "web-app/login-config/form-login-config/form-error-page", "setErrorPage", 0);
+        digester.addCallMethod(this.prefix + "web-app/login-config/form-login-config/form-login-page", "setLoginPage", 0);
+        digester.addCallMethod(this.prefix + "web-app/mime-mapping", "addMimeMapping", 2);
+        digester.addCallParam(this.prefix + "web-app/mime-mapping/extension", 0);
+        digester.addCallParam(this.prefix + "web-app/mime-mapping/mime-type", 1);
+        digester.addCallMethod(this.prefix + "web-app/resource-env-ref", "addResourceEnvRef", 2);
+        digester.addCallParam(this.prefix + "web-app/resource-env-ref/resource-env-ref-name", 0);
+        digester.addCallParam(this.prefix + "web-app/resource-env-ref/resource-env-ref-type", 1);
+        digester.addObjectCreate(this.prefix + "web-app/resource-ref", "org.apache.catalina.deploy.ContextResource");
+        digester.addSetNext(this.prefix + "web-app/resource-ref", "addResource", "org.apache.catalina.deploy.ContextResource");
+        digester.addCallMethod(this.prefix + "web-app/resource-ref/description", "setDescription", 0);
+        digester.addCallMethod(this.prefix + "web-app/resource-ref/res-auth", "setAuth", 0);
+        digester.addCallMethod(this.prefix + "web-app/resource-ref/res-ref-name", "setName", 0);
+        digester.addCallMethod(this.prefix + "web-app/resource-ref/res-sharing-scope", "setScope", 0);
+        digester.addCallMethod(this.prefix + "web-app/resource-ref/res-type", "setType", 0);
+        digester.addObjectCreate(this.prefix + "web-app/security-constraint", "org.apache.catalina.deploy.SecurityConstraint");
+        digester.addSetNext(this.prefix + "web-app/security-constraint", "addConstraint", "org.apache.catalina.deploy.SecurityConstraint");
+        digester.addRule(this.prefix + "web-app/security-constraint/auth-constraint", new SetAuthConstraintRule(digester));
+        digester.addCallMethod(this.prefix + "web-app/security-constraint/auth-constraint/role-name", "addAuthRole", 0);
+        digester.addCallMethod(this.prefix + "web-app/security-constraint/display-name", "setDisplayName", 0);
+        digester.addCallMethod(this.prefix + "web-app/security-constraint/user-data-constraint/transport-guarantee", "setUserConstraint", 0);
+        digester.addObjectCreate(this.prefix + "web-app/security-constraint/web-resource-collection", "org.apache.catalina.deploy.SecurityCollection");
+        digester.addSetNext(this.prefix + "web-app/security-constraint/web-resource-collection", "addCollection", "org.apache.catalina.deploy.SecurityCollection");
+        digester.addCallMethod(this.prefix + "web-app/security-constraint/web-resource-collection/http-method", "addMethod", 0);
+        digester.addCallMethod(this.prefix + "web-app/security-constraint/web-resource-collection/url-pattern", "addPattern", 0);
+        digester.addCallMethod(this.prefix + "web-app/security-constraint/web-resource-collection/web-resource-name", "setName", 0);
+        digester.addCallMethod(this.prefix + "web-app/security-role/role-name", "addSecurityRole", 0);
+        digester.addRule(this.prefix + "web-app/servlet", new WrapperCreateRule(digester));
+        digester.addSetNext(this.prefix + "web-app/servlet", "addChild", "org.apache.catalina.Container");
+        digester.addCallMethod(this.prefix + "web-app/servlet/init-param", "addInitParameter", 2);
+        digester.addCallParam(this.prefix + "web-app/servlet/init-param/param-name", 0);
+        digester.addCallParam(this.prefix + "web-app/servlet/init-param/param-value", 1);
+        digester.addCallMethod(this.prefix + "web-app/servlet/jsp-file", "setJspFile", 0);
+        digester.addCallMethod(this.prefix + "web-app/servlet/load-on-startup", "setLoadOnStartupString", 0);
+        digester.addCallMethod(this.prefix + "web-app/servlet/run-as/role-name", "setRunAs", 0);
+        digester.addCallMethod(this.prefix + "web-app/servlet/security-role-ref", "addSecurityReference", 2);
+        digester.addCallParam(this.prefix + "web-app/servlet/security-role-ref/role-link", 1);
+        digester.addCallParam(this.prefix + "web-app/servlet/security-role-ref/role-name", 0);
+        digester.addCallMethod(this.prefix + "web-app/servlet/servlet-class", "setServletClass", 0);
+        digester.addCallMethod(this.prefix + "web-app/servlet/servlet-name", "setName", 0);
+        digester.addCallMethod(this.prefix + "web-app/servlet-mapping", "addServletMapping", 2);
+        digester.addCallParam(this.prefix + "web-app/servlet-mapping/servlet-name", 1);
+        digester.addCallParam(this.prefix + "web-app/servlet-mapping/url-pattern", 0);
+        digester.addCallMethod(this.prefix + "web-app/session-config/session-timeout", "setSessionTimeout", 1, new Class[]{Integer.TYPE});
+        digester.addCallParam(this.prefix + "web-app/session-config/session-timeout", 0);
+        digester.addCallMethod(this.prefix + "web-app/taglib", "addTaglib", 2);
+        digester.addCallParam(this.prefix + "web-app/taglib/taglib-location", 1);
+        digester.addCallParam(this.prefix + "web-app/taglib/taglib-uri", 0);
+        digester.addCallMethod(this.prefix + "web-app/welcome-file-list/welcome-file", "addWelcomeFile", 0);
+    }
+}
+```
