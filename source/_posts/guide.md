@@ -53,7 +53,7 @@ date: 2019-10-14 00:00:00
                 - [x] [StandardContext](../detail/1923304143.html)
                 - [x] [主机(host)和引擎(engine)](../detail/700695093.html)
                 - [x] [服务器和服务](../detail/561747658.html)
-                - [ ] [Digester]()
+                - [x] [Digester](../detail/2030302893.html)
                 - [ ] [关闭钩子]()
                 - [ ] [Tomcat 启动]()
                 - [ ] [部署器]()
