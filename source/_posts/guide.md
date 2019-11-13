@@ -96,8 +96,8 @@ date: 2019-10-14 00:00:00
                 - [x] [Single Pattern[单例模式]](../detail/4049607742.html)
                 - [x] [Factory Pattern[工厂模式]](../detail/1417187187.html)
                 - [x] [Abstract Factory Pattern[抽象工厂]](../detail/2506759259.html)
-                - [ ] [Builder Pattern[建造者模式]]()
-                - [ ] [Prototype Pattern[原型模式]]()
+                - [x] [Builder Pattern[建造者模式]](../detail/3898751754.html)
+                - [x] [Prototype Pattern[原型模式]](../detail/153761970.html)
             - 行为型
                 - [x] [Chain of Responsibility Pattern[责任链模式]](../detail/1644716670.html)
                 - [x] [Command Pattern[命令模式]](../detail/256138576.html)
@@ -111,10 +111,10 @@ date: 2019-10-14 00:00:00
                 - [ ] [Template Pattern[模板模式]]()
                 - [ ] [Visitor Pattern[访问者模式]]()
                 - [ ] [Null Object Pattern[空对象模式]]()
-                - [ ] [Filter Pattern[过滤器模式]]()
             - 结构型
                 - [x] [Adapter Pattern[适配器模式]](../detail/4123342314.html)
                 - [ ] [Bridge Pattern[桥接模式]]()
+                - [ ] [Filter Pattern[过滤器模式]]()
                 - [ ] [Composite Pattern[组合模式]]()
                 - [ ] [Decorator Pattern[装饰器模式]]()
                 - [x] [Facade Pattern[外观模式]](../detail/4158556840.html)
