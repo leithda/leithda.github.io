@@ -1,5 +1,5 @@
 ---
-title: 排序算法
+title: leetcode题解-两数之和
 categories:
   - 算法
   - 题目
