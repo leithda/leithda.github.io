@@ -101,7 +101,7 @@ date: 2019-10-14 00:00:00
             - 行为型
                 - [x] [Chain of Responsibility Pattern[责任链模式]](../detail/1644716670.html)
                 - [x] [Command Pattern[命令模式]](../detail/256138576.html)
-                - [ ] [Interpreter Pattern[解释器模式]]()
+                - [x] [Interpreter Pattern[解释器模式]](../detail/1940214718.html)
                 - [ ] [Iterator Pattern[迭代器模式]]()
                 - [ ] [Mediator Pattern[中介者模式]]()
                 - [ ] [Memento Pattern[备忘录模式]]()
