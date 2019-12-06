@@ -136,23 +136,23 @@ $$
 ### 基本语法
 
 - 起始标志`\begin{matrix}`,结束标记`\end{matrix}`
-- 每一行末尾`\\`,行间元素之间`&`
+- 每一行末尾`\\`,行间元素之间`&`(PS: hexo博客输入`\\`会被转义为`\`,所以实际输入时要输入`\\\\`)
 
  ```
 $$
 \begin{matrix}
-1&0&0\\\
-0&1&0\\\
-0&0&1\\\
+1&0&0 \\
+0&1&0 \\
+0&0&1 \\
 \end{matrix}
 $$
  ```
 
 $$
 \begin{matrix}
-1&0&0\\\
-0&1&0\\\
-0&0&1\\\
+1 & 0 & 0 \\\\
+0 & 1 & 0 \\\\
+0 & 0 & 1 \\\\
 \end{matrix}
 $$
 
@@ -174,20 +174,20 @@ $$
 ```
 $$
 \begin{bmatrix}
-{a_{11}}&{a_{12}}&{\cdots}&{a_{1n}}\\\
-{a_{21}}&{a_{22}}&{\cdots}&{a_{2n}}\\\
-{\vdots}&{\vdots}&{\ddots}&{\vdots}\\\
-{a_{m1}}&{a_{m2}}&{\cdots}&{a_{mn}}\\\
+{a_{11}}&{a_{12}}&{\cdots}&{a_{1n}} \\
+{a_{21}}&{a_{22}}&{\cdots}&{a_{2n}} \\
+{\vdots}&{\vdots}&{\ddots}&{\vdots} \\
+{a_{m1}}&{a_{m2}}&{\cdots}&{a_{mn}} \\
 \end{bmatrix}
 $$
 ```
 
 $$
 \begin{bmatrix}
-{a_{11}}&{a_{12}}&{\cdots}&{a_{1n}}\\\
-{a_{21}}&{a_{22}}&{\cdots}&{a_{2n}}\\\
-{\vdots}&{\vdots}&{\ddots}&{\vdots}\\\
-{a_{m1}}&{a_{m2}}&{\cdots}&{a_{mn}}\\\
+{a_{11}}&{a_{12}}&{\cdots}&{a_{1n}} \\\\
+{a_{21}}&{a_{22}}&{\cdots}&{a_{2n}} \\\\
+{\vdots}&{\vdots}&{\ddots}&{\vdots} \\\\
+{a_{m1}}&{a_{m2}}&{\cdots}&{a_{mn}} \\\\
 \end{bmatrix}
 $$
 
@@ -196,18 +196,18 @@ $$
 ```
 $$
 \begin{cases}
-a_1x+b_1y+c_1z=d_1\\\
-a_2x+b_2y+c_2z=d_2\\\
-a_3x+b_3y+c_3z=d_3\\\
+a_1x+b_1y+c_1z=d_1 \\
+a_2x+b_2y+c_2z=d_2 \\
+a_3x+b_3y+c_3z=d_3 \\
 \end{cases}
 $$
 ```
 
 $$
 \begin{cases}
-a_1x+b_1y+c_1z=d_1\\\
-a_2x+b_2y+c_2z=d_2\\\
-a_3x+b_3y+c_3z=d_3\\\
+a_1x+b_1y+c_1z=d_1 \\\\
+a_2x+b_2y+c_2z=d_2 \\\\
+a_3x+b_3y+c_3z=d_3 \\\\
 \end{cases}
 $$
 
