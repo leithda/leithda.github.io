@@ -10,14 +10,12 @@ author: 长歌
 abbrlink: 3510268826
 date: 2019-07-03 00:00:00
 ---
-> 解析器模块主要提供两个功能
->
-> - 对XPath进行封装，为mybatis初始化时解`mybatis-config.xml`配置文件及映射文件提供支持
-> - 处理动态sql中的占位符
+解析器模块主要提供两个功能
+- 对XPath进行封装，为mybatis初始化时解`mybatis-config.xml`配置文件及映射文件提供支持
+- 处理动态sql中的占位符
 <!-- More -->
-## `XPathParser`
-
-> 基于Java XPath解析器，用于解析xml文件。属性如下：
+## XPathParser
+基于Java XPath解析器，用于解析xml文件。属性如下：
 
 ```java
 // XPathParser.java

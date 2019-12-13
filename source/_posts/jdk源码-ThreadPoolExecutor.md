@@ -1,5 +1,5 @@
 ---
-title: 高并发之线程池
+title: jdk源码-ThreadPoolExecutor
 categories:
   - Java
   - Core
@@ -11,10 +11,11 @@ abbrlink: 2990170790
 date: 2019-10-24 00:00:00
 ---
 
-写在前面：我这篇照着ppt抄的，后续有时间仔细看看这里在进行补充。网上找到了其他的解析，请向↓看
-[《Java线程池的使用》来自简书：juconcurrent](https://www.jianshu.com/p/7ab4ae9443b9)
-[《Java ThreadPoolExecutor线程池概述》来自CSDN: wtopps](https://blog.csdn.net/wtopps/article/details/80682267)
-<!-- More -->
+## 简介
+写在前面：我这篇照着ppt抄的，后续有时间仔细看看这里在进行补充。网上找到了其他的解析，请向↓看   
+[《Java线程池的使用》来自简书：juconcurrent](https://www.jianshu.com/p/7ab4ae9443b9)   
+[《Java ThreadPoolExecutor线程池概述》来自CSDN: wtopps](https://blog.csdn.net/wtopps/article/details/80682267)   
+
 
 ## 线程
 ### 概念

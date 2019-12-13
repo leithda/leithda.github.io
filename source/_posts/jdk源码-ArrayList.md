@@ -1,5 +1,5 @@
 ---
-title: ArrayList源码分析
+title: jdk源码-ArrayList
 categories:
   - Java
   - Core

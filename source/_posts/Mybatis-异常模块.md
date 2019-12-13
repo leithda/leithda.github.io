@@ -12,7 +12,7 @@ date: 2019-07-09 02:41:00
 ---
 对应 `exceptions` 包。
 
-> 定义了 MyBatis 专有的 PersistenceException 和 TooManyResultsException 异常。
+定义了 MyBatis 专有的 PersistenceException 和 TooManyResultsException 异常。
 
 <!-- More --> 
 
