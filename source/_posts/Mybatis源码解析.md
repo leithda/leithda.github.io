@@ -30,7 +30,7 @@ MyBatis 是支持定制化 SQL、存储过程以及高级映射的优秀的持�
 | datasource | 基础支持层 | 数据源模块 | N |
 | transaction | 基础支持层 | 事物模块 | N |
 | cache | 基础支持层 | 缓存模块 | N |
-| parsing | 基础支持层 | 解析器模块 | [Y](https://github.com/leithda/mybatis-3/tree/master/src/main/java/org/apache/ibatis/parsing) |
+| parsing | 基础支持层 | 解析器模块 | Y |
 | reflection | 基础支持层 | 反射模块 | N |
 | logging | 基础支持层 | 日志模块 | N |
 | binding | 基础支持层 | Binding模块 | N |
