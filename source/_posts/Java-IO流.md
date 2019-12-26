@@ -31,6 +31,9 @@ author: 长歌
 {% asset_img Java_IO_Detail.png Java-IO结构图，含方法 %}
 
 ## 字符流
+### Reader 和 Writer
+{% asset_img Reader.png Reader的UML图 %}
+{% asset_img Writer.png Writer的UML图 %}
 ### FileWriter 和 FileReader
 ```java
     /**
@@ -362,6 +365,10 @@ author: 长歌
 
 ## 字节流
 > 相比较与字符流，字节流都是操作byte[]的操作，相对来说使用的很少。更多的是将字节流转换为字符流，并通过字符流的各个类进行包装使用。
+
+### InputStream 和 OutputStream
+{% asset_img InputStream.png InputStream的UML图 %}
+{% asset_img OutputStream.png OutputStream的UML图 %}
 
 ### FileOutputStream 和 FileInputStream
 ```java
