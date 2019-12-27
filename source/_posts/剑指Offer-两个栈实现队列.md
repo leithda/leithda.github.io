@@ -17,6 +17,7 @@ author: 长歌
 **知识点**: 树
 
 {% endcq %}
+<!-- More -->
 
 ## 题目链接
 [牛客网](https://www.nowcoder.com/practice/54275ddae22f475981afa2244dd448c6?tpId=13&tqId=11158&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)

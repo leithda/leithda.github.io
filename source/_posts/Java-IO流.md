@@ -13,10 +13,148 @@ author: 长歌
 
 {% cq %}
 **Io流**,用于处理设备上的数据。在流中一般以字节的形式存放着数据。
+**File**,Java将文件和文件夹封装为对象
 {% endcq %}
 <!-- More -->
 
-## 介绍
+# 文件
+## 文件介绍
+Java将系统中的文件和文件夹封装成了对象。提供了属性以及方法对这些文件和文件夹进行操作。
+
+## File类
+### 创建
+```java
+    /**
+     * 在指定目录下创建文件
+     * 文件上级目录必须存在,文件已存在则不创建.
+     * 流对象操作时,文件已存在,会覆盖,除非使用续写模式
+     *
+     * @param filePath 文件路径
+     * @return 是否创建成功
+     * @throws IOException IO异常
+     */
+    public boolean createNewFile(String filePath) throws IOException {
+        File file = new File(filePath);
+        return file.createNewFile();
+    }
+
+    /**
+     * 创建文件夹
+     * 上级目录需存在,文件夹存在时不会创建
+     *
+     * @param filePath 文件路径
+     * @return 是否创建成功
+     */
+    public boolean mkdir(String filePath) {
+        File file = new File(filePath);
+        return file.mkdir();
+    }
+
+    /**
+     * 创建多级目录
+     *
+     * @param filePath 文件路径
+     * @return 是否创建成功
+     */
+    public boolean mkdirs(String filePath) {
+        File file = new File(filePath);
+        return file.mkdirs();
+    }
+```
+
+### 删除
+```java
+    /**
+     * 删除文件/目录
+     * 文件/目录不存在返回<code>false</code>,若删除目录下存在文件/目录,不进行删除,返回<code>false</code>
+     *
+     * @param filePath 文件路径
+     */
+    public void delete(String filePath) {
+        File file = new File(filePath);
+
+        boolean isDeleted = file.delete();
+        System.out.println("删除文件" + filePath + "是否成功 : " + isDeleted);
+    }
+
+    /**
+     * 虚拟机退出后删除文件/目录
+     * 文件/目录不存在返回<code>false</code>,若删除目录下存在文件/目录,不进行删除,返回<code>false</code>
+     *
+     * @param filePath 文件路径
+     */
+    public void deleteOnExit(String filePath) {
+        File file = new File(filePath);
+        try {
+            file.deleteOnExit();
+            System.out.println("设置退出虚拟机后删除文件" + filePath);
+            Thread.sleep(3000); // 3s
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+```
+
+### 获取
+```java
+    /**
+     * 文件获取方法
+     *
+     * @param filePath 文件路径
+     */
+    public void getProperties(String filePath) {
+        File file = new File(filePath);
+        long length = file.length();    // 文件大小
+        String name = file.getName();   // 文件/目录 名称
+        String path = file.getPath();   // 路径字符串
+        String absolutePath = file.getAbsolutePath();   // 绝对路径字符串
+        String parent = file.getParent();   // 获取上级路径字符串表示，若无，返回null
+        long lastModified = file.lastModified();    // 返回文件/目录 最后一次修改的时间
+        String pathSeparator = File.pathSeparator;  // 当前系统默认的路径分隔符,window默认为";"
+        String separator = File.separator;  // 当前系统默认的目录分隔符,window默认为"\"
+        System.out.println(String.format("文件大小=%s,文件名称=%s,文件路径=%s,文件绝对路径=%s,文件上级路径=%s,文件最后修改时间=%s,路径分隔符=%s,目录分隔符=%s",
+                length, name, path, absolutePath, parent,String.valueOf(lastModified),pathSeparator,separator));
+    }
+```
+
+### 判断
+```java
+    /**
+     * 文件相关判断方法
+     *
+     * @param filePath 文件路径
+     */
+    public void judge(String filePath){
+        File file = new File(filePath);
+        boolean isExists = file.exists();
+        boolean isDirectory = file.isDirectory();
+        boolean isFile = file.isFile();
+        boolean isHidden = file.isHidden();
+        boolean isAbsolute = file.isAbsolute();
+        System.out.println(String.format("文件是否存在=%s,是目录=%s,是文件=%s,是否是隐藏文件=%s,是否是绝对路径=%s",
+                isExists,isDirectory,isFile,isHidden,isAbsolute));
+    }
+```
+
+### 重命名
+```java
+    /**
+     * 重命名
+     * 上级路径不同可以实现文件移动,上级路径相同时实现重命名
+     *
+     * @param srcPath 源文件路径
+     * @param destPath 目标文件路径
+     */
+    public void renameTo(String srcPath,String destPath){
+        File srcFile = new File(srcPath);
+        File destFile = new File(destPath);
+        boolean isSuccess = srcFile.renameTo(destFile);
+        System.out.println("文件重命名是否成功 : "+isSuccess);
+    }
+```
+
+# IO流
+## IO流介绍
 ### 流的分类
 - 按操作分为输入流、输出流
 - 按类型分为字节流、字符流
@@ -736,3 +874,24 @@ public class PipedStreamTest {
     }
 }
 ```
+
+## 流操作规律
+### 明确目的
+- 数据源：　需要读取，可以使用两类流对象：`InputStream`、`Reader`
+- 数据汇：　需要写入，可以使用两类流对象：`OutputStream`、`Writer`
+
+### 是否纯文本
+- 如果是
+    + 数据源：`Reader`
+    + 数据汇: `Writer`
+- 如果不是
+    + 数据源: `InputStream`
+    + 数据汇: `OutputStream`
+
+### 明确操作的数据设备
+- 硬盘 : `File`
+- 内存 : `数组`
+- 键盘/控制台：　`System.in/System.out`
+
+### 是否需要在基础操作上附加其他功能
+如果需要就使用其他流对象进行装饰，以提高效率或者降低编码难度。
