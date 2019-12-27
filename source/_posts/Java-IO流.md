@@ -384,7 +384,7 @@ Java将系统中的文件和文件夹封装成了对象。提供了属性以及�
 ```
 
 ### PrintWriter
-> 人性化输出流，支持像`System.out.print`一样输出内容。"管生不管养":输出后，如何往回读是个值得思考的问题
+> 字符输出流，提供更多功能，打印方法可以打印任意类型数据。有自动刷新机制。使用本机默认编码
 
 
 ```java
@@ -640,10 +640,13 @@ Java将系统中的文件和文件夹封装成了对象。提供了属性以及�
 
 ### PrintStream
 
+> 字节打印流，提供更多功能，打印方法可以打印任意类型数据。有自动刷新机制。使用本机默认编码
+
 ```java
     /**
-     * 字节流,格式化输出字节流,同字符流一样,管生不管养
-     *
+     * 字节打印流，提供更多功能，打印方法可以打印任意类型数据。有自动刷新机制。使用本机默认编码
+     * 可以包装 File、字符串路径、OutputStream
+     * 
      * @param filePath 文件路径
      */
     public void writeByPrintStream(String filePath){
@@ -895,3 +898,10 @@ public class PipedStreamTest {
 
 ### 是否需要在基础操作上附加其他功能
 如果需要就使用其他流对象进行装饰，以提高效率或者降低编码难度。
+
+### 读取键盘录入
+
+```java
+BufferedReader bufr = new BufferedReader(new InputStreamReader(System.in));	// 源: 键盘输入
+```
+
