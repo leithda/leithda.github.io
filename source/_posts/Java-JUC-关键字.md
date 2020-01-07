@@ -192,21 +192,35 @@ public class Counter {
 }
 ```
 
-
-
-
-
-
-
 # synchronized
-
->  
->
+> Java的保留关键字,是Java同步机制的一种实现,即互斥锁机制.
+> 
 > 推荐阅读 [并发番@Synchronized一文通（1.8版）](https://www.zybuluo.com/kiraSally/note/857726)
+
+## synchronized 的使用
+
+| 作用域       | 锁对象            | 同步原理                                          | Demo                                                         |
+| ------------ | ----------------- | ------------------------------------------------- | ------------------------------------------------------------ |
+| 普通同步方法 | 当前实例          | 依靠方法修饰符上的ACC_SYNCHRONIZED                | synchronized void func(){}                                   |
+| 静态同步方法 | 当前类的class对象 | 依靠方法修饰符上的ACC_SYNCHRONIZED                | static synchronized void func(){}                            |
+| 同步代码块   | 括号内对象        | 同步代码块使用了`monitorenter`和`monitorexit`实现 | Object o = new Object();<br>void func(){<br>  synchronized(o/this){}<br>} |
+
+- **补充：** 使用同步代码块的好处在于其他线程仍可以访问非synchronized(this)的同步代码块
+
+## synchronized 的使用规则
+
+- 首先定义一个测试类
+
+```java
+
+```
+
+
 
 
 
 # final
+> 在JMM中,`final`能确保初始化过程的安全性,共享final对象时无须同步
 
 # Reflence
 {% blockquote 童云兰 https://book.douban.com/subject/10484692 豆瓣 %}
@@ -220,6 +234,6 @@ Java并发编程实战(原作名: Java Concurrency in Practice)
 
 ---
 
-{% blockquote 羽杰 https://www.jianshu.com/p/ccfe24b63d87 简书 %}
-【Java 并发笔记】volatile 相关整理
+{% blockquote @kiraSally https://www.zybuluo.com/kiraSally/note/850631 www.zybuluo.com %}
+并发番@Java内存模型&Volatile一文通（1.7版）
 {% endblockquote %}
