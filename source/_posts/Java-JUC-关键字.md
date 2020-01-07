@@ -209,11 +209,6 @@ public class Counter {
 
 ## synchronized 的使用规则
 
-- 首先定义一个测试类
-
-```java
-
-```
 
 
 
