@@ -208,14 +208,327 @@ public class Counter {
 - **补充：** 使用同步代码块的好处在于其他线程仍可以访问非synchronized(this)的同步代码块
 
 ## synchronized 的使用规则
+### 测试类
+```java
+public class SyncDemo {
+    public synchronized static void staticMethod(){
+        System.out.println(Thread.currentThread().getName() + "访问了静态方法 staticMethod");
+        try{
+            Thread.sleep(1000);
+        }catch (Exception ignored){}
+        System.out.println(Thread.currentThread().getName() + "结束访问静态方法 staticMethod");
+    }
 
+    public synchronized static void staticMethod2(){
+        System.out.println(Thread.currentThread().getName() + "访问了静态方法 staticMethod2");
+        try{
+            Thread.sleep(1000);
+        }catch (Exception ignored){}
+        System.out.println(Thread.currentThread().getName() + "结束访问静态方法 staticMethod2");
+    }
 
+    private synchronized void syncmethod(){
+        System.out.println(Thread.currentThread().getName() + "访问了方法 syncmethod");
+        try{
+            Thread.sleep(1000);
+        }catch (Exception ignored){}
+        System.out.println(Thread.currentThread().getName() + "结束访问方法 syncmethod");
+    }
 
+    private synchronized void syncmethod2(){
+        System.out.println(Thread.currentThread().getName() + "访问了方法 syncmethod2");
+        try{
+            Thread.sleep(1000);
+        }catch (Exception ignored){}
+        System.out.println(Thread.currentThread().getName() + "结束访问方法 syncmethod2");
+    }
 
+    private void method(){
+        System.out.println(Thread.currentThread().getName() + "访问了方法 method");
+        try{
+            Thread.sleep(1000);
+        }catch (Exception ignored){}
+        System.out.println(Thread.currentThread().getName() + "结束访问方法 method");
+    }
+
+    private final Object lock = new Object();
+    private void chunkMethod(){
+        System.out.println(Thread.currentThread().getName() + "访问了chunkMethod方法");
+        synchronized (lock){
+            System.out.println(Thread.currentThread().getName() + "在chunkMethod方法中获取了lock");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println(Thread.currentThread().getName() + "结束访问 chunkMethod方法");
+    }
+    private void chunkMethod2(){
+        System.out.println(Thread.currentThread().getName() + "访问了chunkMethod2方法");
+        synchronized (lock){
+            System.out.println(Thread.currentThread().getName() + "在chunkMethod2方法中获取了lock");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println(Thread.currentThread().getName() + "结束访问chunkMethod2 方法");
+    }
+    public void chunkMethod3(){
+        System.out.println(Thread.currentThread().getName() + "访问了chunkMethod3方法");
+        //同步代码块
+        synchronized (this){
+            System.out.println(Thread.currentThread().getName() + "在chunkMethod3方法中获取了this");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println(Thread.currentThread().getName() + "结束访问 chunkMethod3方法");
+    }
+    public void stringMethod(String lock){
+        synchronized (lock){
+            while (true) {
+                System.out.println(Thread.currentThread().getName());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
+```
+
+### 同步方法与普通方法
+#### 代码
+```java
+    /**
+     * 普通方法和同步方法
+     */
+    private static void methodAndsyncMethod(){
+        SyncDemo sd = new SyncDemo();
+        new Thread(sd::method).start();
+        new Thread(sd::syncmethod).start();
+    }
+```
+
+#### 结果
+```terminal
+Thread-0访问了方法 method
+Thread-1访问了方法 syncmethod
+Thread-0结束访问方法 method
+Thread-1结束访问方法 syncmethod
+```
+- 当一个线程进入同步方法时，其他线程可以正常访问其他非同步方法
+
+### 同步方法
+#### 代码
+```java
+    /**
+     * 同一个锁(相同实例)的同步方法
+     */
+    private static void syncMethodWithOneLock() {
+        SyncDemo sd = new SyncDemo();
+        new Thread(() -> {
+            sd.syncmethod();
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            sd.syncmethod2();
+        }).start();
+
+        new Thread(() -> {
+            sd.syncmethod();
+            sd.syncmethod2();
+        }).start();
+    }
+```
+
+#### 结果
+```bash
+Thread-0访问了方法 syncmethod
+Thread-0结束访问方法 syncmethod
+// 线程0释放锁
+Thread-1访问了方法 syncmethod
+Thread-1结束访问方法 syncmethod
+Thread-1访问了方法 syncmethod2
+Thread-1结束访问方法 syncmethod2
+// 线程1释放锁
+Thread-0访问了方法 syncmethod2
+Thread-0结束访问方法 syncmethod2
+```
+- 任务阻塞,线程需要等待线程0执行完成后才继续执行
+
+### 同步代码块
+#### 代码
+```java
+    /**
+     * 同一个锁下的同步代码块同一时刻只能被一个线程访问
+     */
+    private static void chunkMethodWithOneLock(){
+        SyncDemo sd = new SyncDemo();
+        new Thread(()->{
+            sd.chunkMethod();
+            sd.chunkMethod2();
+        }).start();
+
+        new Thread(()->{
+            sd.chunkMethod2();
+            sd.chunkMethod();
+        }).start();
+    }
+```
+
+#### 结果
+```java
+Thread-0访问了chunkMethod方法
+Thread-0在chunkMethod方法中获取了lock
+Thread-1访问了chunkMethod2方法
+// 线程1等待
+Thread-0结束访问 chunkMethod方法
+Thread-0访问了chunkMethod2方法
+Thread-0在chunkMethod2方法中获取了lock
+Thread-0结束访问chunkMethod2 方法
+Thread-1在chunkMethod2方法中获取了lock
+Thread-1结束访问chunkMethod2 方法
+Thread-1访问了chunkMethod方法
+Thread-1在chunkMethod方法中获取了lock
+Thread-1结束访问 chunkMethod方法
+```
 
 
 # final
 > 在JMM中,`final`能确保初始化过程的安全性,共享final对象时无须同步
+
+## final的使用场景
+final 可以用于修饰变量,方法和类
+
+- final 修饰成员变量
+1. 类变量
+2. 实例变量
+3. 引用变量
+4. 局部变量
+
+- final 修饰成员方法
+该方法不可被子类复写,但是可以重载
+
+- final 修饰类
+该类不可以被继承,
+
+## final 代码
+```java
+public class FinalDemo {
+//public final class FinalDemo {    // 3 final 修饰的类不能被继承
+
+    static final int classVar;  // 1.1 final 修饰类变量
+
+    static{
+        classVar = 10;
+    }
+
+    final int instanceVar;  // 1.2 final 修饰成员变量
+
+    public FinalDemo() {
+//        classVar = 10;    // 错误: 类实例化时,类变量classVar对应内存空间已分配,JVM发现类变量没初始化会报错
+        this.instanceVar = 20;
+    }
+
+
+    public void print(){
+        final int innerVar; // 1.3 final 修饰局部变量
+
+        // 其他处理(不包含对 innerVar 的初始化)
+
+        innerVar = 30;
+        System.out.println(innerVar);
+    }
+
+
+    /**
+     * final 修饰的方法不可以被子类复写
+     */
+    public final void func(){
+        System.out.println("finao void func()");
+    }
+
+    public void testReference(){
+        final FinalObject object = new FinalObject();
+        object.number = 10; // 1.4 final 修饰引用变量时,其引用(指向地址)不可变,引用对象内容可变
+    }
+}
+
+class FinalExtenderDemo extends FinalDemo{
+
+
+    // 可重写普通方法
+    @Override
+    public void print() {
+        super.print();
+        func(); // 可以调用 final 方法
+    }
+//  重写 final 方法报错
+//    public void func(){
+//
+//    }
+
+    // 可以重载 final 方法
+    public void func(String content){
+        System.out.println(content);
+    }
+}
+
+class FinalObject {
+    public int number;
+}
+```
+
+## 并发中的final
+### final 的重排序规则
+#### 基础数据类型
+- 写final域重排序规则
+> 写final域的重排序规则：禁止对final域的写，重排序到构造函数之外
+
+    1. JMM禁止编译器把final域的写，重排序到构造函数之外；
+
+    2. 编译器会在final域写之后，构造函数return之前，插入一个storestore屏障（关于内存屏障可以看上篇文章）。这个屏障可以禁止处理器把final域的写，重排序到构造函数之外。
+
+- 读 final 域重排序规则
+> 读final域重排序规则为：在一个线程中，初次读对象的引用，和初次读该对象包含的final域，JMM会禁止这两个操作的重排序。（注意，这个规则仅仅是针对处理器），处理器会在读final域操作的前面插入一个LoadLoad屏障.
+
+#### 引用类型
+> 禁止在构造函数对一个final修饰的对象的成员域的写入与随后将这个被构造的对象的引用赋值给引用变量 重排序
+
+### final引用溢出问题
+```java
+class FinalReferenceEscapeDemo {
+    private final int a;
+    private FinalReferenceEscapeDemo referenceDemo;
+
+    public FinalReferenceEscapeDemo() {
+        a= 1;  //1
+        referenceDemo= this; //2
+    }
+
+    public void writer() {
+        new FinalReferenceEscapeDemo();
+    }
+
+    public void reader() {
+        if (referenceDemo!= null){  //3
+            int temp=referenceDemo.a; //4
+        }
+    }
+}
+```
+- 1和2之间不存在依赖性,可以重排序,先执行2,此时读取这个对象会出现问题
+
 
 # Reflence
 {% blockquote 童云兰 https://book.douban.com/subject/10484692 豆瓣 %}
