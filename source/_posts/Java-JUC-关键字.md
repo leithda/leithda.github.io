@@ -420,7 +420,7 @@ final 可以用于修饰变量,方法和类
 该方法不可被子类复写,但是可以重载
 
 - final 修饰类
-该类不可以被继承,
+该类不可以被继承,但是可以实例化
 
 ## final 代码
 ```java
@@ -490,6 +490,8 @@ class FinalObject {
 ```
 
 ## 并发中的final
+> 推荐阅读[Java并发系列六：深入了解final关键字 by TzBugs](https://blog.csdn.net/TzBugs/article/details/80939811)
+
 ### final 的重排序规则
 #### 基础数据类型
 - 写final域重排序规则
@@ -545,3 +547,9 @@ Java并发编程实战(原作名: Java Concurrency in Practice)
 {% blockquote @kiraSally https://www.zybuluo.com/kiraSally/note/850631 www.zybuluo.com %}
 并发番@Java内存模型&Volatile一文通（1.7版）
 {% endblockquote %}
+
+---
+{% blockquote @TzBugs https://blog.csdn.net/TzBugs/article/details/80939811 CSDN %}
+Java并发系列六：深入了解final关键字
+{% endblockquote %}
+
