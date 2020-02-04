@@ -713,3 +713,155 @@ public final native boolean isAlive();
 
 
 # 线程暂停
+
+## Java线程暂停的方法
+
+> - 暂停线程意味着线程还可以重新恢复
+> - Java提供多种暂停的方式:`suspend()和resume()`组合、`sleep()`、`join()`、`yield()`、`wait()和notify()组合`等
+> - 其中`join()`与`wait()和notify()`将放在`线程间通信`中进一步讲解
+> - `suspend()和resume()组合`作为线程间的通信方式已被官方弃用，官方推荐使用`wait()和notify()组合`替换前者
+
+
+
+### suspend方法和resume方法
+
+```java
+/**
+ *  暂停当前线程
+ *   - 若当前线程还活着，将被暂停同时直到被恢复之前都不会做任何事
+ *   - 在操作在执行之前必须获取锁
+ *   - 该操作在暂停线程的同时并不会释放锁
+ */
+@Deprecated
+public final void suspend() {
+    checkAccess();
+    suspend0();
+}
+/**
+ * 恢复一个被暂停的线程
+ *   - 若线程活着同时被暂停，恢复它同时允许它继续执行后续行为
+ *   - 由于执行之前suspend会先持有锁，当resume发生在加锁后但suspend前，
+ *     会产生死锁 -> suspend会一直占据锁资源；同时线程状态仍为RUNNABLE
+ */
+@Deprecated
+public final void resume() {
+    checkAccess();
+    resume0();
+}
+```
+
+
+
+### suspend和resume的问题
+
+- 独占问题
+
+```java
+public class TestThread {
+    synchronized void func1(){
+        System.out.println("开始任务");
+        if(Thread.currentThread().getName().equals("leithda")){
+            System.out.println("leithda线程执行suspend方法并永远暂停");
+            Thread.currentThread().suspend();
+        }
+    }
+    
+    /*
+    suspend和resume使用不当容易造成公共的同步对象的独占，使其他线程无法访问公共同步对象
+     */
+    private static void test1() {
+        final TestThread thread = new TestThread();
+
+        Thread t1 = new Thread(thread::func1,"leithda");
+        t1.start();
+        Thread t2 = new Thread(()->{
+            System.out.println("test线程启动，但无法执行echo方法");
+            // echo方法被leithda线程锁定
+            thread.func1();;
+        },"test");
+        t2.start();
+    }
+}
+```
+
+- 不同步问题
+
+```java
+public class TestThread {
+
+    private String value = "战狼1";
+    public String getValue(){
+        return value;
+    }
+
+    public void setValue(String value){
+        if(Thread.currentThread().getName().equals("leithda")){
+            System.out.println("停止leithda线程");
+            Thread.currentThread().suspend();
+        }
+        this.value = value;
+    }
+    
+    /**
+     * 由于线程暂停导致的不同步问题
+     */
+    private static void test2(){
+        final TestThread thread = new TestThread();
+        new Thread(()->{
+            thread.setValue("战狼2");
+        },"leithda").start();
+
+        new Thread(()->{
+            System.out.println(thread.getValue());
+        },"test").start();
+    }
+```
+
+
+
+### sleep方法
+
+```java
+/**
+ * 使线程睡眠一段毫秒时间，但线程并不会丢失已有的任何监视器    
+ */
+public static void sleep(long millis, int nanos) throws InterruptedException {
+    if (millis < 0) {
+        throw new IllegalArgumentException("timeout value is negative");
+    }
+    if (nanos < 0 || nanos > 999999) {
+        throw new IllegalArgumentException("nanosecond timeout value out of range");
+    }
+    //换算用
+    if (nanos >= 500000 || (nanos != 0 && millis == 0)) {
+        millis++;
+    }
+    sleep(millis);
+}
+/** 我们一般会直接调用native方法，这或许是我们主动使用的最多次的native方法了 **/
+public static native void sleep(long millis) throws InterruptedException;
+```
+
+
+
+### yield方法
+
+```java
+/**
+  *  暗示线程调度器当前线程将释放自己当前占用的CPU资源
+  *  - 线程调度器会自由选择是否忽视此暗示
+  *  - 该方法会放弃当前的CPU资源，将它让给其他的任务去占用CPU执行时间
+  *  - 但放弃的时间不确定，可能刚刚放弃又获得CPU时间片
+  *  该方法的适合使用场景比较少，主要用于Debug，比如Lock包设计
+  */
+public static native void yield();
+```
+
+
+
+
+
+
+
+
+
