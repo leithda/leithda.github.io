@@ -857,11 +857,381 @@ public static native void sleep(long millis) throws InterruptedException;
 public static native void yield();
 ```
 
+# 线程中断
+## 终止方式
+Java终止线程主要有三个手段：
+- **自动终止:** 使用退出标识，使线程正常退出，即当`run()`方法完成之后线程自动终止
+- **强行终止:** 使用`stop()`方法强行终止,该方法已经弃用,因为使用这个方法可能产生不可预料的后果.
+- **手动终止:** 使用`interrupt()`方法中断线程,并在获取到线程中断时结束(退出)任务
+
+## 中断机制
+由于Java中无法立即停止一个线程,而停止操作很重要,因此Java提供了一种用于停止线程的机制,即**中断机制**
+- **中断状态:** 在Java中每个线程会维护一个Boolean中断状态位,用来表明当前线程是否被中断,默认非中断false
+- **中断方法:** 中断仅仅只是一种协作方式,JDK仅提供设置中断状态和判断是否中断的方法,如`interrupted()`和`isInterrupted()`
+- **中断过程:** 由于JDK只负责检测和更新中断状态,因此中断过程必须有程序员自己实现,包括中断捕获、中断处理，因此如何优雅的处理中断变得尤为重要
 
 
+## 中断方法
+JDK仅提供检测和更新状态位的方法，注意静态方法将清除中断状态
+-  Thread.currentThread.isInterrupted(): 判断是否中断，对象方法，不会清除中断状态
+-  Thread.interrupted(): 判断是否中断，静态方法，会清除中断状态
+-  Thread.currentThread().interrupt(): 中断操作，对象方法，会将线程的中断状态设置为ture，仅此而已(不会真正中断线程)，捕获和处理中断由程序员自行实现
+
+**中断后: 线程中断后的结果是死亡、等待新的任务或是继续运行至下一步，取决于程序本身
+
+### interrupt方法
+```java
+/**
+ * 中断一个线程(实质是设置中断标志位，标记中断状态)
+ *   - 线程只能被自己中断，否则抛出SecurityException异常
+ *   - 特殊中断处理如下：
+ *     1.若中断线程被如下方法阻塞，会抛出InterruptedException同时清除中断状态：
+ *     Object.wait()、Thread.join() or Thread.sleep()
+ *
+ *     2.若线程在InterruptibleChannel上发生IO阻塞，该通道要被关闭并将设置中断状态同时抛出ClosedByInterruptException异常
+ *
+ *     3.若线程被NIO多路复用器Selector阻塞，会设置中断状态且从select方法中立即返回一个非0值(当wakeup方法正好被调用时)
+ *
+ *   - 非上述情况都会将线程状态设置为中断
+ *   - 中断一个非活线程不会有啥影响
+ */
+public void interrupt() {
+    if (this != Thread.currentThread())
+        checkAccess();
+    synchronized (blockerLock) {
+        Interruptible b = blocker;
+        if (b != null) {
+            // Just to set the interrupt flag
+            // 调用interrupt方法仅仅是在当前线程中打了一个停止的标记，并不是真的停止线程！
+            interrupt0();           
+            b.interrupt(this);
+            return;
+        }
+    }
+    interrupt0();
+}
+```
+
+### isInterrupted方法
+```java
+/**
+ *   检测线程是否是中断状态，但不清除状态标志
+ */
+public boolean isInterrupted() {
+    //会调用本地isInterrupted方法，同时不清除状态标志
+    return isInterrupted(false);
+}
+/**
+  * @param ClearInterrupted 是否清除状态标注，false不清除，true清除
+  */
+private native boolean isInterrupted(boolean ClearInterrupted);
+-------------
+Thread t2 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        for (int i = 0 ;i < 10000;i++){}
+        System.out.println(Thread.currentThread().getName());
+    }
+},"leithda");
+t2.start();
+t2.interrupt();
+System.out.println("是否停止 1 ?= " + t2.isInterrupted());//是否停止 1 ?=true
+System.out.println("是否停止 2 ?= " + t2.isInterrupted());//是否停止 2 ?=true
+```
+
+### interrupted方法
+```java
+/**
+ *  检测当前线程是否是中断状态，执行后将清除中断状态
+ *  当连续两次调用该方法时，第二次会返回false(除非该线程再次被中断)
+ */
+public static boolean interrupted() {
+    //当前线程会调用本地isInterrupted方法，同时不清除状态标志
+    //注意比isInterrupted方法多了个currentThread
+    return currentThread().isInterrupted(true);
+}
+-------------
+Thread t2 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        for (int i = 0 ;i < 10000;i++){}
+        System.out.println(Thread.currentThread().getName());
+    }
+},"leithda");
+t2.start();
+t2.interrupt();//此时currentThread指的是主线程，主线程并没有被中断(执行了out方法)，因此返回false
+System.out.println("是否停止 1 ?= " + t2.interrupted());//是否停止 1 ?=fasle
+System.out.println("是否停止 2 ?= " + t2.interrupted());//是否停止 2 ?=fasle
+//将t2.interrupt()变成下面的，则主线程被中断
+Thread.currentThread().interrupt();
+System.out.println("是否停止 1 ?= " + t2.interrupted());//是否停止 1 ?=true
+```
+
+## 使用中断
+### 设置中断监听
+监听原则： 需要在可能发生中断的线程中循环监听线程中断状态，一旦发生中断就会执行中断逻辑，否则继续正常执行
+处理方案： 处理中断的方案可参见[6.6 处理中断](#处理中断)
+```java
+Thread thread = new Thread(() -> {
+    //循环监听中断状态
+    while(!Thread.currentThread().isInterrupted()) {
+        //正常执行任务
+    }
+    //处理中断
+}).start();
+```
+
+### 触发中断
+中断处理原则： 当调用中断后，会在`下一次`循环判断中退出循环，进而执行中断逻辑
+```java
+//调用JDK提供的中断方法即可
+thread.interrupt();
+```
+
+## 中断情况
+中断线程分以下三种情况：
+1. **中断非阻塞线程:** volatile共享变量或使用`interrupt()`,前者需要自己实现,后者是JDK提供的
+2. **中断阻塞线程:** 当处于阻塞状态的线程调用`interrupt()`时会抛出中断异常,并且会清除线程中断标志(设置为`false`);由于中断标志被清除,若像继续中断,需要在捕获中断异常后重新调用`interrupt()`重置中断标志位`true`
+3. **不可中断线程:** `synchroinzed`和`aquire()`不可被中断,但AQS提供了`acquireInterruptibly()`方法响应中断
+
+**补充:**中断阻塞线程测试用例
+```java
+Thread thread = new Thread(() -> {
+    while(!Thread.currentThread().isInterrupted()) {
+        System.out.println(Thread.currentThread().getName() + " while run ");
+        try {
+            System.out.println(Thread.currentThread().getName() + " sleep begin");
+            Thread.sleep(500);
+            System.out.println(Thread.currentThread().getName() + " sleep end");
+        } catch (InterruptedException e) {
+            //sleep方法会清空中断标志，若不重新中断，线程会继续执行
+            Thread.currentThread().interrupt();
+            e.printStackTrace();
+        }
+    }
+    if (Thread.currentThread().isInterrupted()) {
+        System.out.println(Thread.currentThread().getName() + "is interrupted");
+    }
+});
+thread.start();
+try {
+    Thread.sleep(1000);
+} catch (InterruptedException e) {
+    e.printStackTrace();
+}
+thread.interrupt();
+```
+
+## 处理中断
+
+**注意**: `interrupt()`只是建议中断而不是真正中断,所以需要用以下方法真正中断线程
+### 异常法
+```java
+//直接选择在run方法中抛出异常，从而停止线程
+Thread t2 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        try {
+            throw new InterruptedException();//主动抛出异常
+        } catch (InterruptedException e) {
+            System.out.println("成功捕获 InterruptedException异常");
+            e.printStackTrace();
+        }
+    }
+},"leithda");
+t2.start();
+t2.interrupt();
+-------------
+//输出：成功捕获 InterruptedException异常
+//打印：java.lang.InterruptedException
+```
+
+### 阻塞法
+```java
+//沉睡
+Thread t2 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        try {
+            //若是wait()、join()、sleep()方法需要获取或者选择向上抛出
+            Thread.sleep(1000);//沉睡
+        } catch (InterruptedException e) {
+            System.out.println("在沉睡中 成功捕获 InterruptedException异常");
+            /此时若想中断任务，需要再次触发中断以停止任务
+            Thread.currentThread().interrupt();
+        }
+    }
+},"leithda");
+t2.start();
+t2.interrupt();
+-------------
+//输出：在沉睡中 成功捕获 InterruptedException异常
+//打印：java.lang.InterruptedException: sleep interrupted
+```
 
 
+### Return 方法
+```java
+//将interrupt方法与return结合使用也能停止线程
+Thread t2 = new Thread(new Runnable() {
+@Override
+public void run() {
+    int i = 0;
+    while (true){
+        if (Thread.currentThread().isInterrupted()){
+            System.out.println("停止");
+            return;
+        }
+        System.out.println(System.currentTimeMillis());
+    }
+}
+},"leithda");
+t2.start();
+Thread.sleep(1000);
+t2.interrupt();
+-------------
+//输出：
+.....
+1502463392035
+1502463392035
+1502463392035
+停止
+//然后就停止打印了
+```
+### 暴力法
+```java
+//使用stop()方法停止线程是非常暴力的，不能用！
+Thread t2 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        int i = 0;
+        while (true){
+            System.out.println(i++);
+        }
+    }
+},"leithda");
+t2.start();
+Thread.sleep(1000);
+t2.stop();
+-------------
+//输出：
+.....
+154192
+154193
+154194
+154195
+//然后就停止打印了
+```
 
+## 禁用stop方法
+**禁用`stop()`的原因:**
+  - **立即抛出异常:** 即刻抛出`ThreadDeath异常`,在线程的`run()`内,任何一点都有可能抛出`ThreadDeath Error`,包括在`cache或finally`语句中
+  - **立即释放所有锁:** 释放该线程所持有的所有的锁,会导致数据无法同步处理,出现数据不一致的问题
+```java
+//情况1：使用stop()方法时会抛出ThreadDeath异常，但一般不需要显示捕获
+Thread t2 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        try {
+            Thread.currentThread().stop();
+        }catch (ThreadDeath death){
+            System.out.println("捕获到ThreadDeath异常");
+            death.printStackTrace();
+        }
+    }
+},"leithda");
+t2.start();
+-------------
+//输出：捕获到ThreadDeath异常
+//打印：java.lang.ThreadDeath
+```
+```java
+//情况2：使用stop()方法释放锁会给数据造成不一样的问题
+final Object lock = new Object();
+Thread t1 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        try {
+            synchronized (lock) {
+                System.out.println(Thread.currentThread().getName() + "获取锁");
+                Thread.sleep(1000);
+                System.out.println(Thread.currentThread().getName() + "释放锁");
+            }
+        } catch (Throwable ex) {
+            System.out.println("获取异常： " + ex);
+            ex.printStackTrace();
+        }
+    }
+},"leithda");
+Thread t2 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        synchronized (lock) {
+            System.out.println(Thread.currentThread().getName() + "获取锁");
+        }
+    }
+},"mellofly");
+t1.start();
+Thread.sleep(1000);
+//        t1.stop();
+t2.start();
+-------------
+//当t1.stop()未执行时，两个线程竞争锁的顺序是固定的，打印结果如下：
+leithda 获取锁
+leithda 释放锁
+mellofly 获取锁
+//当t1.stop()执行时，t1线程抛出了ThreadDeath异常并且t1线程释放了它所占有的锁，打印结果如下：
+mellofly
+java.lang.ThreadDeath
+获取异常： java.lang.ThreadDeath
+//由上述可得，stop方法非线性安全，再加上是过期方法，一定不能用！
+```
 
+# 线程优先级
+## setPriority方法
+```java
+/**
+  * Changes the priority of this thread.
+  *     变更线程优先级 默认优先级为NORM_PRIORITY = 5
+  */
+public final void setPriority(int newPriority) {
+    ThreadGroup g;
+    checkAccess();
+    //优先级区间时MIN_PRIORITY - MAX_PRIORITY
+    //注意：不同操作系统的优先级可能有些区别
+    if (newPriority > MAX_PRIORITY || newPriority < MIN_PRIORITY) {
+        throw new IllegalArgumentException();
+    }
+    if((g = getThreadGroup()) != null) {
+        if (newPriority > g.getMaxPriority()) {
+            newPriority = g.getMaxPriority();
+        }
+        setPriority0(priority = newPriority);
+    }
+}
+```
 
+## 优先级规则
+- 继承性
+```java
+//线程t1启动线程t2，则t2与t1具有相同的优先级
+Thread t1 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        System.out.println("当前线程" + Thread.currentThread().getName() + "的优先级为：" + Thread.currentThread().getPriority());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("当前线程" + Thread.currentThread().getName() + "的优先级为：" + Thread.currentThread().getPriority());
+            }
+        },"leithda").start();
+    }
+}, "mellofly");
+t1.setPriority(Thread.MAX_PRIORITY);//注意默认优先级是5，这里我们改成10
+t1.start();
+-------------
+//输出：
+当前线程sally的优先级为：10
+当前线程kira的优先级为：10
 
+```
