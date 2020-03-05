@@ -669,8 +669,8 @@ Thread t = new Thread( new Runnable() {
     public void run() {
         System.out.println(Thread.currentThread().getName());
     }
-},"kira");
-t.start();//kira
+},"leithda");
+t.start();//leithda
 ```
 
 
@@ -1231,7 +1231,239 @@ t1.setPriority(Thread.MAX_PRIORITY);//注意默认优先级是5，这里我们�
 t1.start();
 -------------
 //输出：
-当前线程sally的优先级为：10
-当前线程kira的优先级为：10
+当前线程leithda的优先级为：10
+当前线程mellofly的优先级为：10
 
 ```
+- 规则性
+> - CPU会尽量将执行资源让给优先级比较高的线程
+> - 高优先级的线程总是大部分先执行完,但不意味着高优先级的线程会先全部执行完
+> - 当线程优先级的等级差距很大时,谁先执行完和代码的调用顺序无关
+
+- 随机性
+> - 优先级高的线程不一定每次都先执行完,具有随机性和不确定性
+> - 但通常来说,优先级高的线程都会运行的比优先级较低的要快(大概率事件)
+
+# 线程异常处理
+## 线程中异常处理
+**线程中异常处理方法:**
+  - `setDefaultUncaughtExceptionHandler()`:全局默认线程异常处理器,用于给所有线程对象设置默认的异常处理器
+  - `setUncaughtException()`: 线程私有异常处理器,给指定线程对象设置的异常处理器,优先级高于全局默认线程异常处理器
+
+### setDefaultUncaughtExceptionHandler方法
+```java
+Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+    @Override
+    public void uncaughtException(Thread t, Throwable e) {
+        System.out.println(t.getName() + "线程出现异常");
+        e.printStackTrace();
+    }
+});
+Thread t2 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        Object object = null;
+        System.out.println(object.toString());
+    }
+},"leithda");
+t2.start();
+-------------
+//输出：
+leithda线程出现异常
+java.lang.NullPointerException
+    at concurrent.Main$1.run(Main.java:12)
+    at java.lang.Thread.run(Thread.java:748)
+```
+
+### setUncaughtExceptionHandler方法
+```java
+Thread t2 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        Object object = null;
+        System.out.println(object.toString());
+    }
+},"leithda");
+t2.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+    @Override
+    public void uncaughtException(Thread t, Throwable e) {
+        System.out.println(t.getName() + "线程出现异常");
+        e.printStackTrace();
+    }
+});
+t2.start();
+-------------
+//输出：
+leithda线程出现异常
+java.lang.NullPointerException
+    at concurrent.Main$1.run(Main.java:12)
+    at java.lang.Thread.run(Thread.java:748)
+```
+
+## 线程组异常处理
+**线程组异常特点**  
+  - 默认情况下,同意个线程组的线程出现异常,该线程组并不会收到影响并被终止,而是继续正常运行
+  - 若像实现同一个线程组中一旦有一个线程出现异常要终止该线程组的所有线程时,需要集成`ThreadGroup`同时重写`ThreadGroup`的`uncaughtException()`方法
+
+ - 继承ThreadGroup
+```java
+/**
+  * 继承ThreadGroup自定义一个新的线程组，并重写uncaughtException方法
+  * 实现：当线程组内一个线程出现异常，该线程组下的所有线程也会全部停止
+  */
+public class leithdaThreadGroup extends ThreadGroup {
+    public leithdaThreadGroup(String name) {
+        super(name);
+    }
+    //重写线程组的uncaughtException方法
+    @Override
+    public void uncaughtException(Thread t, Throwable e) {
+        super.uncaughtException(t, e);
+        this.interrupt();//出现异常，就终止该线程
+    }
+}
+-------------
+leithdaThreadGroup leithdaThreadGroup = new leithdaThreadGroup("leithdaGroup");
+Thread [] threads = new Thread[5];
+for (int i =0;i<5;i++){
+    threads[i] = new Thread(leithdaThreadGroup,new Runnable() {
+    @Override
+    public void run() {
+        Thread t = Thread.currentThread();
+        if ("leithda4".equals(t.getName())){
+            throw new NullPointerException();//随便抛出一个异常
+        }
+        while (t.isInterrupted() == false){
+            System.out.println("线程" + t.getName() + "死循环中");
+        }
+    }
+},"leithda" + i);
+threads[i].start();
+-------------
+//输出：
+.....
+线程leithda1死循环中
+线程leithda1死循环中
+线程leithda0死循环中
+线程leithda3死循环中
+Exception in thread "leithda4" java.lang.NullPointerException
+    at concurrent.Main$1.run(Main.java:17)
+    at java.lang.Thread.run(Thread.java:748)
+//然后所有线程都终止了，结束打印   
+```
+
+# 守护线程
+## 守护线程
+- **分类**:在Java中分成两种线程: **用户线程**和**守护线程**
+- **特性**: 当进程中不存在非守护线程时,则全部的守护线程会自动销毁
+- **应用**: JVM在启动后会生成一系列守护线程,最有名的当属GC(垃圾回收器)
+
+## 守护线程的使用
+```java
+Thread t2 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        System.out.println("守护线程运行了");
+        for (int i = 0; i < 500000;i++){
+            System.out.println("守护线程计数：" + i);
+        }
+    }
+}, "leithda");
+t2.setDaemon(true);
+t2.start();
+Thread.sleep(500);
+-------------
+//输出：
+......
+守护线程计数：113755
+守护线程计数：113756
+守护线程计数：113757
+守护线程计数：113758
+//结束打印：会发现守护线程并没有打印500000次，因为主线程已经结束运行了
+```
+
+# 线程间通信
+## 线程间通信
+线程与线程之间不是独立的个体,彼此之间可以互相通信和协作:
+  **Java提供多种线程间通信方案**: 轮询机制、等待/通知机制、join()、ThreadLocal、Synchronized、Volatile等
+
+## 轮询机制
+- sleep+while(true)
+```java
+final List<Integer> list = new ArrayList<Integer>();
+Thread t1 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        try {
+            for (int i = 0 ; i < 6 ;i++){
+                list.add(i);
+                System.out.println("添加了" + (i+1) + "个元素");
+            }
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+},"leithda");
+Thread t2 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        try {
+            while (true){
+                if (list.size() == 3){
+                    System.out.println("已添加5个元素,mellofly 线程需要退出");
+                    throw new InterruptedException();
+                }
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();//这里只是打印堆栈信息，不是真的停止执行
+        }
+    }
+},"mellofly");
+t1.start();
+t2.start();
+-------------
+//输出：
+添加了1个元素
+添加了2个元素
+添加了3个元素
+已添加3个元素,mellofly 线程需要退出
+java.lang.InterruptedException
+    at concurrent.Main$2.run(Main.java:98)
+    at java.lang.Thread.run(Thread.java:748)
+添加了4个元素
+添加了5个元素
+添加了6个元素
+```
+  - 轮训机制的弊端
+    1. 难以保证及时性：睡眠时，基本不消耗资源，但睡眠时间过长(轮询间隔时间较大)，就不能及时发现条件变更
+    2. 难以降低开销：减少睡眠时间(轮询间隔时间较小)，能更迅速发现变化，但会消耗更多资源，造成无端浪费
+    3. Java引入等待/通知机制来减少CPU的资源浪费，同时还可以实现在多个线程间的通信
+
+## 等待/通知机制
+### Object类的wait和notify方法
+
+| 方法名称       | 描述                                                         |
+| -------------- | ------------------------------------------------------------ |
+| notify()       | 通知一个在对象上等待的线程，使其从wait()方法返回，而返回的前提是该线程获取到了对象的锁 |
+| notifyAll()    | 通知所有等待在该对象上的线程                                 |
+| wait()         | 调用该方法的线程进入WAITING状态，只有等待另外线程的通知或被中断才会返回，需要注意，调用wait()方法后，会释放对象的锁 |
+| wait(long)     | 超时等待一段时间，这里的参数时间是毫秒，也就是等待长达n毫秒，如果没有通知就超时返回 |
+| wait(long,int) | 对于超时时间更细粒度的控制，可以达到纳秒                     |
+
+
+
+### Object.wait方法
+
+- wait方法**使当前线程进行阻塞等待**,该方法是Object类的方法,用来将当前线程**放入"等待队列"**中,并在wait所在的代码处停止执行,直到收到通知**被唤醒或中断或超时**
+- **调用wait方法之前,线程必须获得该对象的对象级别锁**,即只能在同步方法或同步块中调用wait方法
+- 在执行wait方法后,**当前线程释放锁**,在从wait方法返回前,线程与其他线程竞争重新获得锁
+- 如果调用wait方法时没有持有适当的锁,则抛出运行期异常类`IllegalMonitorStateException`
+
+### Object.notify方法
+
+- notify方法**使线程被唤醒**,该方法是Object类的方法,用来将当前线程**从"等待队列中"移出到"同步队列中"**线程状态重新编程**阻塞状态**,notify方法所在同步快释放锁后,从wait方法返回继续执行
+- **调用notify方法之前,线程必须获得该对象的对象级别锁**,即只能在同步方法或同步块中调用notify方法
+- 该方法用来通知可能等待该对象的对象锁的其他线程,如果有多个线程等待,则由线程规划器从等待队列中随机选择一个WAITTING状态线程,对其发出通知转入同步队列并使它等待获取该对象的对象锁
+- 在执行notify方法之后,**当前线程不会马上释放对象所锁**,等待线程也并不能马上获取该对象锁,需要等到执行notify方法的线程将程序执行完,即**退出同步代码块之后当前线程才能释放锁**,而等待线程才可以有机会获取该对象锁
+- 如果调用notify方法时没有持有适当的锁,则抛出运行期异常类`IllegalMonitorStateException`
