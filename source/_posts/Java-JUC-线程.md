@@ -1467,3 +1467,302 @@ java.lang.InterruptedException
 - 该方法用来通知可能等待该对象的对象锁的其他线程,如果有多个线程等待,则由线程规划器从等待队列中随机选择一个WAITTING状态线程,对其发出通知转入同步队列并使它等待获取该对象的对象锁
 - 在执行notify方法之后,**当前线程不会马上释放对象所锁**,等待线程也并不能马上获取该对象锁,需要等到执行notify方法的线程将程序执行完,即**退出同步代码块之后当前线程才能释放锁**,而等待线程才可以有机会获取该对象锁
 - 如果调用notify方法时没有持有适当的锁,则抛出运行期异常类`IllegalMonitorStateException`
+
+### wait/notify机制
+
+- **wait()使线程停止运行，notify()使停止的线程继续运行
+1. 使用`wait()`、`notify()`、`notifyAll()`需要 **先对调用对象加锁**，即只能在同步方法或同步代码块中调用这些方法
+2. 使用`wait()`方法后，**线程状态由RUNNING编程WAITING**，并将当前线程放入对象的 **等待队列**中
+3. 调用`notify()`或`notifyAll()`方法之后，等待线程不会从`wait()`返回，需要`notify()`方法所在 **同步代码块执行完毕而释放锁**之后，等待线程才可以 **获取到该对象锁并从`wait()`返回**
+4. `notify()`方法将 **随机选择一个等待线程**从等待队列移动到同步队列中；`notifyAll()`方法会将等待队列中的 **所有等待线程**全部移到同步队列中，被移动线程状态由`WAITING`变成`BLOCKED`
+
+### 等待/通知的经典范式(生产者-消费者模式)
+- 等待方(生产者)遵循如下规则
+- 1. 获取对象的锁
+- 2. 如果条件不满足，那么调用对象的wait方法，被通知后仍要检查条件
+- 3. 条件满足则执行对应处理逻辑
+
+```java
+// 对应伪代码
+synchronized(对象){
+  while(条件不满足){
+    对象.wait();
+  }
+  对应处理逻辑
+}
+```
+
+- 通知方(消费者)遵循如下规则
+- 1. 获取对象的锁
+- 2. 改变条件
+- 3. 通知所有等待在对象上的线程
+
+```java
+// 对应伪代码
+synchronized(对象){
+  改变条件
+  对象.notifyAll();
+}
+```
+
+### wait/notify的使用
+```java
+final List<Integer> list = new ArrayList<Integer>();
+Object lock = new Object();
+Thread t1 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        //加锁，拥有lock的Monitor
+        //wait方法必须在synchronized方法或方法块中执行，否则抛出IllegalMonitorStateException
+        synchronized (lock){
+            System.out.println(Thread.currentThread().getName() + "线程开始执行");
+            if (list.size() != 3){
+                System.out.println("wait 开始:" + System.currentTimeMillis());
+                try {
+                    lock.wait();//将当前leithda线程放入等待队列中，进入等待状态
+                    System.out.println("wait 结束:" + System.currentTimeMillis());
+                    System.out.println(Thread.currentThread().getName() + "线程结束执行");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+},"leithda");
+Thread t2 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        //加锁，拥有lock的Monitor
+        //notify方法必须在synchronized方法或方法块中执行，否则抛出IllegalMonitorStateException
+        //由于wait方法会释放锁，所以mellofly线程可以获取到lock同步锁
+        //同时notify方法不会释放锁，直到该同步块执行完毕
+        synchronized (lock){
+            try {
+                System.out.println(Thread.currentThread().getName() + "线程开始执行");
+                for (int i = 0; i< 6;i++){
+                    list.add(i);
+                    if (list.size() == 3){
+                        System.out.println("notify 开始:" + System.currentTimeMillis());
+                        //随机唤醒一个等待线程，这里因为就只有leithda线程被等待，所有就唤醒它
+                        lock.notify();
+                        // lock.notifyAll(); 会一次性唤醒所有的等待线程
+                        System.out.println("notify方法已执行，发出通知");
+                    }
+                    System.out.println("已添加" + ( i +1 ) + "个元素");
+                    Thread.sleep(500);//为了让效果明显一些，我们先暂停500毫秒
+                }
+                System.out.println("notify 结束:" + System.currentTimeMillis());
+                System.out.println(Thread.currentThread().getName() + "线程结束执行");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+},"mellofly");
+t1.start();
+t2.start();
+-------------
+//输出：
+leithda线程开始执行
+wait 开始:1502699526681
+执行wait方法    
+mellofly线程开始执行 //注意：wait方法会释放锁，所有mellofly线程获得锁从而执行
+已添加1个元素
+已添加2个元素
+notify 开始:1502699527682
+notify已方法，发出通知
+已添加3个元素
+已添加4个元素
+已添加5个元素
+已添加6个元素 //注意：notify方法不会释放锁，直到该同步方法/块执行完毕才会释放锁
+notify 结束:1502699529682
+mellofly线程结束执行
+wait 结束:1502699529682
+leithda线程结束执行
+```
+
+### wait/notify的陷阱
+> - **通知过早**： 当notify执行的过早，或者说通知过早，很容易造成逻辑混乱，比如wait失效
+> - **等待条件变化**： 当wait等待的条件发生了变化，很容易造成逻辑混乱，比如异常
+
+## join方法
+### join方法
+
+- **作用**: 等待线程对象销毁，可以使得一个线程在另一个线程结束后再执行，底层使用`wait()`实现
+- **常用于**： 将两个交替执行的线程合并为顺序执行的线程
+- **场景**： 在很多情况下，主线程创建并启动子线程，当子线程中药进行大量耗时运算，主线程往往将遭遇子线程结束之前结束。这时，如果主线程想等待子线程执行完成之后再结束，比如子线程处理一个数据，主线程要取得这个数据中的值，就可以使用`join()`方法
+
+### join方法解析
+
+```java
+/**
+  * Waits at most {@code millis} milliseconds for this thread to
+  * die. A timeout of {@code 0} means to wait forever.
+  *     后续线程需要等待当前线程至多运行millis毫秒（超过millis当前线程会自动死亡，结束等待）
+  *     若millis表示0，表示后续线程需要永远等待（直到当前线程运行完毕）
+  * <p> This implementation uses a loop of {@code this.wait} calls conditioned on 
+  * {@code this.isAlive}. As a thread terminates the {@code this.notifyAll} method is invoked. 
+  * It is recommended that applications not use {@code wait}, {@code notify}, or
+  * {@code notifyAll} on {@code Thread} instances.
+  *     该方法的原理是循环调用wait方法阻塞后续线程直到当前线程已经不是存活状态了
+  * @param  millis
+  *         the time to wait in milliseconds
+  * @throws  IllegalArgumentException
+  *          if the value of {@code millis} is negative
+  * @throws  InterruptedException
+  *          if any thread has interrupted the current thread. The
+  *          <i>interrupted status</i> of the current thread is
+  *          cleared when this exception is thrown.
+  */
+//注意 join方法被synchronized修改，即是个同步方法，也是此处获取到同步锁，为wait做好前提准备
+//同时lock指的就是调用join方法的对象
+public final synchronized void join(long millis) throws InterruptedException {
+    long base = System.currentTimeMillis();
+    long now = 0;
+    if (millis < 0) {
+        throw new IllegalArgumentException("timeout value is negative");
+    }
+    //当millis为0时，说明后续线程需要被无限循环等待，直到当前线程结束运行
+    if (millis == 0) {
+        while (isAlive()) {
+            wait(0);//wait的超时时间为0
+        }
+    } else {
+        //当millis>0时，在millis毫秒内后续线程需要循环等待，直到超时当前线程自动死亡
+        while (isAlive()) {
+            long delay = millis - now;
+            if (delay <= 0) {
+                break;
+            }
+            wait(delay);//wait的超时时间为delay
+            now = System.currentTimeMillis() - base;
+        }
+    }
+}
+/**
+  * Thread类还提供一个等待时间为0的join方法
+  * 用于将后续线程无限循环等待，直到当前线程结束运行
+  */
+public final void join() throws InterruptedException {
+    join(0);
+}
+```
+
+### join方法的使用
+```java
+Thread t1 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        for (int i = 0;i<100;i++){
+            System.out.println(Thread.currentThread().getName()+"线程值为:leithda" + i);                    }
+    }
+},"leithda");
+Thread t2 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        for (int i = 0;i<2;i++){
+            System.out.println(Thread.currentThread().getName()+"线程值为:mellofly" + i);
+        }
+    }
+},"mellofly");
+t1.start();
+t1.join();//让t2线程和后续线程无限等待直到leithda线程执行完毕
+t2.start();
+-------------
+//输出：
+......
+leithda线程值为:leithda97
+leithda线程值为:leithda98
+leithda线程值为:leithda99
+mellofly线程值为:mellofly0 //可以发现直到leithda线程执行完毕，mellofly线程才开始执行
+mellofly线程值为:mellofly1
+```
+
+### join(long)方法的使用
+
+```java
+Thread t1 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        try {
+            System.out.println("beginTime=" + System.currentTimeMillis());
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+},"leithda");
+t1.start();
+t1.join(2000);//当主线程等待2000毫秒
+System.out.println("endTime=" + System.currentTimeMillis());
+-------------
+//输出：
+......
+beginTime=1502693592670
+endTime  =1502693594670
+//endTime - beginTime = 2000 正好相当于等待的时间
+```
+
+### join VS sleep
+
+- `join(long`方法在内部使用`wait(long`方法进行等待，因此`join(long)`方法能够释放锁
+- `Thread.sleep(long)`方法不会释放锁
+
+### join VS synchronized
+
+- `join()`方法在内部使用`wait()`方法进行等待
+- `synchronized`使用的是对象监视器原理作为同步
+
+## ThreadLocal
+
+### ThreadLocal
+- **变量共享**：变量值的共享可以使用public static变量，所有线程都使用同一个静态变量
+- **作用**： ThreadLocal 实现每个线程都有自己的共享变量，从而别的线程修改静态变量并不会对自身产生影响
+- **原理**： ThreadLocal相当于全局存放数据的盒子，存储每个线程的私有数据
+- **重点**： ThreadLocal 并不能解决并发带来的数据不一致问题，而主要用于备份共享变量作为私有变量
+- **补充**：关于 ThreadLocal 请参见笔者的 并发番@ThreadLocal一文通，这里只是简单介绍
+
+### ThreadLocal的使用
+
+```java
+ThreadLocal threadLocal = new ThreadLocal();
+Thread t1 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        for (int i = 0;i<2;i++){
+            threadLocal.set("leithda" + i);
+            System.out.println(Thread.currentThread().getName() + 
+                "线程的ThreadLocal值为:" + threadLocal.get());
+            }
+        }
+    },"leithda");
+Thread t2 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        for (int i = 0;i<2;i++){
+            threadLocal.set("mellofly" + i);
+            System.out.println(Thread.currentThread().getName() + 
+                "线程的ThreadLocal值为:" + threadLocal.get());
+            }
+        }
+    },"mellofly");
+t1.start();
+t2.start();
+for (int i = 0;i<2;i++){
+    threadLocal.set("Main" + i);
+    System.out.println(Thread.currentThread().getName() + 
+        "线程的ThreadLocal值为:" + threadLocal.get());
+}
+//输出：
+main线程的ThreadLocal值为:Main0
+mellofly线程的ThreadLocal值为:mellofly0
+leithda线程的ThreadLocal值为:leithda0
+mellofly线程的ThreadLocal值为:mellofly1
+main线程的ThreadLocal值为:Main1
+leithda线程的ThreadLocal值为:leithda1
+```
+
+# 致谢
+[并发番@Thread一文通(1.7版)](https://www.zybuluo.com/kiraSally/note/823674) 由 [黄志鹏kira](https://juejin.im/user/59716ee96fb9a06b9c744c67) 创作，采用 [知识共享 署名-非商业性使用 4.0 国际 许可协议](http://creativecommons.org/licenses/by-nc/4.0/) 进行许可。
+
+本站文章除注明转载/出处外，均为本站原创或翻译，转载前请务必署名。
