@@ -793,3 +793,70 @@ public enum JdbcType {
 `org.apache.ibatis.type.TypeHandlerRegistry` ，TypeHandler 注册表，相当于管理 TypeHandler 的容器，从其中能获取到对应的 TypeHandler 。
 
 ## 构造方法
+```java
+/**
+   * JDBC Type 和 {@link TypeHandler} 的映射
+   */
+  private final Map<JdbcType, TypeHandler<?>>  jdbcTypeHandlerMap = new EnumMap<>(JdbcType.class);
+
+  /**
+   * {@link TypeHandler}
+   */
+  private final Map<Type, Map<JdbcType, TypeHandler<?>>> typeHandlerMap = new ConcurrentHashMap<>();
+
+  /**
+   * {@link UnknownTypeHandler}
+   */
+  private final TypeHandler<Object> unknownTypeHandler = new UnknownTypeHandler(this);
+
+  /**
+   * 所有 {@link TypeHandler} 的集合
+   */
+  private final Map<Class<?>, TypeHandler<?>> allTypeHandlersMap = new HashMap<>();
+
+  /**
+   * 空的 {@link TypeHandler} 集合
+   */
+  private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = Collections.emptyMap();
+
+  /**
+   * 默认的枚举类型的 TypeHandler 对象
+   */
+  private Class<? extends TypeHandler> defaultEnumTypeHandler = EnumTypeHandler.class;
+
+  public TypeHandlerRegistry() {
+    register(Boolean.class, new BooleanTypeHandler());
+    register(boolean.class, new BooleanTypeHandler());
+    register(JdbcType.BOOLEAN, new BooleanTypeHandler());
+    register(JdbcType.BIT, new BooleanTypeHandler());
+
+    // <1>
+    register(Date.class, new DateTypeHandler());
+    register(Date.class, JdbcType.DATE, new DateOnlyTypeHandler());
+    register(Date.class, JdbcType.TIME, new TimeOnlyTypeHandler());
+
+    // 省略其他类型的注册
+  }
+```
+- `TYPE_HANDLER_MAP`属性，TypeHandler的映射
+  - 一个Java Type 可以对应多个 JDBC Type,也就是多个TypeHandler,所以Map的第一层的值是`Map<JdbcTyoe,TypeHandler<?>`。在`<1>`处，我们可以看到，Date对应了对个JDBC的TypeHandler的注册
+  - 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

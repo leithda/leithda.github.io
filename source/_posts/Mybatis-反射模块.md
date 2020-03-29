@@ -216,6 +216,8 @@ public class Reflector {
       }
     }
 ```
+- bridge方法是jdk用于桥接接口实现中包含范型时使用。例子如下：
+
  - `<3>`处，会调用`#getSignature(Method method)`方法获取方法的签名(唯一标识)
 ```java
  /**
