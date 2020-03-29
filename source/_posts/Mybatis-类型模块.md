@@ -825,29 +825,192 @@ public enum JdbcType {
   private Class<? extends TypeHandler> defaultEnumTypeHandler = EnumTypeHandler.class;
 
   public TypeHandlerRegistry() {
-    register(Boolean.class, new BooleanTypeHandler());
-    register(boolean.class, new BooleanTypeHandler());
-    register(JdbcType.BOOLEAN, new BooleanTypeHandler());
-    register(JdbcType.BIT, new BooleanTypeHandler());
 
     // <1>
     register(Date.class, new DateTypeHandler());
     register(Date.class, JdbcType.DATE, new DateOnlyTypeHandler());
     register(Date.class, JdbcType.TIME, new TimeOnlyTypeHandler());
-
+    // <2>
+    register(JdbcType.TIMESTAMP, new DateTypeHandler());
+    register(JdbcType.DATE, new DateOnlyTypeHandler());
+    register(JdbcType.TIME, new TimeOnlyTypeHandler());
     // 省略其他类型的注册
   }
+
 ```
 - `TYPE_HANDLER_MAP`属性，TypeHandler的映射
   - 一个Java Type 可以对应多个 JDBC Type,也就是多个TypeHandler,所以Map的第一层的值是`Map<JdbcTyoe,TypeHandler<?>`。在`<1>`处，我们可以看到，Date对应了对个JDBC的TypeHandler的注册
-  - 
+  - 当一个`Java Type`不存在对应的JDBC Type时，就使用`NULL_TYPE_HANDLER_MAP`静态属性，添加到`TYPE_HANDLER_MAP`中进行占位。
+- `JDBC_TYPE_HANDLER_MAP`属性，JDBC Type个TypeHandler的映射。
+  - 一个JDBC Type只对应一个Java Type，也就是一个TypeHandler,不同于`TYPE_HANDLER_MAP`属性，在`<2>`
+处，我们可以看到，三个时间类型的Jdbc Type注册到`JDBC_TYPE_HANDLER_MAP`中。
+  - `JDBC_TYPE_HANDLER_MAP`是一一映射，简单就可以获得 JDBC Type 对应的 TypeHandler ，而 `TYPE_HANDLER_MAP`是一对多映射，一个Java Type该如何获取对应的TypeHandler呢，答案在`#getTypeHandler(Type type,JdbcType jdbcType)`方法。
 
+## getInstance
+`#getInstance(Class<?> javaTypeClass, Class<?> typeHandlerClass)`方法，创建TypeHandler对象。代码如下：
 
+```java
+  @SuppressWarnings("unchecked")
+  public <T> TypeHandler<T> getInstance(Class<?> javaTypeClass, Class<?> typeHandlerClass) {
+    // 获得 Class 类型的构造方法
+    if (javaTypeClass != null) {
+      try {
+        Constructor<?> c = typeHandlerClass.getConstructor(Class.class);
+        return (TypeHandler<T>) c.newInstance(javaTypeClass); // 符合这个条件的，例如：EnumTypeHandler
+      } catch (NoSuchMethodException ignored) {
+        // ignored  // ignored 忽略该异常，继续向下
+      } catch (Exception e) {
+        throw new TypeException("Failed invoking constructor for handler " + typeHandlerClass, e);
+      }
+    }
+    // 获得空参的构造方法
+    try {
+      Constructor<?> c = typeHandlerClass.getConstructor();
+      return (TypeHandler<T>) c.newInstance();
+    } catch (Exception e) {
+      throw new TypeException("Unable to find a usable constructor for " + typeHandlerClass, e);
+    }
+  }
+```
 
+## register
+`#register(...)`方法，注册TypeHandler。TypeHandlerRegistry中有大量该方法的重载实现，整理如下：
 
+> FROM 徐群明 [<Mybatis技术内幕>](https://item.jd.com/12125531.html)
+> {% asset_img register.png register 方法 %}
 
+除了⑤以外，所有方法最终都会调用④，即`#register(Type javaType, JdbcType jdbcType, TypeHandler<?> handler)`方法，代码如下：
+```java
+  private void register(Type javaType, JdbcType jdbcType, TypeHandler<?> handler) {
+    // <1> 添加 handler 到 TYPE_HANDLER_MAP 中
+    if (javaType != null) {
+      // 获取 Java Type 对应的 map
+      Map<JdbcType, TypeHandler<?>> map = typeHandlerMap.get(javaType);
+      if (map == null || map == NULL_TYPE_HANDLER_MAP) {
+        map = new HashMap<>();
+        typeHandlerMap.put(javaType, map);
+      }
+      // 添加到 handler 的 map 中
+      map.put(jdbcType, handler);
+    }
+    // <2> 添加 handler 到 ALL_TYPE_HANDLER__MAP 中
+    allTypeHandlersMap.put(handler.getClass(), handler);
+  }
+```
 
+1. `#register(String packageName)` 方法，扫描指定包下的所有TypeHandler类，并发起注册。代码如下：
+```java
+  public void register(String packageName) {
+    // 扫描指定包下的所有 TypeHandler 类
+    ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<>();
+    resolverUtil.find(new ResolverUtil.IsA(TypeHandler.class), packageName);
+    Set<Class<? extends Class<?>>> handlerSet = resolverUtil.getClasses();
+    // 遍历 TypeHandler 数组，发起注册
+    for (Class<?> type : handlerSet) {
+      //Ignore inner classes and interfaces (including package-info.java) and abstract classes
+      // 排除匿名类、接口、抽象类
+      if (!type.isAnonymousClass() && !type.isInterface() && !Modifier.isAbstract(type.getModifiers())) {
+        register(type);
+      }
+    }
+  }
+```
+- 上述方法中，会调用⑥ `#register(Class<?> typeHandlerClass)`方法，注册指定的 TypeHandler 类。代码如下：
+  ```java
+  public void register(Class<?> typeHandlerClass) {
+    boolean mappedTypeFound = false;
+    // <3> 获得 @MappedTypes 注解
+    MappedTypes mappedTypes = typeHandlerClass.getAnnotation(MappedTypes.class);
+    if (mappedTypes != null) {
+      // 遍历注解的 Java Type 数组逐个进行注册
+      for (Class<?> javaTypeClass : mappedTypes.value()) {
+        register(javaTypeClass, typeHandlerClass);
+        mappedTypeFound = true;
+      }
+    }
 
+    // <4> 未使用 @MappedTypes 注解，直接进行注册
+    if (!mappedTypeFound) {
+      register(getInstance(null, typeHandlerClass));
+    }
+  }
+  ```
+  - 分成`<3>` `<4>`两种情况
+  - `<3>` 处,基于`@MappedTypes`注解,调用`#register(Class<?> javaTypeClass,Class<?> typeHandlerClass)`方法，注册指定 Java Type的指定TypeHandler类。代码如下：
+  ```java
+  public void register(Class<?> javaTypeClass, Class<?> typeHandlerClass) {
+    register(javaTypeClass, getInstance(javaTypeClass, typeHandlerClass));
+  }
+  ```
+  - 调用③ `#register(Clas<T> javaType, TypeHandler<? extends T> typeHandler)`方法，注册指定Java Type的指定 TypeHandler对象，代码如下：
+  ```java
+    private <T> void register(Type javaType, TypeHandler<? extends T> typeHandler) {
+    // 获得 @MappedJdbcTypes 注解
+    MappedJdbcTypes mappedJdbcTypes = typeHandler.getClass().getAnnotation(MappedJdbcTypes.class);
+    if (mappedJdbcTypes != null) {
+      // 遍历 MappedJdbcTypes 注册的 JDBC Type 进行注册
+      for (JdbcType handledJdbcType : mappedJdbcTypes.value()) {
+        register(javaType, handledJdbcType, typeHandler);
+      }
+      if (mappedJdbcTypes.includeNullJdbcType()) {
+        // <5>
+        register(javaType, null, typeHandler);  // jdbcType = null
+      }
+    } else {
+      // <5>
+      register(javaType, null, typeHandler);  // jdbcType = null
+    }
+  }
+  ```
+  - 有`@MappedJdbcTypes`注解的④ `#register(Type javaType, JdbcType jdbcType, TypeHandler<?> handler)`方法，发起最终注册
+  - 对于`<5>`处，发起注册时， `jdbcType`参数为`null`。后续说明原因.
+- `<4>`处，调用② `#register(TypeHandler<T> typeHandler)`方法，未使用`@MappedTypes`注解，调用`#register(TypeHandler<T> typeHandler)`方法，注册 TypeHandler对象。代码如下：
+```java
+  @SuppressWarnings("unchecked")
+  public <T> void register(TypeHandler<T> typeHandler) {
+    boolean mappedTypeFound = false;
+    // <5> 获得 @MappedTypes 注解
+    MappedTypes mappedTypes = typeHandler.getClass().getAnnotation(MappedTypes.class);
+    // 优先，使用 @MappedTypes 注解的 Java Type 进行注册
+    if (mappedTypes != null) {
+      for (Class<?> handledType : mappedTypes.value()) {
+        register(handledType, typeHandler);
+        mappedTypeFound = true;
+      }
+    }
+    // @since 3.1.0 - try to auto-discover the mapped type
+    // <6> 其次，当 typeHandler 为 TypeReference 子类时，进行注册
+    if (!mappedTypeFound && typeHandler instanceof TypeReference) {
+      try {
+        TypeReference<T> typeReference = (TypeReference<T>) typeHandler;
+        register(typeReference.getRawType(), typeHandler);  // Java Type 为 <T> 泛型
+        mappedTypeFound = true;
+      } catch (Throwable t) {
+        // maybe users define the TypeReference with a different type and are not assignable, so just ignore it
+      }
+    }
+    // <7> 最差，使用Java Type 为 null 进行注册
+    if (!mappedTypeFound) {
+      register((Class<T>) null, typeHandler);
+    }
+  }
+```
+- 分成三种情况，最终都是调用`#register(Type javaType, TypeHandler<? extends T> typeHandler)`方法，进行注册，也就是跳到③
+
+- ⑤ `#register(JdbcType jdbcType, TypeHandler<?> handler)`方法，注册`handler`到`JDBC_TYPE_HANDLER_MAP`中，代码如下：
+```java
+  public void register(JdbcType jdbcType, TypeHandler<?> handler) {
+    jdbcTypeHandlerMap.put(jdbcType, handler);
+  }
+```
+- 和上述方法不同
+
+## getTypeHandler
+`#getTypeHandler(...)`方法，获得`TypeHandler`。有大量的重载实现，大体如下：
+
+> FROM 徐群明 [<Mybatis技术内幕>](https://item.jd.com/12125531.html)
+> {% asset_img getTypeHandler.png getTypeHandler 方法 %}
+> 
 
 
 
