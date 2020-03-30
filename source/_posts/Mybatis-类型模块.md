@@ -1010,8 +1010,320 @@ public enum JdbcType {
 
 > FROM 徐群明 [<Mybatis技术内幕>](https://item.jd.com/12125531.html)
 > {% asset_img getTypeHandler.png getTypeHandler 方法 %}
-> 
 
+从图中，我们可以看到，最终会调用 ① 处的 `#getTypeHandler(Type type, JdbcType jdbcType)` 方法。当然，我们先来看看三种调用的情况：
+
+- 调用情况一： `#getTypeHandler(Class<?> type)`方法，代码如下:
+```java
+// TypeHandlerRegistry.java
+
+public <T> TypeHandler<T> getTypeHandler(Class<T> type) {
+    return getTypeHandler((Type) type, null);
+}
+```
+  - jdbcType 为 null
+- 调用情况二：`#getTypeHandler(Class<T> type, JdbcType jdbcType)` 方法，代码如下：
+```java
+// TypeHandlerRegistry.java
+
+public <T> TypeHandler<T> getTypeHandler(Class<T> type, JdbcType jdbcType) {
+    return getTypeHandler((Type) type, jdbcType);
+}
+```
+ - 将`tyoe`转换为Type类型
+
+- 调用情况三：`#getTypeHandler(TypeReference<T> javaTypeReference, ...)`方法，代码如下：
+```java
+// TypeHandlerRegistry.java
+
+public <T> TypeHandler<T> getTypeHandler(TypeReference<T> javaTypeReference) {
+    return getTypeHandler(javaTypeReference, null);
+}
+
+public <T> TypeHandler<T> getTypeHandler(TypeReference<T> javaTypeReference, JdbcType jdbcType) {
+    return getTypeHandler(javaTypeReference.getRawType(), jdbcType);
+}
+```
+
+- 看看①处的方法
+```java
+ @SuppressWarnings("unchecked")
+  private <T> TypeHandler<T> getTypeHandler(Type type, JdbcType jdbcType) {
+    // 忽略 ParamMap 的情况
+    if (ParamMap.class.equals(type)) {
+      return null;
+    }
+    // <1> 获得 Java Type 对应的 TypeHandler 的集合
+    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = getJdbcHandlerMap(type);
+    TypeHandler<?> handler = null;
+    if (jdbcHandlerMap != null) {
+      // <2.1> 优先，使用 jdbcType 获取对应的 TypeHandler
+      handler = jdbcHandlerMap.get(jdbcType);
+      if (handler == null) {
+        // <2.2> 其次，使用 null 获取对应的 TypeHandler ，可以认为是默认的 TypeHandler
+        handler = jdbcHandlerMap.get(null);
+      }
+      // <2.3> 最差，从 TypeHandler 集合中选择一个唯一的 TypeHandler
+      if (handler == null) {
+        // #591
+        handler = pickSoleHandler(jdbcHandlerMap);
+      }
+    }
+    // type drives generics here
+    return (TypeHandler<T>) handler;
+  }
+```
+- `<1>`处，调用 `#getJdbcHandlerMap(Type type)`` 方法，获得 Java Type 对应的 TypeHandler 集合。代码如下：
+  ```java
+  private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMap(Type type) {
+    // <1> 获得 Java Type 对应的 TypeHandler 集合
+    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = typeHandlerMap.get(type);
+    // <1.2> 如果为 NULL_TYPE_HANDLER_MAP ，意味着为空，直接返回
+    if (NULL_TYPE_HANDLER_MAP.equals(jdbcHandlerMap)) {
+      return null;
+    }
+    // <1.3> 如果找不到
+    if (jdbcHandlerMap == null && type instanceof Class) {
+      Class<?> clazz = (Class<?>) type;
+      // 如果是枚举类型
+      if (Enum.class.isAssignableFrom(clazz)) {
+        // 获得父类对应的 TypeHandler 集合
+        Class<?> enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
+        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(enumClass, enumClass);
+        // 如果找不到
+        if (jdbcHandlerMap == null) {
+          // 注册 defaultEnumTypeHandler ，并使用它
+          register(enumClass, getInstance(enumClass, defaultEnumTypeHandler));
+          // 返回结果
+          return typeHandlerMap.get(enumClass);
+        }
+        // 非枚举类型
+      } else {
+        // 获得父类对应的 TypeHandler 集合
+        jdbcHandlerMap = getJdbcHandlerMapForSuperclass(clazz);
+      }
+    }
+    // <1.4> 如果结果为空，设置为 NULL_TYPE_HANDLER_MAP ，提升查找速度，避免二次查找
+    typeHandlerMap.put(type, jdbcHandlerMap == null ? NULL_TYPE_HANDLER_MAP : jdbcHandlerMap);
+    // 返回结果
+    return jdbcHandlerMap;
+  }
+  ```
+  - <1.1> 处，获得 Java Type 对应的 TypeHandler 集合。
+  - <1.2> 处，如果为 NULL_TYPE_HANDLER_MAP ，意味着为空，直接返回。原因可见 <1.4> 处。
+  - <1.3> 处，找不到，则根据 type 是否为枚举类型，进行不同处理。
+    + 【枚举】
+    + 先调用 `#getJdbcHandlerMapForEnumInterfaces(Class<?> clazz, Class<?> enumClazz)` 方法， 获得父类对应的 TypeHandler 集合。代码如下：
+    ```java
+    private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMapForEnumInterfaces(Class<?> clazz, Class<?> enumClazz) {
+      // 遍历枚举类的所有接口
+      for (Class<?> iface : clazz.getInterfaces()) {
+        // 获得该接口对应的 jdbcHandlerMap 集合
+        Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = typeHandlerMap.get(iface);
+        // 为空，递归 getJdbcHandlerMapForEnumInterfaces 方法，继续从父类对应的 TypeHandler 集合
+        if (jdbcHandlerMap == null) {
+          jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(iface, enumClazz);
+        }
+        // 如果找到，则从 jdbcHandlerMap 初始化中 newMap 中，并进行返回
+        if (jdbcHandlerMap != null) {
+          // Found a type handler regsiterd to a super interface
+          HashMap<JdbcType, TypeHandler<?>> newMap = new HashMap<>();
+          for (Entry<JdbcType, TypeHandler<?>> entry : jdbcHandlerMap.entrySet()) {
+            // Create a type handler instance with enum type as a constructor arg
+            newMap.put(entry.getKey(), getInstance(enumClazz, entry.getValue().getClass()));
+          }
+          return newMap;
+        }
+      }
+      // 找不到，则返回 null
+      return null;
+    }
+    ```
+    + 调用 `#getJdbcHandlerMapForSuperclass(Class<?> clazz)` 方法，获得父类对应的 TypeHandler 集合。代码如下：
+    ```java
+    private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMapForSuperclass(Class<?> clazz) {
+      // 获得父类
+      Class<?> superclass =  clazz.getSuperclass();
+      // 不存在非 Object 的父类，返回null
+      if (superclass == null || Object.class.equals(superclass)) {
+        return null;
+      }
+      // 找到父类对应的 TypeHandler 集合
+      Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = typeHandlerMap.get(superclass);
+      // 找到则直接返回，找不到递归调用，继续查找父类的 TypeHandler
+      if (jdbcHandlerMap != null) {
+        return jdbcHandlerMap;
+      } else {
+        return getJdbcHandlerMapForSuperclass(superclass);
+      }
+    }
+    ```
+  - <2.1> 处，优先，使用 jdbcType 获取对应的 TypeHandler 。
+
+  - <2.2> 处，其次，使用 null 获取对应的 TypeHandler ，可以认为是默认的 TypeHandler 。这里是解决一个 Java Type 可能对应多个 TypeHandler 的方式之一。
+  - <2.3> 处，最差，调用 #pickSoleHandler(Map<JdbcType, TypeHandler<?>> jdbcHandlerMap) 方法，从 TypeHandler 集合中选择一个唯一的 TypeHandler 。代码如下：
+  ```java
+  private TypeHandler<?> pickSoleHandler(Map<JdbcType, TypeHandler<?>> jdbcHandlerMap) {
+    TypeHandler<?> soleHandler = null;
+    // 选择一个
+    for (TypeHandler<?> handler : jdbcHandlerMap.values()) {
+      if (soleHandler == null) {
+        soleHandler = handler;
+      // 如果还有，并且不同类，那么不好选择，所以返回 null
+      } else if (!handler.getClass().equals(soleHandler.getClass())) {
+        // More than one type handlers registered.
+        return null;
+      }
+    }
+    return soleHandler;
+  }
+  ```
+
+# TypeAliasRegistry
+`org.apache.ibatis.type.TypeAliasRegistry` ，类型与别名的注册表。通过别名，我们在 Mapper XML 中的 resultType 和 parameterType 属性，直接使用，而不用写全类名。
+
+## 构造方法
+```java
+ /**
+   * 类型与别名的映射
+   */
+  private final Map<String, Class<?>> typeAliases = new HashMap<>();
+
+  /**
+   * 构造方法，初始化默认的类型与别名
+   */
+  public TypeAliasRegistry() {
+    registerAlias("string", String.class);
+
+    registerAlias("byte", Byte.class);
+    registerAlias("long", Long.class);
+    registerAlias("short", Short.class);
+    registerAlias("int", Integer.class);
+    registerAlias("integer", Integer.class);
+    registerAlias("double", Double.class);
+    registerAlias("float", Float.class);
+    registerAlias("boolean", Boolean.class);
+
+    // ... 省略其他注册
+  }
+```
+
+## registerAlias
+`#registerAlias(Class<?> type)` 方法，注册指定类。代码如下：
+```java
+public void registerAlias(Class<?> type) {
+  // <1> 默认为，简单类名
+  String alias = type.getSimpleName();
+  // <2> 如果有注解，使用注解上的名称
+  Alias aliasAnnotation = type.getAnnotation(Alias.class);
+  if (aliasAnnotation != null) {
+    alias = aliasAnnotation.value();
+  }
+  // <3> 注册类型与别名的注册表
+  registerAlias(alias, type);
+}
+```
+- `<1>` ，默认为，简单类名。
+- `<2>` ，可通过 @Alias 注解的别名。
+- `<3>` ，调用 `#registerAlias(String alias, Class<?> value)` 方法，注册类型与别名的注册表。代码如下：
+
+```java
+  public void registerAlias(String alias, Class<?> value) {
+    if (alias == null) {
+      throw new TypeException("The parameter alias cannot be null");
+    }
+    // issue #748
+    // <1> 转换成小写
+    String key = alias.toLowerCase(Locale.ENGLISH);
+    // <2> 如果冲突，抛出 TypeException 异常
+    if (typeAliases.containsKey(key) && typeAliases.get(key) != null && !typeAliases.get(key).equals(value)) {
+      throw new TypeException("The alias '" + alias + "' is already mapped to the value '" + typeAliases.get(key).getName() + "'.");
+    }
+    // <3>
+    typeAliases.put(key, value);
+  }
+```
+
+- `<1>` 处，将别名转换成**小写**。这样的话，无论我们在 Mapper XML 中，写 `String` 还是 `string` 甚至是 `STRING` ，都是对应的 String 类型。
+- `<2>` 处，如果已经注册，并且类型不一致，说明有冲突，抛出 TypeException 异常。
+- `<3>` 处，添加到 `TYPE_ALIASES` 中。
+- 另外，`#registerAlias(String alias, String value)` 方法，也会调用该方法。代码如下：
+```java
+  public void registerAlias(String alias, String value) {
+    try {
+      registerAlias(alias, Resources.classForName(value));
+    } catch (ClassNotFoundException e) {
+      throw new TypeException("Error registering type alias " + alias + " for " + value + ". Cause: " + e, e);
+    }
+  }
+```
+
+## registerAliases
+`#registerAliases(String packageName, ...)` 方法，扫描指定包下的所有类，并进行注册。代码如下：
+```java
+  /**
+   * 注册指定包下的别名与类的映射
+   * @param packageName 指定包
+   */
+  public void registerAliases(String packageName) {
+    registerAliases(packageName, Object.class);
+  }
+
+  /**
+   * 注册指定包下的别名与类的映射。另外，要求类必须是 {@param superType} 类型（包括子类）。
+   * @param packageName 指定包
+   * @param superType 指定父类
+   */
+  public void registerAliases(String packageName, Class<?> superType) {
+    // 获得指定包下的所有类
+    ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<>();
+    resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
+    Set<Class<? extends Class<?>>> typeSet = resolverUtil.getClasses();
+    // 遍历，逐个注册类型与别名的注册表
+    for (Class<?> type : typeSet) {
+      // Ignore inner classes and interfaces (including package-info.java)
+      // Skip also inner classes. See issue #6
+      // 排除匿名类，接口，内部类
+      if (!type.isAnonymousClass() && !type.isInterface() && !type.isMemberClass()) {
+        registerAlias(type);
+      }
+    }
+  }
+```
+
+## 7.4 resolveAlias
+
+`#resolveAlias(String string)` 方法，获得别名对应的类型。代码如下：
+```java
+  public <T> Class<T> resolveAlias(String string) {
+    try {
+      if (string == null) {
+        return null;
+      }
+      // issue #748
+      // <1> 转换成小写
+      String key = string.toLowerCase(Locale.ENGLISH);
+      Class<T> value;
+      // <2.1> 首先，从 TYPE_ALIASES 中获取
+      if (typeAliases.containsKey(key)) {
+        value = (Class<T>) typeAliases.get(key);
+      } else {
+        // <2.2> 其次，直接获得对应类
+        value = (Class<T>) Resources.classForName(string);
+      }
+      return value;
+    } catch (ClassNotFoundException e) { // <2.3> 异常
+      throw new TypeException("Could not resolve type alias '" + string + "'.  Cause: " + e, e);
+    }
+  }
+```
+
+# 其他
+## SimpleTypeRegistry
+`org.apache.ibatis.type.SimpleTypeRegistry` ，简单类型注册表。
+
+## ByteArrayUtils
+`org.apache.ibatis.type.ByteArrayUtils` ，Byte 数组的工具类。
 
 
 
