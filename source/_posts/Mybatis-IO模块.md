@@ -831,10 +831,294 @@ public boolean isValid() {
 // 都返回 true ，因为默认支持。
 ```
 
+### list
+`#list(URL url, String path) ` 方法，递归的列出所有的资源们。代码如下：
 
+```java
+  public List<String> list(URL url, String path) throws IOException {
+    InputStream is = null;
+    try {
+      List<String> resources = new ArrayList<>();
 
+      // First, try to find the URL of a JAR file containing the requested resource. If a JAR
+      // file is found, then we'll list child resources by reading the JAR.
+      // 如果该路径指向 Jar Rousource，则返回该 Jar Source；否则返回 null
+      URL jarUrl = findJarForResource(url);
+      if (jarUrl != null) {
+        is = jarUrl.openStream();
+        if (log.isDebugEnabled()) {
+          log.debug("Listing " + url);
+        }
+        // 遍历 Jar Resource
+        resources = listResources(new JarInputStream(is), path);
+      }
+      else {
+        List<String> children = new ArrayList<>();
+        try {
+          // 如果是一个jar文件
+          if (isJar(url)) {
+            // Some versions of JBoss VFS might give a JAR stream even if the resource
+            // referenced by the URL isn't actually a JAR
+            is = url.openStream();
+            try (JarInputStream jarInput = new JarInputStream(is)) {
+              if (log.isDebugEnabled()) {
+                log.debug("Listing " + url);
+              }
+              // 遍历jar文件
+              for (JarEntry entry; (entry = jarInput.getNextJarEntry()) != null; ) {
+                if (log.isDebugEnabled()) {
+                  log.debug("Jar entry: " + entry.getName());
+                }
+                children.add(entry.getName());
+              }
+            }
+          }
+          else {
+            /*
+             * Some servlet containers allow reading from directory resources like a
+             * text file, listing the child resources one per line. However, there is no
+             * way to differentiate between directory and file resources just by reading
+             * them. To work around that, as each line is read, try to look it up via
+             * the class loader as a child of the current resource. If any line fails
+             * then we assume the current resource is not a directory.
+             */
+            is = url.openStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            List<String> lines = new ArrayList<>();
+            for (String line; (line = reader.readLine()) != null;) {
+              if (log.isDebugEnabled()) {
+                log.debug("Reader entry: " + line);
+              }
+              lines.add(line);
+              if (getResources(path + "/" + line).isEmpty()) {
+                lines.clear();
+                break;
+              }
+            }
 
+            if (!lines.isEmpty()) {
+              if (log.isDebugEnabled()) {
+                log.debug("Listing " + url);
+              }
+              children.addAll(lines);
+            }
+          }
+        } catch (FileNotFoundException e) {
+          /*
+           * For file URLs the openStream() call might fail, depending on the servlet
+           * container, because directories can't be opened for reading. If that happens,
+           * then list the directory directly instead.
+           */
+          if ("file".equals(url.getProtocol())) {
+            File file = new File(url.getFile());
+            if (log.isDebugEnabled()) {
+                log.debug("Listing directory " + file.getAbsolutePath());
+            }
+            if (file.isDirectory()) {
+              if (log.isDebugEnabled()) {
+                  log.debug("Listing " + url);
+              }
+              children = Arrays.asList(file.list());
+            }
+          }
+          else {
+            // No idea where the exception came from so rethrow it
+            throw e;
+          }
+        }
 
+        // The URL prefix to use when recursively listing child resources
+        String prefix = url.toExternalForm();
+        if (!prefix.endsWith("/")) {
+          prefix = prefix + "/";
+        }
+
+        // Iterate over immediate children, adding files and recursing into directories
+        // 遍历子路径，将结果加入到 resources 中
+        for (String child : children) {
+          String resourcePath = path + "/" + child;
+          resources.add(resourcePath);
+          URL childUrl = new URL(prefix + child);
+          resources.addAll(list(childUrl, resourcePath));
+        }
+      }
+
+      return resources;
+    } finally {
+      if (is != null) {
+        try {
+          is.close();
+        } catch (Exception e) {
+          // Ignore
+        }
+      }
+    }
+  }
+```
+- `#findJarForResource(URL url) ` 方法，如果 url 指向的是 Jar Resource ，则返回该 Jar Resource ，否则返回 null 。代码如下：
+  ```java
+  protected URL findJarForResource(URL url) throws MalformedURLException {
+    if (log.isDebugEnabled()) {
+      log.debug("Find JAR URL: " + url);
+    }
+
+    // If the file part of the URL is itself a URL, then that URL probably points to the JAR
+    // 如果URL 的文件本身就是URL，那么这个URL可能指向JAR文件
+    try {
+      for (;;) {
+        url = new URL(url.getFile());
+        if (log.isDebugEnabled()) {
+          log.debug("Inner URL: " + url);
+        }
+      }
+    } catch (MalformedURLException e) {
+      // This will happen at some point and serves as a break in the loop
+    }
+
+    // Look for the .jar extension and chop off everything after that
+    // 判断是否以 .jar 结尾
+    StringBuilder jarUrl = new StringBuilder(url.toExternalForm());
+    int index = jarUrl.lastIndexOf(".jar");
+    if (index >= 0) {
+      jarUrl.setLength(index + 4);
+      if (log.isDebugEnabled()) {
+        log.debug("Extracted JAR URL: " + jarUrl);
+      }
+    }
+    else {
+      if (log.isDebugEnabled()) {
+        log.debug("Not a JAR: " + jarUrl);
+      }
+      // 如果不是 jar 文件，直接返回null
+      return null;
+    }
+
+    // Try to open and test it
+    try {
+      URL testUrl = new URL(jarUrl.toString());
+      // 判断是否是 jar
+      if (isJar(testUrl)) {
+        return testUrl;
+      }
+      else {
+        // WebLogic fix: check if the URL's file exists in the filesystem.
+        if (log.isDebugEnabled()) {
+          log.debug("Not a JAR: " + jarUrl);
+        }
+
+        jarUrl.replace(0, jarUrl.length(), testUrl.getFile());  // 路径替换
+        File file = new File(jarUrl.toString());
+
+        // File name might be URL-encoded
+        // 文件不存在可能是编码问题，设置编码为 UTF-8
+        if (!file.exists()) {
+          try {
+            file = new File(URLEncoder.encode(jarUrl.toString(), "UTF-8"));
+          } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Unsupported encoding?  UTF-8?  That's unpossible.");
+          }
+        }
+
+        // 判断文件是否存在
+        if (file.exists()) {
+          if (log.isDebugEnabled()) {
+            log.debug("Trying real file: " + file.getAbsolutePath());
+          }
+          testUrl = file.toURI().toURL();
+          // 如果是 jar 文件，返回
+          if (isJar(testUrl)) {
+            return testUrl;
+          }
+        }
+      }
+    } catch (MalformedURLException e) {
+      log.warn("Invalid JAR URL: " + jarUrl);
+    }
+
+    if (log.isDebugEnabled()) {
+      log.debug("Not a JAR: " + jarUrl);
+    }
+    return null;
+  }
+  ```
+- `#isJar(URL url)`,判断是否是 Jar URL,代码如下：
+  ```java
+  protected boolean isJar(URL url, byte[] buffer) {
+    InputStream is = null;
+    try {
+      is = url.openStream();
+      is.read(buffer, 0, JAR_MAGIC.length);
+      // 判断 url 的 Magic Number 是否为 Jar 的 Magic Number
+      if (Arrays.equals(buffer, JAR_MAGIC)) {
+        if (log.isDebugEnabled()) {
+          log.debug("Found JAR: " + url);
+        }
+        return true;
+      }
+    } catch (Exception e) {
+      // Failure to read the stream means this is not a JAR
+    } finally {
+      if (is != null) {
+        try {
+          is.close();
+        } catch (Exception e) {
+          // Ignore
+        }
+      }
+    }
+
+    return false;
+  }
+}
+  ```
+- `#listResources(JarInputStream jar, String path) ` 方法，遍历 Jar Resource 。代码如下：
+  ```java
+  protected List<String> listResources(JarInputStream jar, String path) throws IOException {
+    // Include the leading and trailing slash when matching names
+    // 路径处理
+    if (!path.startsWith("/")) {
+      path = "/" + path;
+    }
+    if (!path.endsWith("/")) {
+      path = path + "/";
+    }
+
+    // Iterate over the entries and collect those that begin with the requested path
+    // 遍历数据并收集以请求路径开头的数据
+    List<String> resources = new ArrayList<>();
+    for (JarEntry entry; (entry = jar.getNextJarEntry()) != null;) {
+      if (!entry.isDirectory()) {
+        // Add leading slash if it's missing
+        StringBuilder name = new StringBuilder(entry.getName());
+        if (name.charAt(0) != '/') {
+          name.insert(0, '/');
+        }
+
+        // Check file name
+        // 判断以请求路径开头
+        if (name.indexOf(path) == 0) {
+          if (log.isDebugEnabled()) {
+            log.debug("Found resource: " + name);
+          }
+          // Trim leading slash
+          resources.add(name.substring(1));
+        }
+      }
+    }
+    return resources;
+  }
+  ```
+
+## JBoss6VFS
+`org.apache.ibatis.io.JBoss6VFS ` ，继承 VFS 抽象类，基于 JBoss 的 VFS 实现类。使用时，需要引入如下：
+
+```xml
+<dependency>
+    <groupId>org.jboss</groupId>
+    <artifactId>jboss-vfs</artifactId>
+    <version>${version></version>
+</dependency>
+```
 
 
 
