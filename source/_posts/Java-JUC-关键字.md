@@ -194,8 +194,12 @@ public class Counter {
 
 # synchronized
 > Java的保留关键字,是Java同步机制的一种实现,即互斥锁机制.
+> **Java多线程的锁都是基于对象的**
 > 
-> 推荐阅读 [并发番@Synchronized一文通（1.8版）](https://www.zybuluo.com/kiraSally/note/857726)
+> 推荐阅读 
+> [并发番@Synchronized一文通（1.8版）](https://www.zybuluo.com/kiraSally/note/857726)
+> [深入浅出 Java 多线程 - 第九章](https://redspider.gitbook.io/concurrent/di-er-pian-yuan-li-pian/9)
+> 
 
 ## synchronized 的使用
 
