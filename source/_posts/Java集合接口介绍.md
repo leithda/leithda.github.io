@@ -298,11 +298,48 @@ public interface Collection<E> extends Iterable<E> {
 | E                        | last()<br/>返回该集合的最后一个(比较值最大的)元素            |
 | default Spliterator\<E\> | spliterator()<br>在此集合中的元素上创建一个Spliterator       |
 
-
-
 # Queue
+
+> 队列接口，队列，先进先出。它只允许在表的前端进行删除操作，而在表的后端进行插入操作
+>
+> `LinkedList`实现了`Queue`接口，所以我们可以把`LinkedList`当成队列来使用
+
+| 返回类型 | 方法名称及描述                                               |
+| -------- | ------------------------------------------------------------ |
+| E        | element()<br>查询但不删除这个队列的头(**队列为空抛出异常**)  |
+| boolean  | offer(E e)<br>不违反容量限制的情况下立即执行，将制定元素插入队列 |
+| E        | peek()<br>查询但不删除队列的头，如果队列为空返回null         |
+| E        | pool()<br>查询并删除队列的头，如果队列为空返回null           |
+| E        | remove()<br>查询并删除队列的头(**队列为空抛出异常**)         |
 
 ## Deque
 
+> 双端队列，该接口提供了插入，移除，查询元素的方法。这些方法每种存在两种形式：返回特殊值(null或false)和抛出异常。
+>
+> `Deque`没有严格要求禁止插入空元素，但是我们要避免这么做，因为很多时候我们通过判断null来确定`Deque`是否是空的。
+
+| 返回类型       | 方法名称                        | 方法描述                                              |
+| -------------- | ------------------------------- | ----------------------------------------------------- |
+| void           | addFirst(E e)                   | 插入队列前面，超出容量限制抛出`IllegalStateException` |
+| void           | addLast(E e)                    | 插入队列末尾，超出容量限制抛出`IllegalStateException` |
+| boolean        | offerFirst(E e)                 | 插入队列头部                                          |
+| boolean        | offerLast(E e)                  | 插入队列尾部                                          |
+| E              | removeFirst()                   | 查询并删除队列第一个元素                              |
+| E              | removeLast()                    | 查询并删除队列最后一个元素                            |
+| E              | pollFirst()                     | 查询并删除第一个元素，队列为空返回null                |
+| E              | pollLast()                      | 查询并删除最后一个元素，队列为空返回null              |
+| E              | getFirst()                      | 获取队列第一个元素(不删除)                            |
+| E              | getLast()                       | 获取队列最后一个元素(不删除)                          |
+| E              | peekFirst()                     | 查询且不删除队列第一个元素，队列为空返回null          |
+| E              | peekLast()                      | 查询且不删除队列最后一个元素，队列为空返回null        |
+| boolean        | removeFirstOccurrence(Object o) | 从队列中删除第一次出现的指定元素                      |
+| boolean        | removeLastOccurrence(Object o)  | 从队列中删除最后一次出现的指定元素                    |
+| void           | push(E e)                       | 入栈，超出限制抛出`IllegalStateException`             |
+| E              | pop()                           | 出栈                                                  |
+| Interator\<E\> | descendingIterator()            | 返回倒序的迭代器                                      |
+
+
+
 # Map
+
 ## SortedMap
