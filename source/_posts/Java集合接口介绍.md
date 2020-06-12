@@ -342,4 +342,51 @@ public interface Collection<E> extends Iterable<E> {
 
 # Map
 
+> Map集合是一个**双列集合**，一个元素包含两个值(key,value)
+>
+> Map集合中的元素，key不允许重复，value可以重复
+
+| 返回类型          | 方法名称                                                     | 方法描述                                                     |
+| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| void              | clear()                                                      | 清空元素                                                     |
+| default V         | compute(K key,BiFunction<? super K , ? extends V> remappingFunction) | 尝试计算指定键的映射及其当前映射的值（如果没有当前映射， `null` ） |
+| default V         | computeIfAbsent(K key , Function<? super K, ? exnteds V> remappingFunction) | 如果指定的key没有对应的value（或映射到 `null` ），则尝试使用给定的映射函数计算其值，并将其输入到此映射中，除非 `null` |
+| default V         | computeIfPresent(K key,BiFunction<? super K , ? super V , ? extends V> remappingFunction) | 如果指定的key存在，尝试计算给定key和value的映射              |
+| boolean           | containsKey(Object key)                                      | 如果集合包含这个key，返回true                                |
+| boolean           | containsValue(Object value)                                  | 如果集合包含这个value，返回ture                              |
+| Set<Entry<K , V>> | entrySet()                                                   | 返回包含此集合映射的Set集合                                  |
+| default void      | forEach(BiConsuer<? super K , ? super V> action)             | 对集合的每个映射执行给定的操作                               |
+| V                 | get(Object key)                                              | 返回给定key的value，key不存在返回null                        |
+| default V         | getOfDefalt(Object key , V defaultValue)                     | 返回给定key的value，key不存在返回默认值                      |
+| boolean           | isEmpty()                                                    | 如果集合为空，返回true                                       |
+| Set\<K\>          | keySet()                                                     | 返回包含这个集合所有key的Set集合                             |
+| default V         | merge(K key , V value , BiFunction<? super V , ? super V , ? extends V> remappingFunction) | 如果key不存在或值为null,则将其value设置为给定值              |
+| V                 | put(K key , V value)                                         | 添加映射到集合，key重复会覆盖value的值                       |
+| void              | putAll(Map<? extends K , ? extends V> m)                     | 添加给定集合所有映射到此集合                                 |
+| default V         | putIfAbsent(K key, V value)                                  | 如果key不存在，返回null并添加映射。否则返回value             |
+| V                 | remove(Object key)                                           | key存在，移除映射返回value;否则，返回null                    |
+| default boolean   | remove(Object key, Object value)                             | 当key和value都符合集合元素时删除映射，返回true               |
+| default V         | replace(K key, V value)                                      | key存在时替换value并返回原值，key不存在时返回null            |
+| default boolean   | replace(K key, V oldValue, V newValue)                       | 映射存在时，替换value的值为newValue                          |
+| default void      | replaceAll(BiFunction<? super K, ? super V, ? extends V> function) | 对映射执行方法，将value替换为方法返回值。                    |
+| int               | size()                                                       | 返回集合大小                                                 |
+| Collection<V>     | values()                                                     | 返回包含此集合所有元素的Colleciton                           |
+
+
+
 ## SortedMap
+
+> 根据Key，和对应比较规则进行排序的Map集合接口
+
+| 返回类型              | 方法名称                   | 方法描述                                        |
+| --------------------- | -------------------------- | ----------------------------------------------- |
+| Comparator<? super K> | comparator()               | 返回比较器，如果使用key的自然顺序排序则返回null |
+| K                     | firstKey()                 | 返回第一个key(排序值最小)                       |
+| SortedMap<K,V>        | headMap(K toKey)           | 返回小于toKey的子集合                           |
+| K                     | lastKey()                  | 返回最后一个key(排序值最大)                     |
+| SortedMap<K,V>        | subMap(K fromKey, K toKey) | 返回fromKey到toKey的子集合                      |
+| SortedMap<K,V>        | tailMap(K fromKey)         | 返回大于fromKey的子集合                         |
+
+# 注意
+- **重点关注接口代表的数据类型**
+- **重点关注接口方法的用途及异常场景**
