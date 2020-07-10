@@ -1,5 +1,5 @@
 ---
-title: JVM入门及Class文件结构
+title: JVM之入门及类文件结构
 abbrlink: 1204858154
 date: 2020-07-10 10:35:38
 categories:

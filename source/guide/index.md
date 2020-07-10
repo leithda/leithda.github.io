@@ -23,9 +23,12 @@
 - [x] [Java-面向对象思想](../detail/2742829166.html)
 - [x] [Java-IO](../detail/3845166172.html)
 - [x] [Java-网络编程-基础](../detail/2098644504.html)
+- [x] [Java之引用类型](../detail/72877877.html)
+- [x] [Java之ThreadLocal](../detail/355185077.html)
 
 ## JVM
-- [x] [JVM入门及Class文件格式](../detail/1204858154.html)
+- [x] [JVM之入门及类文件结构](../detail/1204858154.html)
+- [x] [JVM之类文件加载过程](../detail/581636265.html) 
 
 ## JUC 
 
