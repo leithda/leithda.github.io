@@ -25,7 +25,7 @@
 - [x] [Java-网络编程-基础](../detail/2098644504.html)
 
 ## JVM
-- [x] [JVM入门及Class文件格式]()
+- [x] [JVM入门及Class文件格式](../detail/1204858154.html)
 
 ## JUC 
 
@@ -77,7 +77,7 @@
 ### 集合源码
 - [x] [Java 集合框架概述](../detail/1126326809.html)
 - [x] [Java 集合接口类介绍](../detail/3518917720.html)
-- [ ] [Java 集合抽象类介绍]()
+- [x] [Java 集合抽象类介绍](../detail/4107645288.html)
 - [ ] [HashSet]()
 - [x] [LinkedList](../detail/3563866560.html)
 - [x] [ArrayList](../detail/3276972275.html)
