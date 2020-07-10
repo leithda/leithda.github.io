@@ -127,6 +127,7 @@ scheme: Muse
 menu:
   home: / || home
   about: /about/ || user
+  guide: /guide/ || list
   tags: /tags/ || tags
   categories: /categories/ || th
   archives: /archives/ || archive
