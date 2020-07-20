@@ -135,8 +135,7 @@ public void logout(HttpRequest request){
 1. 减少线程方法间的参数传递，使用 `#ThreadLocal.set` 设置值后，线程内任意一处调用 `#ThreadLocal.get()` 即可获取到值
 
 # 原理
-
-![image.png](https://cdn.nlark.com/yuque/0/2020/png/1625785/1593389744721-745dcf7c-6f74-4dcd-9848-e344c00c2f55.png?x-oss-process=image%2Fresize%2Cw_1500)
+{% asset_img ThreadLocal原理 ThreadLocal原理.png %}
 
 > **个人理解：**
 >
