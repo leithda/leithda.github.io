@@ -1,4 +1,3 @@
-
 {% cq %}
 对应代码仓库地址:      [Github代码仓库](https://github.com/leithda) | [Gitee代码仓库](https://gitee.com/leithda) 
 {% endcq %}
@@ -6,6 +5,7 @@
 <!-- More -->
 
 # 计算机基础
+
 ## 计算机网络原理
 - [x] [计算机网络-概述](../detail/15988581.html)
 - [x] [计算机网络-物理层](../detail/3070870257.html)
@@ -49,7 +49,28 @@
 ### 文档型数据库
 #### mongoDB
 ### key-value型数据库
-#### Redis
+#### [Redis](https://redis.io/)
+> [Redis开发与运维(豆瓣)](https://book.douban.com/subject/26971561/)
+- [x] [Redis开发与运维笔记-初始Redis](../detail/1097430507.html)
+- [x] [Redis开发与运维笔记-API的理解和使用](../detail/4241361649.html)
+- [x] [Redis开发与运维笔记-小功能大用处](../detail/2425201135.html)
+- [x] [Redis开发与运维笔记-客户端](../detail/3206834815.html)
+- [x] [Redis开发与运维笔记-持久化](../detail/1023191841.html)
+- [x] [Redis开发与运维笔记-复制](../detail/3460365957.html)
+- [x] [Redis开发与运维笔记-Redis的噩梦_阻塞](../detail/3586754738.html)
+- [x] [Redis开发与运维笔记-理解内存](../detail/1495994843.html)
+- [x] [Redis开发与运维笔记-哨兵](../detail/2400819807.html)
+- [x] [Redis开发与运维笔记-集群](../detail/3460365959.html)
+- [ ] [Redis开发与运维笔记-缓存设计]()
+- [ ] [Redis开发与运维笔记-开发运维的陷阱]()
+- [ ] [Redis开发与运维笔记-监控运维平台CacheCloud]()
+- [ ] [Redis开发与运维笔记-配置统计字典]()
+
+
+
+
+
+
 #### etcd
 #### memcached
 ### 搜索引擎式
