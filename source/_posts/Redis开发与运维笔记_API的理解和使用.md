@@ -14,6 +14,9 @@ Redis提供了5种数据结构，理解每种数据结构的特点对于Redis开
 {% endcq %}
 <!-- more -->
 
+参考书籍：[Redis开发与运维](https://book.douban.com/subject/26971561/)
+<hr>
+
 # API的理解和使用
 
 ## 预备

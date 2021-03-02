@@ -1,6 +1,6 @@
 ---
 abbrlink: 1097430507
-title: Redis开发与运维笔记01-初识Redis
+title: Redis开发与运维笔记-初识Redis
 date: 2021-03-01 10:00:00
 categories:
   - Redis
@@ -13,6 +13,9 @@ author: 长歌
 本章将带领读者进入Redis的世界，了解它的前世今生、众多特性、典型应用场景、安装配置、如何好用等，最后会对Redis发展过程中的重要版本进行说明
 {% endcq %}
 <!-- more -->
+
+参考书籍：[Redis开发与运维](https://book.douban.com/subject/26971561/)
+<hr>
 
 # 初始Redis
 
@@ -155,7 +158,7 @@ make install
    - 重构了大量的核心代码，所有集群相关的代码都去掉了，cluster功 能将会是3.0版本最大的亮点。
    - sort命令优化。
 2. Redis 2.8
-   - 添加部分主从复制的功能，在一定程度上降低了由于网络问题，造 成频繁全量复制生成RDB对系统造成的压力。
+   - 添加部分主从复制的功能，在一定程度上降低了由于网络问题，造成频繁全量复制生成RDB对系统造成的压力。
    - 尝试性地支持IPv6。
    - 可以通过config set命令设置maxclients。
    - 可以用bind命令绑定多个IP地址。

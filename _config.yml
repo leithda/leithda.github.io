@@ -3,17 +3,17 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Leithda's Notes
-subtitle:
-description:
+title: leithda's Notes
+subtitle: leithda的技术博客
+description: 
 keywords: Java,博客,leithda
 author: 长歌
 language: zh-CN
-timezone:
+timezone: Asia/Shanghai
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://leithda.top
+# url: http://leithda.top
 root: /
 permalink: :subcatalog/:abbrlink.html  # 此处可以自己设置，也可以直接使用 :/abbrlink
 permalink_defaults:

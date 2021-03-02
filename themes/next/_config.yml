@@ -192,7 +192,7 @@ social:
   E-Mail: mailto:leithda@163.com || envelope
   豆瓣: https://www.douban.com/people/leithda/ || globe
   #Weibo: https://weibo.com/yourname || weibo
-  #Google: https://plus.google.com/yourname || google
+  Google: https://plus.google.com/leithda || google
   #Twitter: https://twitter.com/yourname || twitter
   #FB Page: https://www.facebook.com/yourname || facebook
   #VK Group: https://vk.com/yourname || vk
@@ -317,7 +317,7 @@ related_posts:
 # Dependencies: https://github.com/hexojs/hexo-deployer-git
 post_edit:
   enable: false
-  url: https://github.com/user-name/repo-name/tree/branch-name/subdirectory-name # Link for view source
+  url: https://github.com/leithda/leithda.github.io/tree/hexo/ # Link for view source
   #url: https://github.com/user-name/repo-name/edit/branch-name/subdirectory-name # Link for fork & edit
 
 

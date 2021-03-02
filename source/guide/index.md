@@ -24,7 +24,6 @@
 - [x] [Java-IO](../detail/3845166172.html)
 - [x] [Java-网络编程-基础](../detail/2098644504.html)
 - [x] [Java之引用类型](../detail/72877877.html)
-- [x] [Java之ThreadLocal](../detail/355185077.html)
 
 ## JVM
 - [x] [JVM之入门及类文件结构](../detail/1204858154.html)
@@ -49,7 +48,7 @@
 ### 文档型数据库
 #### mongoDB
 ### key-value型数据库
-#### [Redis](https://redis.io/)
+#### [redis](https://redis.io/)
 > [Redis开发与运维(豆瓣)](https://book.douban.com/subject/26971561/)
 - [x] [Redis开发与运维笔记-初始Redis](../detail/1097430507.html)
 - [x] [Redis开发与运维笔记-API的理解和使用](../detail/4241361649.html)
@@ -65,11 +64,6 @@
 - [ ] [Redis开发与运维笔记-开发运维的陷阱]()
 - [ ] [Redis开发与运维笔记-监控运维平台CacheCloud]()
 - [ ] [Redis开发与运维笔记-配置统计字典]()
-
-
-
-
-
 
 #### etcd
 #### memcached
@@ -99,80 +93,108 @@
 - [RocketMQ收发消息](/framework/rocketmq/message)
 - [RocketMQ高级功能](/framework/rocketmq/advancedFunction)
 
-## [Kafka](http://kafka.apache.org/)
+
 
 # 源码
 ## JDK源码
+
+### 工具类源码
+- [ ] [Arrays]()
+- [ ] [Collections]()
+- [ ] [Objects]()
+
 ### 集合源码
-- [x] [Java 集合框架概述](../detail/1126326809.html)
-- [x] [Java 集合接口类介绍](../detail/3518917720.html)
-- [x] [Java 集合抽象类介绍](../detail/4107645288.html)
-- [ ] [HashSet]()
-- [x] [LinkedList](../detail/3563866560.html)
-- [x] [ArrayList](../detail/3276972275.html)
-- [ ] [TreeMap]()
+- [x] [概述](../detail/1126326809.html)
+- [x] [接口类介绍](../detail/3518917720.html)
+- [x] [抽象类介绍](../detail/4107645288.html)
+- [x] [ArrayList](../detail/2501046991.html)
+- [ ] [LinkedList]()
 - [ ] [HashMap]()
-- [ ] [Properties]()
+- [ ] [TreeMap和LinkedHashMap]()
+- [ ] [HashSet和TreeSet]()
 
-### 并发
-- [ ] [ThreadLocal源码解析]()
-- [ ] [AQS源码解析]()
-- [ ] [ReentranLock]()
+### 并发集合
+- [ ] [CopyOnWriteArrayList]()
+- [ ] [ConcurrentHashMap]()
 
-### 并发源码
+### 队列
+- [ ] [LinkedBlockingQueue]()
+- [ ] [SynchronousQueue]()
+- [ ] [DelayQueue]()
+- [ ] [ArrayBlockingQueue]()
+
+### 线程
+- [ ] [Thread]()
+- [x] [Future、ExecutorService]()
+- [ ] [ThreadLocal]()
+
+
+### 锁
+- [ ] [AbstrractQueuedSynchronizer]()
+- [ ] [ReentrantLock]()
+- [ ] [CountDownLatch，Atomic]()
+
+### 线程池
+- [ ] [ThreadPoolExecutor]()
+
+
+
 ## Tomcat
-- [x] [编码前准备](../detail/1805298928.html)
-- [x] [一个简单的Web服务器](../detail/1975698977.html)
-- [x] [一个简单的Servlet容器](../detail/991341650.html)
-- [x] [连接器](../detail/2076341340.html)
-- [x] [tomcat的默认连接器](../detail/479209129.html)
-- [x] [容器](../detail/3459939477.html)
-- [x] [生命周期](../detail/1950977268.html)
-- [x] [日志系统](../detail/3784073105.html)
-- [x] [加载器](../detail/4141534283.html)
-- [x] [session管理](../detail/1571172711.html)
-- [x] [安全](../detail/3630618985.html)
-- [x] [StandardWrapper](../detail/1604995939.html)
-- [x] [StandardContext](../detail/1923304143.html)
-- [x] [主机(host)和引擎(engine)](../detail/700695093.html)
-- [x] [服务器和服务](../detail/561747658.html)
-- [x] [Digester](../detail/2030302893.html)
-- [x] [关闭钩子](../detail/966063575.html)
-- [x] [Tomcat 启动(TODO)](../detail/3300275107.html)
-- [x] [部署器](../detail/2507917456.html)
-- [ ] [管理 Servlet]()
-- [ ] [JMX-Based Management]()
+- [《How Tomcat Works》](https://book.douban.com/subject/10426640/)
+  - [x] [编码前准备](../detail/1805298928.html)
+  - [x] [一个简单的Web服务器](../detail/1975698977.html)
+  - [x] [一个简单的Servlet容器](../detail/991341650.html)
+  - [x] [连接器](../detail/2076341340.html)
+  - [x] [tomcat的默认连接器](../detail/479209129.html)
+  - [x] [容器](../detail/3459939477.html)
+  - [x] [生命周期](../detail/1950977268.html)
+  - [x] [日志系统](../detail/3784073105.html)
+  - [x] [加载器](../detail/4141534283.html)
+  - [x] [session管理](../detail/1571172711.html)
+  - [x] [安全](../detail/3630618985.html)
+  - [x] [StandardWrapper](../detail/1604995939.html)
+  - [x] [StandardContext](../detail/1923304143.html)
+  - [x] [主机(host)和引擎(engine)](../detail/700695093.html)
+  - [x] [服务器和服务](../detail/561747658.html)
+  - [x] [Digester](../detail/2030302893.html)
+  - [x] [关闭钩子](../detail/966063575.html)
+  - [x] [Tomcat 启动(TODO)](../detail/3300275107.html)
+  - [x] [部署器](../detail/2507917456.html)
+  - [ ] [管理 Servlet]()
+  - [ ] [JMX-Based Management]()
+
 
 ## Mybatis
-- [x] [Mybatis源码解析-概览](../detail/3692374944.html)
-- [x] [Mybatis源码解析-解析器模块](../detail/3510268826.html)
-- [x] [Mybatis源码解析-反射模块](../detail/2532778738.html)
-- [x] [Mybatis源码解析-异常模块](../detail/1783791857.html)
-- [x] [Mybatis源码解析-数据源模块](../detail/3958014950.html)
-- [x] [Mybatis源码解析-事务模块](../detail/3506020362.html)
-- [x] [Mybatis源码解析-缓存模块](../detail/3051614827.html)
-- [x] [Mybatis源码解析-类型模块](../detail/2139696773.html)
-- [x] [Mybatis源码解析-IO模块](../detail/2479054134.html)
-- [x] [Mybatis源码解析-日志](../detail/1547130688.html)
-- [x] [Mybatis源码解析-注解](../detail/2645650477.html)
-- [ ] [Mybatis源码解析-Binding]()
-- [ ] [Mybatis源码解析-MyBatis 初始化（一）之加载 mybatis-config]()
-- [ ] [Mybatis源码解析-MyBatis 初始化（二）之加载 Mapper 映射配置文件]()
-- [ ] [Mybatis源码解析-MyBatis 初始化（三）之加载 Statement 配置]()
-- [ ] [Mybatis源码解析-MyBatis 初始化（四）之加载注解配置]()
-- [ ] [Mybatis源码解析-SQL 初始化（上）之 SqlNode]()
-- [ ] [Mybatis源码解析-SQL 初始化（下）之 SqlSource]()
-- [ ] [Mybatis源码解析-SQL 执行（二）之 StatementHandler]()
-- [ ] [Mybatis源码解析-SQL 执行（五）之延迟加载]()
-- [ ] [Mybatis源码解析-会话 SqlSession]()
-- [ ] [Mybatis源码解析-插件体系（一）之原理]()
-- [ ] [Mybatis源码解析-插件体系（二）之 PageHelper]()
-- [ ] [Mybatis源码解析-Spring 集成（一）之调试环境搭建]()
-- [ ] [Mybatis源码解析-Spring 集成（二）之初始化]()
-- [ ] [Mybatis源码解析-Spring 集成（二）之初始化]()
-- [ ] [Mybatis源码解析-Spring 集成（三）之 SqlSession]()
-- [ ] [Mybatis源码解析-Spring 集成（四）之事务]()
-- [ ] [Mybatis源码解析-Spring 集成（五）之批处理]()
+- [芋道源码-Mybatis源码解析](http://svip.iocoder.cn/categories/MyBatis/)
+  - [x] [Mybatis源码解析-概览](../detail/3692374944.html)
+  - [x] [Mybatis源码解析-解析器模块](../detail/3510268826.html)
+  - [x] [Mybatis源码解析-反射模块](../detail/2532778738.html)
+  - [x] [Mybatis源码解析-异常模块](../detail/1783791857.html)
+  - [x] [Mybatis源码解析-数据源模块](../detail/3958014950.html)
+  - [x] [Mybatis源码解析-事务模块](../detail/3506020362.html)
+  - [x] [Mybatis源码解析-缓存模块](../detail/3051614827.html)
+  - [x] [Mybatis源码解析-类型模块](../detail/2139696773.html)
+  - [x] [Mybatis源码解析-IO模块](../detail/2479054134.html)
+  - [x] [Mybatis源码解析-日志](../detail/1547130688.html)
+  - [x] [Mybatis源码解析-注解](../detail/2645650477.html)
+  - [ ] [Mybatis源码解析-Binding]()
+  - [ ] [Mybatis源码解析-MyBatis 初始化（一）之加载 mybatis-config]()
+  - [ ] [Mybatis源码解析-MyBatis 初始化（二）之加载 Mapper 映射配置文件]()
+  - [ ] [Mybatis源码解析-MyBatis 初始化（三）之加载 Statement 配置]()
+  - [ ] [Mybatis源码解析-MyBatis 初始化（四）之加载注解配置]()
+  - [ ] [Mybatis源码解析-SQL 初始化（上）之 SqlNode]()
+  - [ ] [Mybatis源码解析-SQL 初始化（下）之 SqlSource]()
+  - [ ] [Mybatis源码解析-SQL 执行（二）之 StatementHandler]()
+  - [ ] [Mybatis源码解析-SQL 执行（五）之延迟加载]()
+  - [ ] [Mybatis源码解析-会话 SqlSession]()
+  - [ ] [Mybatis源码解析-插件体系（一）之原理]()
+  - [ ] [Mybatis源码解析-插件体系（二）之 PageHelper]()
+  - [ ] [Mybatis源码解析-Spring 集成（一）之调试环境搭建]()
+  - [ ] [Mybatis源码解析-Spring 集成（二）之初始化]()
+  - [ ] [Mybatis源码解析-Spring 集成（二）之初始化]()
+  - [ ] [Mybatis源码解析-Spring 集成（三）之 SqlSession]()
+  - [ ] [Mybatis源码解析-Spring 集成（四）之事务]()
+  - [ ] [Mybatis源码解析-Spring 集成（五）之批处理]()
 
 # 数据结构与算法
 ## 基础算法
@@ -236,3 +258,6 @@
 ## [Kylin](http://kylin.apache.org/cn/)
 ## [cloudera](https://www.cloudera.com/)
 ## [MaxCompute](https://help.aliyun.com/product/27797.html)
+
+# 机器学习
+
