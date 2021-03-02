@@ -301,15 +301,105 @@ pfmerge destkey sourcekey [sourcekey ...]
 Redis提供了基于“发布/订阅”模式的消息机制，此种模式下，消息发布者和订阅者不进行直接通信，发布者客户端向指定的频道(channel)发布消息，订阅该频道的每个客户端都可以收到该消息
 
 ### 命令
-1. 发布消息
-2. 订阅消息
-3. 取消订阅
+1. 发布消息 `publish channel message`
+2. 订阅消息 `subscribe channel [channel ...]`
+3. 取消订阅 `unsubscribe [channel [channel ...]]`
 4. 按照模式订阅或取消订阅
 
+```bash
+psubscribe pattern [pattern...]
+punsubscribe [pattern [pattern ...]]
+```
+
+5. 查询订阅
+   1. 查看活跃的频道 `pubsub channels [pattern]`
+   2. 查看频道订阅数 `pubsub numsub [channel ...]`
+   3. 查看模式订阅数 `pubsub numpat`
+
 ### 使用场景
+聊天室、公告牌及服务之间利用消息解耦都可以使用发布订阅模式
 
 ## Geo
+Redis3.2版本提供了GEO(地理信息定位)功能，支持存储地理位置信 息用来实现诸如附近位置、摇一摇这类依赖于地理位置信息的功能，对于需 要实现这些功能的开发者来说是一大福音。GEO功能是Redis的另一位作者 Matt Stancliff[^2]借鉴NoSQL数据库Ardb[^3]实现的，Ardb的作者来自中国，它提供了优秀的GEO功能。
+
+### 增加地理位置信息
+```bash
+geoadd key longitude latitude member [longitude latitude member ...]
+```
+- longitude、latitude、member分别是该地理位置的经度、纬度、成员
+
+### 获取地理信息
+```bash
+geopos key member [member ...]
+```
+- 会返回对应位置的经纬度
+
+### 获取两个地理位置之间的距离
+```bash
+geodist key member1 member2 [unit]
+```
+- unit:返回结果的单位:m(meters)代表米，km(kilometers)代表公里，mi(miles)代表英里，ft(feet)代表尺
+
+### 获取指定位置范围内的地理信息位置集合
+```bash
+georadius key longitude latitude radiusm|km|ft|mi [withcoord] [withdist] [withhash] [COUNT count] [asc|desc] [store key] [storedist key]
+georadiusbymember key member radiusm|km|ft|mi [withcoord] [withdist] [withhash] [COUNT count] [asc|desc] [store key] [storedist key]
+```
+- georadius以经纬度为中心，georadiusbymember以成员为中心
+- **withcoord**:返回结果中包含经纬度
+- **withdist**:返回结果中包含距中心店的距离
+- **withhash**:返回结果中包含gethash
+- **COUNT count**:指定返回结果数量
+- **asc|desc**:按照距中心的距离做升序或降序
+- **store key**:将返回结果的地理信息保存到指定键。使用Sorted Set保存(城市)
+- **storedist key**:将返回结果距中心距离保存到指定键
+
+```bash
+127.0.0.1:6379> georadiusbymember cities:locations beijing 150 km # 距离北京150km内的城市
+1) "beijing"
+2) "tianjin"
+3) "tangshan"
+4) "baoding"
+```
+
+### 获取 geohash
+```bash
+geohash key member [member ...]
+```
+
+- **geohash[^4]** 的数据类型为zset，Redis将所有地理位置信息存放在zset中
+- 字符串越长，精确度越准确
+- 两个字符串越相似，它们之间的距离越近
+- geohash编码和经纬度可以相互转换
+
+### 删除地理位置
+```bash
+zrem key member
+```
+- geo没有提供删除位置的命令，但是Geo的底层实现是zset，所以可以借用zrem命令实现对地理位置信息的删除。
+
 
 ## 本章重点回顾
 
+- 慢查询中的两个重要参数`slowlog-log-slower-than`和`slowlog-max-len`
+- 慢查询不包含命令网络传输和排队时间
+- 有必要将慢查询定期存放
+- redis-cli的一些重要的选项，例如`--latency`、`–-bigkeys`、`-i`和`-r`组合
+- redis-benchmark 的使用方法和重要参数
+- Pipeline可以有效减少RTT次数，但每次Pipeline的命令数量不能无节制
+- Redis可以使用Lua脚本创造出原子、高效、自定义命令组合
+- Redis执行Lua脚本有两种方法:eval和evalsha
+- Bitmaps可以用来做独立用户统计，有效节省内存
+- Bitmaps中setbit一个大的偏移量，由于申请大量内存会导致阻塞
+- HyperLogLog虽然在统计独立总量时存在一定的误差，但是节省的 内存量十分惊人
+- Redis的发布订阅机制相比许多专业的消息队列系统功能较弱，不 具备堆积和回溯消息的能力，但胜在足够简单
+- Redis3.2提供了GEO功能，用来实现基于地理位置信息的应用，但 底层实现是zset。
+
+
 [^1]:HyperLogLog的算法是由[Philippe Flajolet](https://en.wikipedia.org/wiki/Philippe_Flajolet)在 The analysis of a near-optimal cardinality estimation algorithm 这篇论文中提出，读者如果有兴趣 可以自行阅读。
+
+[^2]:[https://matt.sh/](https://matt.sh/)
+
+[^3]:[https://github.com/yinqiwen/ardb](https://github.com/yinqiwen/ardb)
+
+[^4]:[https://en.wikipedia.org/wiki/Geohash](https://en.wikipedia.org/wiki/Geohash)

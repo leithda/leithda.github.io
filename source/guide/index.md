@@ -39,15 +39,25 @@
 # 操作系统
 
 # 数据库
+
 ## 数据库原理
+
 ## 关系型数据库
+
 ### MySQL
+
 ### Oracle
+
 ### SQL Server
+
 ## NoSQL
+
 ### 文档型数据库
+
 #### mongoDB
+
 ### key-value型数据库
+
 #### [redis](https://redis.io/)
 > [Redis开发与运维(豆瓣)](https://book.douban.com/subject/26971561/)
 - [x] [Redis开发与运维笔记-初始Redis](../detail/1097430507.html)
@@ -66,9 +76,13 @@
 - [ ] [Redis开发与运维笔记-配置统计字典]()
 
 #### etcd
+
 #### memcached
+
 ### 搜索引擎式
+
 #### elastic search
+
 #### solr
 
 # 框架
@@ -197,22 +211,31 @@
   - [ ] [Mybatis源码解析-Spring 集成（五）之批处理]()
 
 # 数据结构与算法
+
 ## 基础算法
 - [x] [分治法](../detail/1495194475.html)
 
 ## 力扣
 
 # 工具
+
 ## 版本管理工具
+
 ### GIT
 - [x] [Git-Book](../detail/2879265125.html)
 
 ### SVN
+
 ## 项目构建工具
+
 ### Maven
+
 ### Gradle
+
 ## 编程工具
+
 ### IntelliJ IDEA
+
 ### Sublime Text
 
 # 编程
@@ -246,17 +269,40 @@
     - [x] [Flyweight Pattern[享元模式]](../detail/2031750427.html)
     - [x] [Proxy Pattern[代理模式]](../detail/3822496321.html)
 
+# 理论
+## 基础
+
+
+## 分布式
+- [ ] [CAP理论]()
+- [ ] [Base理论]()
+- [ ] [分布式事务]()
+- [ ] [分布式系统一致性]()
+- [ ] [分布式存储]()
+- [ ] [分布式计算]()
+
 # 大数据
+
 ## [Hadoop](http://hadoop.apache.org/)
+
 ## [Hive](https://hive.apache.org/)
+
 ## [HBase](https://hbase.apache.org/)
+
 ## [Flume](http://flume.apache.org/)
+
 ## [sqoop](https://sqoop.apache.org/)
+
 ## [Nifi](http://nifi.apache.org/)
+
 ## [Spark](http://spark.apache.org/)
+
 ## [Flink](https://flink.apache.org/)
+
 ## [Kylin](http://kylin.apache.org/cn/)
+
 ## [cloudera](https://www.cloudera.com/)
+
 ## [MaxCompute](https://help.aliyun.com/product/27797.html)
 
 # 机器学习
