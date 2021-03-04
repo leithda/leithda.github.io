@@ -391,9 +391,9 @@ zrem key member
 - Redis执行Lua脚本有两种方法:eval和evalsha
 - Bitmaps可以用来做独立用户统计，有效节省内存
 - Bitmaps中setbit一个大的偏移量，由于申请大量内存会导致阻塞
-- HyperLogLog虽然在统计独立总量时存在一定的误差，但是节省的 内存量十分惊人
-- Redis的发布订阅机制相比许多专业的消息队列系统功能较弱，不 具备堆积和回溯消息的能力，但胜在足够简单
-- Redis3.2提供了GEO功能，用来实现基于地理位置信息的应用，但 底层实现是zset。
+- HyperLogLog虽然在统计独立总量时存在一定的误差，但是节省的内存量十分惊人
+- Redis的发布订阅机制相比许多专业的消息队列系统功能较弱，不具备堆积和回溯消息的能力，但胜在足够简单
+- Redis3.2提供了GEO功能，用来实现基于地理位置信息的应用，但底层实现是zset。
 
 
 [^1]:HyperLogLog的算法是由[Philippe Flajolet](https://en.wikipedia.org/wiki/Philippe_Flajolet)在 The analysis of a near-optimal cardinality estimation algorithm 这篇论文中提出，读者如果有兴趣 可以自行阅读。
