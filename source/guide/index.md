@@ -1,5 +1,5 @@
 {% cq %}
-对应代码仓库地址:      [Github代码仓库](https://github.com/leithda) | [Gitee代码仓库](https://gitee.com/leithda) 
+[Github代码仓库](https://github.com/leithda) | [Gitee代码仓库](https://gitee.com/leithda) 
 {% endcq %}
 
 <!-- More -->
@@ -87,19 +87,19 @@
 
 # 框架
 ## [Spring Cloud](https://spring.io/projects/spring-cloud)
-- [x] [Eureka(服务注册与发现)](../detail/518531817.html)
-- [x] [Ribbon(负载均衡)](../detail/2968946741.html)
-- [x] [Feign(声明式调用)](../detail/874139413.html)
-- [x] [Hystrix(熔断器)](../detail/1776285993.html)
-- [x] [Zuul(智能网关)](../detail/1996565447.html)
-- [ ] [Gateway(网关)]()
-- [x] [Config(配置中心)](../detail/1798410625.html)
-- [x] [Zipkin(链路追踪)](../detail/3833359923.html)
-- [x] [Admin(微服务监控)](../detail/1287611694.html)
-- [ ] [Spring Boot Security]()
-- [ ] [使用Spring Cloud OAuth2]()
-- [ ] [使用Spring Security OAuth2]()
-- [ ] [使用Spring Cloud构建微服务综合案例]()
+- [SpringCloud微服务构建(豆瓣)](https://book.douban.com/subject/30180533)
+  - [x] [Eureka(服务注册与发现)](../detail/518531817.html)
+  - [x] [Ribbon(负载均衡)](../detail/2968946741.html)
+  - [x] [Feign(声明式调用)](../detail/874139413.html)
+  - [x] [Hystrix(熔断器)](../detail/1776285993.html)
+  - [x] [Zuul(智能网关)](../detail/1996565447.html)
+  - [x] [Config(配置中心)](../detail/1798410625.html)
+  - [x] [Zipkin(链路追踪)](../detail/3833359923.html)
+  - [x] [Admin(微服务监控)](../detail/1287611694.html)
+  - [ ] [Spring Boot Security]()
+  - [ ] [使用Spring Cloud OAuth2]()
+  - [ ] [使用Spring Security OAuth2]()
+  - [ ] [使用Spring Cloud构建微服务综合案例]()
 
 ## [RocketMQ](http://rocketmq.apache.org/)
 - [RocketMQ快速入门](/framework/rocketmq/quickStart)
@@ -154,7 +154,7 @@
 
 
 ## Tomcat
-- [《How Tomcat Works》](https://book.douban.com/subject/10426640/)
+- [HowTomcatWorks(豆瓣)](https://book.douban.com/subject/10426640)
   - [x] [编码前准备](../detail/1805298928.html)
   - [x] [一个简单的Web服务器](../detail/1975698977.html)
   - [x] [一个简单的Servlet容器](../detail/991341650.html)
@@ -270,11 +270,11 @@
     - [x] [Proxy Pattern[代理模式]](../detail/3822496321.html)
 
 # 理论
+
 ## 基础
 
-
 ## 分布式
-- [ ] [CAP理论]()
+- [x] [CAP理论](../detail/821096212.html)
 - [ ] [Base理论]()
 - [ ] [分布式事务]()
 - [ ] [分布式系统一致性]()
