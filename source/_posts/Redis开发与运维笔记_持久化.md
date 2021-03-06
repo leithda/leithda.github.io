@@ -3,6 +3,7 @@ abbrlink: 1023191841
 title: Redis开发与运维笔记-持久化
 date: 2021-03-04 17:40:00
 categories:
+  - 数据库
   - Redis
 tags:
   - Redis

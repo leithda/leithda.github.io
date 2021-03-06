@@ -1,6 +1,7 @@
 ---
 title: Redis开发与运维笔记-Redis的噩梦_阻塞
 categories:
+  - 数据库
   - Redis
 tags:
   - Redis

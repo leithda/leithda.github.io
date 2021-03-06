@@ -1,8 +1,9 @@
 ---
-title: CAP理论
+title: 分布式理论-CAP理论
 date: 2021-03-02 12:00:00
 categories:
-  - 分布式
+  - 理论
+  - 分布式理论
 tags:
   - CAP
 author: 长歌
@@ -33,7 +34,7 @@ CAP原则又称CAP定理，指的是在一个分布式系统中，一致性（Co
 
 
 ## CAP权衡
-
+{% asset_img cap.png CAP %}
 ### CA without P
 如果不要求 Partition Tolerance，即不允许分区，则强一致性和可用性是可以保证的。其实分区是始终存在的问题，因此 CA 的分布式系统更多的是允许分区后各子系统依然保持 CA。
 
@@ -43,9 +44,16 @@ CAP原则又称CAP定理，指的是在一个分布式系统中，一致性（Co
 ### AP without C
 如果要可用性高并允许分区，则需放弃一致性。一旦分区发生，节点之间可能会失去联系，为了实现高可用，每个节点只能用本地数据提供服务，而这样会导致全局数据的不一致性。
 
+### 结论
+通过CAP理论，我们知道无法同时满足CAP三个特性。
 
-<hr>
+现代多数互联网应用场景，部署机器多且分散，节点和网络故障无法避免。要保证服务可用性达N个9的目标，必然要保证AP，舍弃C(放弃强一致性追求最终一致性)。
+
+但当涉及到金钱相关业务时，一致性必须得到保证。这种情况下就需要放弃A。如果发生网络故障时，放弃系统的可用性也要保证数据的一致性。
+
+两种方式各有取舍，应该根据业务场景判断，选择合适的方案。
 
 
 ## Reference
-> [mwhittaker's blog](https://mwhittaker.github.io/blog/an_illustrated_proof_of_the_cap_theorem/)
+- [分布式系统的CAP理论-HollisChuang's Blog](https://www.hollischuang.com/archives/666)
+- [mwhittaker's blog](https://mwhittaker.github.io/blog/an_illustrated_proof_of_the_cap_theorem/)

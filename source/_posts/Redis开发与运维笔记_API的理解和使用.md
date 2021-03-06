@@ -1,6 +1,7 @@
 ---
 title: Redis开发与运维笔记-API的理解和使用
 categories:
+  - 数据库
   - Redis
 tags:
   - Redis

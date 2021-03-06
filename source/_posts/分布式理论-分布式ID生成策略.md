@@ -3,11 +3,10 @@ title: 分布式ID生成策略
 abbrlink: 3146196455
 date: 2019-12-24 09:38:49
 categories:
-  - Distributed
-  - Tools
+  - 理论
+  - 分布式理论
 tags:
-  - 分布式
-  - Snowflake
+  - snowflake
 author: 长歌
 ---
 

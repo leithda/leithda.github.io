@@ -1,11 +1,10 @@
 ---
 title: Spring Cloud 之 Admin-微服务监控
 categories:
-  - Java
-  - Spring Cloud
+  - 框架
+  - SpringCloud
+  - 基础
 tags:
-  - Spring Boot
-  - 微服务
   - Spring Cloud
 author: 长歌
 abbrlink: 1287611694

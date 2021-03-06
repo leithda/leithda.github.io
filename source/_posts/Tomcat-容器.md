@@ -1,11 +1,10 @@
 ---
 title: Tomcat-容器
 categories:
-  - Java
+  - 源码
   - Tomcat
 tags:
   - 源码
-  - Tomcat
 author: 长歌
 date: 2019-10-9
 abbrlink: 3459939477

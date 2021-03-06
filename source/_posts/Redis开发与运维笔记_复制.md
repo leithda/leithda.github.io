@@ -2,6 +2,7 @@
 abbrlink: 3460365957
 title: Redis开发与运维笔记-复制
 categories:
+  - 数据库
   - Redis
 tags:
   - Redis

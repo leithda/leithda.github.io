@@ -3,6 +3,7 @@ abbrlink: 1097430507
 title: Redis开发与运维笔记-初识Redis
 date: 2021-03-01 10:00:00
 categories:
+  - 数据库
   - Redis
 tags:
   - Redis

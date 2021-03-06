@@ -1,11 +1,10 @@
 ---
 title: Tomcat-关闭钩子
 categories:
-  - Java
+  - 源码
   - Tomcat
 tags:
   - 源码
-  - Tomcat
 author: 长歌
 abbrlink: 966063575
 date: 2019-11-19 20:00:00

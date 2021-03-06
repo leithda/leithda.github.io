@@ -1,11 +1,10 @@
 ---
 title: Tomcat-一个Web服务器
 categories:
-  - Java
+  - 源码
   - Tomcat
 tags:
   - 源码
-  - Tomcat
 author: 长歌
 abbrlink: 1975698977
 date: 2019-09-23 18:45:00

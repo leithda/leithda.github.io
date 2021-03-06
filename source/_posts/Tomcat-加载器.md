@@ -1,11 +1,10 @@
 ---
 title: Tomcat-加载器
 categories:
-  - Java
+  - 源码
   - Tomcat
 tags:
   - 源码
-  - Tomcat
 author: 长歌
 abbrlink: 4141534283
 date: 2019-10-16 00:00:00

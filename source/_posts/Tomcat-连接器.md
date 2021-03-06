@@ -1,11 +1,10 @@
 ---
 title: Tomcat-连接器
 categories:
-  - Java
+  - 源码
   - Tomcat
 tags:
   - 源码
-  - Tomcat
 author: 长歌
 date: 2019-9-24
 abbrlink: 2076341340

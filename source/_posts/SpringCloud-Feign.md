@@ -1,11 +1,10 @@
 ---
 title: Spring Cloud 之 Feign-声明式调用
 categories:
-  - Java
-  - Spring Cloud
+  - 框架
+  - SpringCloud
+  - 基础
 tags:
-  - Spring Boot
-  - 微服务
   - Spring Cloud
 author: 长歌
 date: 2019-9-20

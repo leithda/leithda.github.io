@@ -3,7 +3,7 @@ title: Mybatis-注解模块
 abbrlink: 2645650477
 date: 2020-04-20 19:24:03
 categories:
-  - Java
+  - 源码
   - Mybatis
 tags:
   - 源码

@@ -2,7 +2,7 @@
 title: Mybatis源码解析-数据源模块
 author: 长歌
 categories:
-  - Java
+  - 源码
   - Mybatis
 tags:
   - 源码

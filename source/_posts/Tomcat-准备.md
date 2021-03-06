@@ -1,11 +1,10 @@
 ---
 title: Tomcat-准备
 categories:
-  - Java
+  - 源码
   - Tomcat
 tags:
   - 源码
-  - Tomcat
 author: 长歌
 abbrlink: 1805298928
 date: 2019-10-26 00:00:00

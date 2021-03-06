@@ -4,10 +4,7 @@ abbrlink: 2098644504
 date: 2019-12-27 11:12:59
 categories:
   - Java
-  - Basic
-tags:
-  - Net
-  - 网络编程
+  - 基础
 author: 长歌
 ---
 

@@ -3,10 +3,10 @@ title: Nginx之配置文件
 abbrlink: 1707226120
 date: 2020-06-09 22:54:39
 categories:
+  - 中间件
   - Nginx
 tags:
   - Nginx
-  - 中间件
 author: 长歌
 ---
 

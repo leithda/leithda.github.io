@@ -2,9 +2,7 @@
 title: Java8中处理日期和时间示例
 categories:
   - Java
-  - Basic
-tags:
-  - 日期
+  - 基础
 author: 长歌
 abbrlink: 2517593741
 date: 2019-10-14 00:00:00

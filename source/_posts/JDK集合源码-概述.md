@@ -1,8 +1,9 @@
 ---
 title: Java集合框架概述
 categories:
-  - Java
-  - Core
+  - 源码
+  - JDK
+  - 集合
 tags:
   - 源码
 author: 长歌

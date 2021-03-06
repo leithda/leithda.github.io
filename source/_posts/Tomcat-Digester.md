@@ -1,11 +1,10 @@
 ---
 title: Tomcat-Digester
 categories:
-  - Java
+  - 源码
   - Tomcat
 tags:
   - 源码
-  - Tomcat
 author: 长歌
 abbrlink: 2030302893
 date: 2019-11-10 08:00:00

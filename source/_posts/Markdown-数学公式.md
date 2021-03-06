@@ -3,11 +3,11 @@ title: Markdown-数学公式
 abbrlink: 2665394633
 date: 2019-12-06 11:40:38
 categories:
-  - Tools
+  - 工具
+  - 日常
   - Markdown
 tags:
   - Markdown
-  - 工具
 author: 长歌
 mathjax: true
 ---

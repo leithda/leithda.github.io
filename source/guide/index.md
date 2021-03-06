@@ -1,12 +1,15 @@
 {% cq %}
-[Github代码仓库](https://github.com/leithda) | [Gitee代码仓库](https://gitee.com/leithda) 
+[Github](https://github.com/leithda) | [Gitee](https://gitee.com/leithda) 
 {% endcq %}
 
 <!-- More -->
 
 # 计算机基础
 
+## 操作系统
+
 ## 计算机网络原理
+
 - [x] [计算机网络-概述](../detail/15988581.html)
 - [x] [计算机网络-物理层](../detail/3070870257.html)
 - [ ] [计算机网络-数据链路层]()
@@ -15,32 +18,59 @@
 - [ ] [计算机网络-应用层]()
 - [ ] [计算机网络-网络安全]()
 
-## 计算机组成原理
+## 数据库原理
 
-# Java
-## 基础
+- [ ] [数据库简介]()
+- [ ] [关系模型]()
+- [ ] [结构化查询语言]()
+- [ ] [数据建模]()
+- [ ] [数据库设计]()
+- [ ] [数据库管理]()
+
+## 数据结构与算法
+
+### 数据结构
+- [数组]()
+- [栈]()
+- [队列]()
+- [链表]()
+- [树]()
+  - [二叉树]()
+  - [查找树]()
+  - [平衡树]()
+  - [线索数]()
+- [散列表]()
+- [堆]()
+- [图]()
+
+### 算法
+
+### 算法题
+- [排序算法总结](../detail/1935562633.html)
+
+
+# 编程语言
+
+## Java
+
+### 基础
 - [x] [java8 处理日期和时间](../detail/2517593741.html)
-- [x] [Java-面向对象思想](../detail/2742829166.html)
 - [x] [Java-IO](../detail/3845166172.html)
 - [x] [Java-网络编程-基础](../detail/2098644504.html)
-- [x] [Java之引用类型](../detail/72877877.html)
 
-## JVM
-- [x] [JVM之入门及类文件结构](../detail/1204858154.html)
-- [x] [JVM之类文件加载过程](../detail/581636265.html) 
+### 多线程
 
-## JUC 
-- [x] [JUC-概述](../detail/2396729586.html)
-- [x] [Java-JUC-关键字](../detail/4169854470.html)
-- [x] [Java-JUC-原子操作](../detail/1710138375.html)
-- [x] [Java-JUC-线程](../detail/2466310928.html)
-- [x] [Jaba-JUC-工具类](../detail/3943993470.html)
+## JavaScript
 
-# 操作系统
+### 基础
+
+### [Vue](https://cn.vuejs.org/)
+
+### [React](https://zh-hans.reactjs.org/)
+
+## Python
 
 # 数据库
-
-## 数据库原理
 
 ## 关系型数据库
 
@@ -54,11 +84,9 @@
 
 ### 文档型数据库
 
-#### mongoDB
+### Key-Value型数据库
 
-### key-value型数据库
-
-#### [redis](https://redis.io/)
+#### [Redis](https://redis.io/)
 > [Redis开发与运维(豆瓣)](https://book.douban.com/subject/26971561/)
 - [x] [Redis开发与运维笔记-初始Redis](../detail/1097430507.html)
 - [x] [Redis开发与运维笔记-API的理解和使用](../detail/4241361649.html)
@@ -75,85 +103,132 @@
 - [ ] [Redis开发与运维笔记-监控运维平台CacheCloud]()
 - [ ] [Redis开发与运维笔记-配置统计字典]()
 
-#### etcd
+#### [etcd](https://etcd.io/)
 
-#### memcached
+#### [memcached](http://memcached.org/)
 
-### 搜索引擎式
+### 搜索引擎数据库
 
-#### elastic search
+#### [ElasticSearch](https://www.elastic.co/cn/elasticsearch/)
 
-#### solr
+#### [Solr](https://solr.apache.org/)
 
-# 框架
-## [Spring Cloud](https://spring.io/projects/spring-cloud)
-- [SpringCloud微服务构建(豆瓣)](https://book.douban.com/subject/30180533)
-  - [x] [Eureka(服务注册与发现)](../detail/518531817.html)
-  - [x] [Ribbon(负载均衡)](../detail/2968946741.html)
-  - [x] [Feign(声明式调用)](../detail/874139413.html)
-  - [x] [Hystrix(熔断器)](../detail/1776285993.html)
-  - [x] [Zuul(智能网关)](../detail/1996565447.html)
-  - [x] [Config(配置中心)](../detail/1798410625.html)
-  - [x] [Zipkin(链路追踪)](../detail/3833359923.html)
-  - [x] [Admin(微服务监控)](../detail/1287611694.html)
-  - [ ] [Spring Boot Security]()
-  - [ ] [使用Spring Cloud OAuth2]()
-  - [ ] [使用Spring Security OAuth2]()
-  - [ ] [使用Spring Cloud构建微服务综合案例]()
+# 理论
 
-## [RocketMQ](http://rocketmq.apache.org/)
-- [RocketMQ快速入门](/framework/rocketmq/quickStart)
-- [RocketMQ集群搭建](/framework/rocketmq/clustr)
-- [RocketMQ收发消息](/framework/rocketmq/message)
-- [RocketMQ高级功能](/framework/rocketmq/advancedFunction)
+## 设计模式
+- 创建型
+    - [x] [Single Pattern[单例模式]](../detail/4049607742.html)
+    - [x] [Factory Pattern[工厂模式]](../detail/1417187187.html)
+    - [x] [Abstract Factory Pattern[抽象工厂]](../detail/2506759259.html)
+    - [x] [Builder Pattern[建造者模式]](../detail/3898751754.html)
+    - [x] [Prototype Pattern[原型模式]](../detail/153761970.html)
+- 行为型
+    - [x] [Chain of Responsibility Pattern[责任链模式]](../detail/1644716670.html)
+    - [x] [Command Pattern[命令模式]](../detail/256138576.html)
+    - [x] [Interpreter Pattern[解释器模式]](../detail/1940214718.html)
+    - [x] [Iterator Pattern[迭代器模式]](../detail/1151138151.html)
+    - [x] [Mediator Pattern[中介者模式]](../detail/83831917.html)
+    - [x] [Memento Pattern[备忘录模式]](../detail/400445220.html)
+    - [x] [Observer Pattern[观察者模式]](../detail/2586075670.html)
+    - [x] [State Pattern[状态模式]](../detail/307019047.html)
+    - [x] [Strategy Pattern[策略模式]](../detail/3932426784.html)
+    - [x] [Template Pattern[模板模式]](../detail/2374608698.html)
+    - [x] [Visitor Pattern[访问者模式]](../detail/2960930216.html)
+    - [x] [Null Object Pattern[空对象模式]](../detail/3159547075.html)
+- 结构型
+    - [x] [Adapter Pattern[适配器模式]](../detail/4123342314.html)
+    - [x] [Bridge Pattern[桥接模式]](../detail/3468020877.html)
+    - [x] [Filter Pattern[过滤器模式]](../detail/3277476179.html)
+    - [x] [Composite Pattern[组合模式]](../detail/1191195587.html)
+    - [x] [Decorator Pattern[装饰器模式]](../detail/1942064508.html)
+    - [x] [Facade Pattern[外观模式]](../detail/4158556840.html)
+    - [x] [Flyweight Pattern[享元模式]](../detail/2031750427.html)
+    - [x] [Proxy Pattern[代理模式]](../detail/3822496321.html)
 
 
+## Java
+- [x] [Java-面向对象思想](../detail/2742829166.html)
+- [x] [Java-引用类型](../detail/72877877.html)
 
-# 源码
-## JDK源码
+## 算法思想
+- [ ] [递推法]()
+- [ ] [递归法]()
+- [ ] [穷举法]()
+- [ ] [贪心算法]()
+- [ ] [分治法]()
+- [ ] [动态规划法]()
+- [ ] [分支界限法]()
+- [ ] [回溯法]()
 
-### 工具类源码
+## 分布式理论
+- [x] [CAP理论](../detail/821096212.html)
+- [x] [Base理论](../detail/2139113162.html)
+- [ ] [分布式事务]()
+- [ ] [分布式系统一致性]()
+- [ ] [分布式存储]()
+- [ ] [分布式计算]()
+- [x] [分布式ID生成策略](../detail/3146196455.html)
+
+## 未分类
+
+
+# [框架及中间件](https://github.com/leithda/FrameWork-Labs)
+
+## SpringBoot
+
+### 基础
+- [x] [spting-boot-web]()
+- [x] [spring-boot-swagger]()
+- [x] [spring-boot-jdbc-template]()
+- [x] [spring-boot-jpa]()
+- [x] [spring-boot-mybatis-plus]()
+- [x] [spring-boot-redis]()
+- [x] [spring-boot-security]()
+- [x] [spring-boot-shiro]()
+
+## SpringCloud
+
+## RocketMQ
+
+## Nginx
+
+
+# [源码](https://github.com/leithda/SourceCodeAnalysis)
+
+## [JDK](https://github.com/leithda/jdk8)
+
+### 工具类
 - [ ] [Arrays]()
 - [ ] [Collections]()
 - [ ] [Objects]()
 
-### 集合源码
+### 集合
 - [x] [概述](../detail/1126326809.html)
 - [x] [接口类介绍](../detail/3518917720.html)
 - [x] [抽象类介绍](../detail/4107645288.html)
 - [x] [ArrayList](../detail/2501046991.html)
-- [ ] [LinkedList]()
+- [x] [LinkedList](../detail/2526212613.html)
 - [ ] [HashMap]()
 - [ ] [TreeMap和LinkedHashMap]()
 - [ ] [HashSet和TreeSet]()
-
-### 并发集合
-- [ ] [CopyOnWriteArrayList]()
-- [ ] [ConcurrentHashMap]()
-
-### 队列
 - [ ] [LinkedBlockingQueue]()
 - [ ] [SynchronousQueue]()
 - [ ] [DelayQueue]()
 - [ ] [ArrayBlockingQueue]()
 
-### 线程
+### 并发集合
+- [ ] [CopyOnWriteArrayList]()
+- [ ] [ConcurrentHashMap]()
+
+### 多线程
 - [ ] [Thread]()
-- [x] [Future、ExecutorService]()
-- [ ] [ThreadLocal]()
-
-
-### 锁
-- [ ] [AbstrractQueuedSynchronizer]()
-- [ ] [ReentrantLock]()
-- [ ] [CountDownLatch，Atomic]()
-
-### 线程池
+- [ ] [Future、ExecutorService]()
+- [x] [ThreadLocal](../detail/355185077.html)
 - [ ] [ThreadPoolExecutor]()
 
+### 锁
 
-
-## Tomcat
+## [Tomcat]()
 - [HowTomcatWorks(豆瓣)](https://book.douban.com/subject/10426640)
   - [x] [编码前准备](../detail/1805298928.html)
   - [x] [一个简单的Web服务器](../detail/1975698977.html)
@@ -210,100 +285,63 @@
   - [ ] [Mybatis源码解析-Spring 集成（四）之事务]()
   - [ ] [Mybatis源码解析-Spring 集成（五）之批处理]()
 
-# 数据结构与算法
-
-## 基础算法
-- [x] [分治法](../detail/1495194475.html)
-
-## 力扣
-
 # 工具
 
-## 版本管理工具
+## 常用软件
+- [IntelliJ IDEA]()
+- [Typora]()
+- [VS Code]()
+- [语雀]()
 
-### GIT
-- [x] [Git-Book](../detail/2879265125.html)
+## 编程工具
+### IntelliJ IDEA
 
-### SVN
+### Visual Studio Code
 
-## 项目构建工具
+## 版本控制
+
+### Git
+
+### Svn
+
+## 项目构建
 
 ### Maven
 
 ### Gradle
 
-## 编程工具
+## 日常
 
-### IntelliJ IDEA
+### [Markdown]()
+- [x] [Markdown-基本语法](../detail.1069057006.html)
+- [x] [Markdown-流程图](../detail/3540196146.html)
+- [x] [Markdown-数学公式](../detail/2665394633.html)
 
-### Sublime Text
+# 其他
 
-# 编程
-## 设计模式
-- 创建型
-    - [x] [Single Pattern[单例模式]](../detail/4049607742.html)
-    - [x] [Factory Pattern[工厂模式]](../detail/1417187187.html)
-    - [x] [Abstract Factory Pattern[抽象工厂]](../detail/2506759259.html)
-    - [x] [Builder Pattern[建造者模式]](../detail/3898751754.html)
-    - [x] [Prototype Pattern[原型模式]](../detail/153761970.html)
-- 行为型
-    - [x] [Chain of Responsibility Pattern[责任链模式]](../detail/1644716670.html)
-    - [x] [Command Pattern[命令模式]](../detail/256138576.html)
-    - [x] [Interpreter Pattern[解释器模式]](../detail/1940214718.html)
-    - [x] [Iterator Pattern[迭代器模式]](../detail/1151138151.html)
-    - [x] [Mediator Pattern[中介者模式]](../detail/83831917.html)
-    - [x] [Memento Pattern[备忘录模式]](../detail/400445220.html)
-    - [x] [Observer Pattern[观察者模式]](../detail/2586075670.html)
-    - [x] [State Pattern[状态模式]](../detail/307019047.html)
-    - [x] [Strategy Pattern[策略模式]](../detail/3932426784.html)
-    - [x] [Template Pattern[模板模式]](../detail/2374608698.html)
-    - [x] [Visitor Pattern[访问者模式]](../detail/2960930216.html)
-    - [x] [Null Object Pattern[空对象模式]](../detail/3159547075.html)
-- 结构型
-    - [x] [Adapter Pattern[适配器模式]](../detail/4123342314.html)
-    - [x] [Bridge Pattern[桥接模式]](../detail/3468020877.html)
-    - [x] [Filter Pattern[过滤器模式]](../detail/3277476179.html)
-    - [x] [Composite Pattern[组合模式]](../detail/1191195587.html)
-    - [x] [Decorator Pattern[装饰器模式]](../detail/1942064508.html)
-    - [x] [Facade Pattern[外观模式]](../detail/4158556840.html)
-    - [x] [Flyweight Pattern[享元模式]](../detail/2031750427.html)
-    - [x] [Proxy Pattern[代理模式]](../detail/3822496321.html)
+## 大数据
 
-# 理论
+### [Hadoop](http://hadoop.apache.org/)
 
-## 基础
+### [Hive](https://hive.apache.org/)
 
-## 分布式
-- [x] [CAP理论](../detail/821096212.html)
-- [ ] [Base理论]()
-- [ ] [分布式事务]()
-- [ ] [分布式系统一致性]()
-- [ ] [分布式存储]()
-- [ ] [分布式计算]()
+### [HBase](https://hbase.apache.org/)
 
-# 大数据
+### [Flume](http://flume.apache.org/)
 
-## [Hadoop](http://hadoop.apache.org/)
+### [sqoop](https://sqoop.apache.org/)
 
-## [Hive](https://hive.apache.org/)
+### [Nifi](http://nifi.apache.org/)
 
-## [HBase](https://hbase.apache.org/)
+### [Spark](http://spark.apache.org/)
 
-## [Flume](http://flume.apache.org/)
+### [Flink](https://flink.apache.org/)
 
-## [sqoop](https://sqoop.apache.org/)
+### [Kylin](http://kylin.apache.org/cn/)
 
-## [Nifi](http://nifi.apache.org/)
+### [cloudera](https://www.cloudera.com/)
 
-## [Spark](http://spark.apache.org/)
+### [MaxCompute](https://help.aliyun.com/product/27797.html)
 
-## [Flink](https://flink.apache.org/)
-
-## [Kylin](http://kylin.apache.org/cn/)
-
-## [cloudera](https://www.cloudera.com/)
-
-## [MaxCompute](https://help.aliyun.com/product/27797.html)
-
-# 机器学习
+## 机器学习
 

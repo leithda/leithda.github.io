@@ -1,11 +1,11 @@
 ---
 title: Markdown-基本语法
 categories:
-  - Tools
+  - 工具
+  - 日常
   - Markdown
 tags:
   - Markdown
-  - 工具
 author: 长歌
 abbrlink: 1069057006
 date: 2019-12-05 08:17:19

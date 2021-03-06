@@ -1,6 +1,7 @@
 ---
 title: Redis开发与运维笔记-客户端
 categories:
+  - 数据库
   - Redis
 tags:
   - Redis

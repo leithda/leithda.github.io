@@ -1,11 +1,10 @@
 ---
 title: Tomcat-Session管理
 categories:
-  - Java
+  - 源码
   - Tomcat
 tags:
   - 源码
-  - Tomcat
 author: 长歌
 abbrlink: 1571172711
 date: 2019-10-17 00:00:00

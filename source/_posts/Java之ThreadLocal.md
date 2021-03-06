@@ -3,8 +3,9 @@ title: Java之ThreadLocal
 abbrlink: 355185077
 date: 2020-07-10 17:27:09
 categories:
-  - Java
-  - Basic
+  - 源码
+  - JDK
+  - 多线程
 tags: ThreadLocal
 author: 长歌
 ---

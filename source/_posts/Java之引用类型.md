@@ -3,8 +3,8 @@ title: Java之引用类型
 abbrlink: 72877877
 date: 2020-07-10 16:59:52
 categories:
+  - 理论
   - Java
-  - Basic
 author: 长歌
 ---
 

@@ -1,6 +1,7 @@
 ---
 title: Redis开发与运维笔记-理解内存
 categories:
+  - 数据库
   - Redis
 tags:
   - Redis

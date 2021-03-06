@@ -3,8 +3,8 @@ title: Java-面向对象
 abbrlink: 2742829166
 date: 2019-12-19 20:32:20
 categories:
+  - 理论
   - Java
-  - Basic
 tags:
   - 面向对象思想
 author: 长歌

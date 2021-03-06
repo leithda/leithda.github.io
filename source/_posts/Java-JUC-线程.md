@@ -4,7 +4,6 @@ abbrlink: 2466310928
 date: 2020-01-15 10:52:08
 categories:
   - Java
-  - Basic
 tags:
   - JUC
   - 并发

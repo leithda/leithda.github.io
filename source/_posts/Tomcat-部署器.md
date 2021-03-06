@@ -3,11 +3,10 @@ title: Tomcat-部署器
 abbrlink: 2507917456
 date: 2019-12-24 16:03:28
 categories:
-  - Java
+  - 源码
   - Tomcat
 tags:
   - 源码
-  - Tomcat
 author: 长歌
 ---
 

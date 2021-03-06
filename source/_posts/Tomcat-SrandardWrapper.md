@@ -1,11 +1,10 @@
 ---
 title: Tomcat-StandardWrapper
 categories:
-  - Java
+  - 源码
   - Tomcat
 tags:
   - 源码
-  - Tomcat
 author: 长歌
 abbrlink: 1604995939
 date: 2019-10-20 00:00:00

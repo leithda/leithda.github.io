@@ -3,8 +3,9 @@ title: JDK集合源码-ArrayList
 abbrlink: 2501046991
 date: 2020-03-01 22:30:00
 categories:
-  - Java
-  - Core
+  - 源码
+  - JDK
+  - 集合
 tags:
   - 源码
 author: 长歌
@@ -17,14 +18,21 @@ ArrayList
 # ArrayList
 
 ## 整体架构
-    ArrayList底层使用数组结构，索引从0开始。
+ArrayList底层使用数组结构，索引从0开始。
 
-## 类注释
-    - 继承了List接口
-    - 支持自动扩容
-    - size, isEmpty, get, set, iterator, and listIterator复杂度为常数级 O(1)
-    - 线程非安全
-    - 它的iterator/listIterator支持`fast-fail`机制
+## ArrayList类
+
+```java
+public class ArrayList<E> extends AbstractList<E>
+        implements List<E>, RandomAccess, Cloneable, java.io.Serializable{
+            // ...
+        }
+```
+- 继承了AbstractList抽象类，默认提供了一般List的操作的基本实现。
+- 实现了Cloneable接口，支持克隆
+- 实现了RandomAccess，支持**快速随机访问策略**[^1]
+- ArrayList支持自动扩容，线程不安全，支持**fast-fail**[^2]机制
+- size,isEmpty,set,get,iterator,listIterator操作复杂度为常数级 O(1)
 
 ## 源码解析
 ### 属性
@@ -260,10 +268,12 @@ public void remove() {
 ```
 
 ## 总结
-1. ArrayList底层使用Object数组，支持自动扩容
-2. ArrayList线程不安全，多线程使用`Collections#synchronizedList`来保证线程安全。
-3. ArrayList扩容和删除元素通过底层`System.arraycopy`数组拷贝实现。
-4. ArrayList支持**fail-fast**[^1]快速失败机制，即迭代器迭代期间，如果发生结构变化(modCount)，迭代过程会抛出异常`ConcurrentModificationException`.
+1. ArrayList支持快速随机访问策略。当存在大量元素时，使用for循环遍历比for增强效率更高。数组元素不多时选择自己习惯的就好。
+2. ArrayList底层使用Object数组，支持自动扩容
+3. ArrayList线程不安全，多线程使用`Collections#synchronizedList`来保证线程安全
+4. ArrayList扩容和删除元素通过底层`System.arraycopy`数组拷贝实现
+5. ArrayList支持**fail-fast**[^1]快速失败机制，即迭代器迭代期间，如果发生结构变化(modCount)，迭代过程会抛出异常`ConcurrentModificationException`
 
 
-[^1]: [fail-fast_百度百科](https://baike.baidu.com/item/fail-fast/16329854?fr=aladdin)
+[^1]: [RandomAccess (Java Platform SE 8 )](https://docs.oracle.com/javase/8/docs/api/java/util/RandomAccess.html)
+[^2]: fail-fast：在创建迭代器进行迭代遍历后，使用迭代器方法以外的方式改变ArrayList底层数据结构时，迭代器会尽可能抛出ConcurrentModificationException异常，避免继续进行危险的迭代行为，具体见：[fail-fast_百度百科](https://baike.baidu.com/item/fail-fast/16329854?fr=aladdin)

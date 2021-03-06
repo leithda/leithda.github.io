@@ -3,10 +3,9 @@ title: JDK集合源码-接口介绍
 abbrlink: 3518917720
 date: 2020-06-09 22:42:57
 categories:
-  - Java
-  - Core
-tags:
   - 源码
+  - JDK
+  - 集合
 author: 长歌
 ---
 {% cq %}

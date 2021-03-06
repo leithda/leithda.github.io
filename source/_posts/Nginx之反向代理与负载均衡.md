@@ -3,10 +3,10 @@ title: Nginx之反向代理与负载均衡
 abbrlink: 1267601138
 date: 2020-06-09 22:59:32
 categories:
+  - 中间件
   - Nginx
 tags:
   - Nginx
-  - 中间件
 author: 长歌
 ---
 

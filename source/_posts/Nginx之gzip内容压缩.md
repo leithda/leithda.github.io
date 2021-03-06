@@ -3,10 +3,10 @@ title: Nginx之gzip内容压缩
 abbrlink: 2600560154
 date: 2020-06-09 23:01:04
 categories:
+  - 中间件
   - Nginx
 tags:
   - Nginx
-  - 中间件
 author: 长歌
 ---
 

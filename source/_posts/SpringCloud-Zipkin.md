@@ -1,11 +1,10 @@
 ---
 title: Spring Cloud 之 Zipkin-链路追踪
 categories:
-  - Java
-  - Spring Cloud
+  - 框架
+  - SpringCloud
+  - 基础
 tags:
-  - Spring Boot
-  - 微服务
   - Spring Cloud
 author: 长歌
 abbrlink: 3833359923

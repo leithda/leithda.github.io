@@ -4,10 +4,7 @@ abbrlink: 3845166172
 date: 2019-12-25 16:15:51
 categories:
   - Java
-  - Basic
-tags:
-  - Io
-  - Java
+  - 基础
 author: 长歌
 ---
 

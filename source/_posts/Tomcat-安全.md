@@ -1,11 +1,10 @@
 ---
 title: Tomcat-安全
 categories:
-  - Java
+  - 源码
   - Tomcat
 tags:
   - 源码
-  - Tomcat
 author: 长歌
 abbrlink: 3630618985
 date: 2019-10-18 00:00:00

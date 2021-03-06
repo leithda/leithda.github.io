@@ -1,11 +1,10 @@
 ---
 title: Tomcat-服务和服务器
 categories:
-  - Java
+  - 源码
   - Tomcat
 tags:
   - 源码
-  - Tomcat
 author: 长歌
 abbrlink: 561747658
 date: 2019-11-09 00:00:00

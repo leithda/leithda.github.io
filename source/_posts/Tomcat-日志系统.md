@@ -1,11 +1,10 @@
 ---
 title: Tomcat-日志系统
 categories:
-  - Java
+  - 源码
   - Tomcat
 tags:
   - 源码
-  - Tomcat
 author: 长歌
 abbrlink: 3784073105
 date: 2019-10-14 00:00:00

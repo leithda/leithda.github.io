@@ -1,7 +1,7 @@
 ---
 title: Mybatis源码解析-解析器模块
 categories:
-  - Java
+  - 源码
   - Mybatis
 tags:
   - 源码

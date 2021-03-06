@@ -1,11 +1,10 @@
 ---
 title: Tomcat-生命周期
 categories:
-  - Java
+  - 源码
   - Tomcat
 tags:
   - 源码
-  - Tomcat
 author: 长歌
 abbrlink: 1950977268
 date: 2019-10-11 00:00:00

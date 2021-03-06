@@ -1,13 +1,11 @@
-
 ---
 title: JDK集合源码-抽象类介绍
 abbrlink: 4107645288
 date: 2020-06-13 00:43:17
 categories:
-  - Java
-  - Core
-tags:
   - 源码
+  - JDK
+  - 集合
 author: 长歌
 ---
 

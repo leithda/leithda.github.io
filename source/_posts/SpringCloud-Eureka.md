@@ -1,11 +1,10 @@
 ---
 title: Spring Cloud 之 Eureka-服务注册与发现
 categories:
-  - Java
-  - Spring Cloud
+  - 框架
+  - SpringCloud
+  - 基础
 tags:
-  - Spring Boot
-  - 微服务
   - Spring Cloud
 author: 长歌
 date: 2019-9-12
