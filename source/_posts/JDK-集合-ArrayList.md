@@ -1,7 +1,7 @@
 ---
 title: JDK集合源码-ArrayList
 abbrlink: 2501046991
-date: 2020-03-01 22:30:00
+date: 2021-03-01 22:30:00
 categories:
   - 源码
   - JDK
@@ -212,17 +212,100 @@ public class ArrayList<E> extends AbstractList<E>
 
 ### 迭代器
 
-迭代器通过实现`java.util.Iterator`类来完成。迭代器主要有以下几个属性:
+迭代器通过实现`java.util.Iterator`类来完成。迭代器主要代码如下:
 ```java
     // AbstractList迭代器的优化版
     private class Itr implements Iterator<E> {
-        int cursor;       // 下一个返回元素的索引
-        int lastRet = -1; // 上次迭代过程中索引的位置。元素被删除时为-1，删除时检查避免二次删除
+        int cursor;       // 迭代元素位置
+        int lastRet = -1; // 上次迭代位置，-1表示迭代元素已被删除
         int expectedModCount = modCount;    // CAS 期望值
 
-        //...
+        Itr() {}
+
+        /**
+         * 判断是否可以向后迭代
+         */
+        public boolean hasNext() {
+            return cursor != size;
+        }
+
+        @SuppressWarnings("unchecked")
+        /**
+         * 获取向后迭代元素
+         */
+        public E next() {
+            // 版本号检查，避免迭代过程中数组结构发生变化
+            checkForComodification();
+            int i = cursor;
+            if (i >= size)
+                throw new NoSuchElementException();
+            Object[] elementData = ArrayList.this.elementData;
+            if (i >= elementData.length)
+                throw new ConcurrentModificationException();
+            // 更新下次索引位置
+            cursor = i + 1;
+
+            // lastRet 为最后一次迭代索引
+            return (E) elementData[lastRet = i];
+        }
+
+        /**
+         * 移除元素
+         */
+        public void remove() {
+            // 元素删除后，lastRet值为-1，避免多次删除
+            if (lastRet < 0)
+                throw new IllegalStateException();
+
+            // 检查版本号
+            checkForComodification();
+
+            try {
+                ArrayList.this.remove(lastRet);
+                cursor = lastRet;
+                lastRet = -1;
+                // 删除元素后版本号发生变化，重新赋值
+                expectedModCount = modCount;
+            } catch (IndexOutOfBoundsException ex) {
+                throw new ConcurrentModificationException();
+            }
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        /**
+         * 函数式接口实现
+         */
+        public void forEachRemaining(Consumer<? super E> consumer) {
+            Objects.requireNonNull(consumer);
+            final int size = ArrayList.this.size;
+            int i = cursor;
+            if (i >= size) {
+                return;
+            }
+            final Object[] elementData = ArrayList.this.elementData;
+            if (i >= elementData.length) {
+                throw new ConcurrentModificationException();
+            }
+            while (i != size && modCount == expectedModCount) { // 遍历执行相应函数实现
+                consumer.accept((E) elementData[i++]);
+            }
+            // update once at end of iteration to reduce heap write traffic
+            cursor = i;
+            lastRet = i - 1;
+            checkForComodification();
+        }
+
+        /**
+         * 检查版本号
+         */
+        final void checkForComodification() {
+            if (modCount != expectedModCount)
+                throw new ConcurrentModificationException();
+        }
     }
 ```
+- 初此之外，ArrayList中的ListItr还实现了ListIterator，支持双向迭代，且支持从指定位置开始迭代。向后迭代通过继承Itr类实现。
 
 迭代方法：
 ```java

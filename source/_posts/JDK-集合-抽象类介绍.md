@@ -1,5 +1,5 @@
 ---
-title: JDK集合源码-抽象类介绍
+title: JDK-集合-抽象类介绍
 abbrlink: 4107645288
 date: 2020-06-13 00:43:17
 categories:
