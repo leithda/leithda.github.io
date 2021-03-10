@@ -7,7 +7,7 @@ tags:
   - Redis
 author: 长歌
 abbrlink: 3586754738
-date: 2020-06-09 22:54:39
+date: 2021-03-10 22:20:00
 ---
 
 {% cq %}
@@ -85,7 +85,37 @@ Swap: 0kB
 
 ### 网络问题
 
-未完待续~~~
+#### 连接拒绝
+1. 网络闪断
+一般发生在网络切割或者带宽耗尽的情况，对于网络闪断的识别比较困难，常见做法是通过`sar -n DEV`查看本机历史流量是否正常，或者借助外部系统监控工具如`Ganglia`进行识别。
+
+2. Redis连接拒绝
+Redis客户端数量超过`maxclients`限制时，会拒绝新的连接接入。`info stats`中的`rejected_connections`统计指标记录被拒绝连接的数量。
+
+> 建议根据情况设置`tcp-keepalive`和`timeout`参数让Redis主动检查和关闭无效连接。
+
+3. 连接溢出
+   1. 操作系统文件句柄数限制 `ulimit -n`
+   2. backlog队列溢出
+    系统对于特定的TCP连接使用backlog队列保存。Redis通过`tcp-backlog`设置，默认511.系统的backlog默认128，使用`echo 511 > /proc/sys/net/core/somaxconn`命令修改。
+    通过`netstat -s | grep overflowed`查看因backlog队列溢出造成的连接拒绝统计指标。
+
+#### 网络延迟
+网络延迟经常出现在跨机房的部署结构上，对于机房之间延迟比较严重的场景需要调整拓扑结构。
+测试网络延迟可以使用`redis-cli --latency`相关命令进行测试。
+带宽瓶颈通常出现在以下几个方面：
+- 机器网卡带宽
+- 机器交换机带宽
+- 机房之间专线带宽
+
+#### 网卡软中断
+网卡软中断是指由于单个网卡队列只能使用一个CPU，高并发下数据交互都集中在一个CPU上，导致无法充分利用多核CPU的情况。网卡软中断瓶颈一般出现在网络高流量吞吐的场景，使用`top`后按数字`1`查看CPU使用情况，其中`si`为软中断参数
+
+## 本章重点回顾
+1. 客户端最先感知阻塞等Redis超时行为，加入日志监控报警工具可快速定位阻塞问题，同时需要对Redis进程和机器做全面监控。
+2. 阻塞的内在原因：确认主线程是否存在阻塞，检查慢查询等信息，发现不合理使用API或数据结构的情况，如`keys`、`sort`、`hgetall`等。关注CPU使用率防止单核跑满。当硬盘IO资源紧张时，AOF追加也会阻塞主进程。
+3. 阻塞的外在原因：CPU竞争、内存交换、网络问题等。
+
 <hr>
 
 [^1]:关于Huge Pages与 Transparent Huge Pages的关系与区别请参阅博客[潇湘隐者 - Linux传统Huge Pages与Transparent Huge Pages再次学习总结](https://www.cnblogs.com/kerrycode/p/7760026.html)
