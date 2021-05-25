@@ -32,11 +32,35 @@
   </entry>
   
   <entry>
+    <title>Redis开发与运维笔记-小功能大用处</title>
+    <link href="https://leithda.github.io/posts/2425201134.html"/>
+    <id>https://leithda.github.io/posts/2425201134.html</id>
+    <published>2021-03-01T22:40:00.000Z</published>
+    <updated>2021-05-25T05:57:34.783Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Redis提供的5种数据结构已经足够强大，但除此之外，Redis还提供了诸如慢查询分析、功能强大的Redis Shell、Pipeline、事务与Lua脚本、 Bitmaps、HyperLogLog、发布订阅、GEO等附加功能，这些功能可以在某些场景发挥重要的作用&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
+    
+    
+    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Redis开发与运维笔记-API的理解和使用</title>
     <link href="https://leithda.github.io/posts/4241361649.html"/>
     <id>https://leithda.github.io/posts/4241361649.html</id>
     <published>2021-03-01T10:25:00.000Z</published>
-    <updated>2021-05-25T07:53:45.229Z</updated>
+    <updated>2021-05-25T12:07:57.621Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
@@ -60,7 +84,7 @@
     <link href="https://leithda.github.io/posts/1097430507.html"/>
     <id>https://leithda.github.io/posts/1097430507.html</id>
     <published>2021-03-01T02:00:00.000Z</published>
-    <updated>2021-05-25T07:38:05.661Z</updated>
+    <updated>2021-05-25T12:07:46.000Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
