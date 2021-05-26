@@ -1,13 +1,13 @@
 ---
-title: Redis开发与运维笔记-小功能大用处
+title: Redis开发与运维笔记_小功能大用处
 categories:
-  - 数据库
-  - Redis
+  - DB
+  - redis
 tags:
-  - Redis
-author: 长歌
+  - redis
+author: leithda
 abbrlink: 2425201134
-date: 2021-03-02 06:40:00
+date: 2021-05-25 22:40:00
 ---
 
 {% cq %}
@@ -176,7 +176,6 @@ print(contact("hello"," world"))  --"hello world"
 
 #### 在Redis中使用Lua
 1. eval `eval 脚本内容 key个数 key列表 参数列表`
-   
 ```bash
 127.0.0.1:6379> eval 'return "hello " .. KEYS[1] .. ARGV[1]' 1 redis world
 "hello redisworld"
@@ -269,7 +268,7 @@ redis-cli --eval lrange_and_mincr.lua hot:user:list
 2. 获取值 `gitbit key offset`
 3. 获取Bitmaps指定范围值为1的个数 `bitcount [start][end]`
 4. Bitmaps间的操作  `bitop op destkey key[key....]`
-  bitop是一个复合操作，它可以做多个Bitmaps的and(交集)、or(并 集)、not(非)、xor(异或)操作并将结果保存在destkey中
+    bitop是一个复合操作，它可以做多个Bitmaps的and(交集)、or(并 集)、not(非)、xor(异或)操作并将结果保存在destkey中
 
 5. 计算Bitmaps中第一个值为targetBit的偏移量 `bitpos key targetBit [start] [end]`
 

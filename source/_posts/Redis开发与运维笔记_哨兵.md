@@ -1,0 +1,422 @@
+---
+title: Redis开发与运维笔记-哨兵
+categories:
+  - DB
+  - redis
+tags:
+  - redis
+author: 长歌
+abbrlink: 2400819807
+date: 2021-05-26 23:15:00
+---
+
+
+
+{% cq %}
+
+Redis的主从复制模式下，一旦主节点由于故障不能提供服务，需要人 工将从节点晋升为主节点，同时还要通知应用方更新主节点地址，对于很多 应用场景这种故障处理的方式是无法接受的。可喜的是Redis从2.8开始正式 提供了Redis Sentinel(哨兵)架构来解决这个问题。
+
+{% endcq %}
+
+<!-- more -->
+
+
+
+> 参考书籍：[Redis开发与运维](https://book.douban.com/subject/26971561/)
+
+---
+
+
+
+# 哨兵
+
+
+
+##  基本概念
+
+### 主从复制的问题
+
+Redis的主从复制模式解决了两个问题：1、主节点备份，主节点出现故障时从节点可以切换为主节点提供服务。2、应用可以从从节点读取数据，降低主节点的读压力。
+
+
+
+Redis的主从模式也引入了新的问题：
+
+- 主节点故障，选择从节点切换为主节点，修改应用配置，修改其他从节点指向新的主节点进行复制。这些都需要手工干预
+- 主节点的写能力受到单机限制(与哨兵无关)
+- 主节点的存储能力受到单机限制(与哨兵无关)
+
+
+
+### 高可用
+
+主从复制模式主节点发生故障时处理流程如下：
+
+1. 选取一个从节点执行`slaveof no one`使其成为主节点。
+2. 更新应用的主节点信息，并重启应用
+3. 更新其他从节点使其复制新的主节点
+4. 原主节点故障解决后，使其复制新的主节点
+
+> 上述处理流程被认为不是高可用的，因为整个流程需要人进行手工干预，有些公司将上述流程自动化了，但是仍然存在下面这些问题：1）判断节点不可达的机制是否健全和标准。2）如果有多个从节点，怎样保证只有一个从节点晋升为主节点。3）通知客户端更新新主节点的机制是否足够健壮。
+
+
+
+### Redis Sentinel高可用
+
+当主节点出现故障时，Redis Sentinel能自动完成故障发现和故障转移，并通知应用方，从而实现真正的高可用。
+
+以1个主节点、2个从节点、3个Sentinel节点为例：拓扑结构如下图
+
+![sentinel示例](Redis开发与运维笔记_哨兵/sentinel示例.png)
+
+
+
+当主节点出现故障时，从节点复制失败。整个故障转移的流程如下：
+
+1. 主节点故障，导致2个从节点与主节点失去连接，主从复制失败
+
+2. 每个Sentinel节点通过定期监控发现主节点故障
+
+3. 多个Sentinel节点对主节点的故障达成一致，选举出Sentinel-3节点作为领导者负责故障转移
+
+4. 如图所示，Sentinel-3节点完成故障转移流程同1.2节叙述一致，不过是自动完成的
+
+
+
+## 安装和部署
+
+按照1.3中拓扑结构搭建Redis哨兵。
+
+
+
+### 部署结构
+
+| 角色       | ip        | port  |
+| ---------- | --------- | ----- |
+| master     | 127.0.0.1 | 6379  |
+| slave-1    | 127.0.0.1 | 6380  |
+| slave-2    | 127.0.0.1 | 6381  |
+| sentinel-1 | 127.0.0.1 | 26379 |
+| sentinel-2 | 127.0.0.1 | 26380 |
+| sentinel-3 | 127.0.0.1 | 26381 |
+
+
+
+### 部署redis节点
+
+1. 部署主节点
+
+   - 配置`redis-6379.conf`
+
+   ```bash
+   port 6379
+   daemonize yes
+   logfile "6379.log" 
+   dbfilename "dump-6379.rdb" 
+   dir "./data/"
+   ```
+
+   - 启动
+
+   `redis-server redis-6379.conf`
+
+
+
+2. 部署从节点
+
+   - 配置`redis-6380.conf`、`redis-6381.conf`
+
+   ```bash
+   port 6380
+   daemonize yes
+   logfile "6380.log" 
+   dbfilename "dump-6380.rdb" 
+   dir "./data/"
+   slaveof 127.0.0.1 6379
+   ```
+
+   
+
+   - 启动
+
+   `redis-server redis-6380.conf`
+
+
+
+3. 查看主从关系，使用`info Replication`
+
+   ```bash
+   ➜  ~ redis-cli info Replication
+   # Replication
+   role:master
+   connected_slaves:2
+   slave0:ip=127.0.0.1,port=6380,state=online,offset=434,lag=1
+   slave1:ip=127.0.0.1,port=6381,state=online,offset=434,lag=1
+   master_replid:993bee493d216cc7bdf38b59d6fc4e0535e94df8
+   master_replid2:0000000000000000000000000000000000000000
+   master_repl_offset:434
+   second_repl_offset:-1
+   repl_backlog_active:1
+   repl_backlog_size:1048576
+   repl_backlog_first_byte_offset:1
+   repl_backlog_histlen:434
+   
+   ➜  ~ redis-cli -p 6380 info Replication   
+   # Replication
+   role:slave
+   master_host:127.0.0.1
+   master_port:6379
+   master_link_status:up
+   master_last_io_seconds_ago:5
+   master_sync_in_progress:0
+   slave_repl_offset:476
+   slave_priority:100
+   slave_read_only:1
+   connected_slaves:0
+   master_replid:993bee493d216cc7bdf38b59d6fc4e0535e94df8
+   master_replid2:0000000000000000000000000000000000000000
+   master_repl_offset:476
+   second_repl_offset:-1
+   repl_backlog_active:1
+   repl_backlog_size:1048576
+   repl_backlog_first_byte_offset:1
+   repl_backlog_histlen:476
+   ```
+
+
+
+### 部署Sentinel节点
+
+1. 配置 `redis-sentinel-26379.conf`
+
+   ```bash
+   port 26379
+   daemonize yes
+   logfile "26379.log"
+   dir ./data/
+   sentinel monitor mymaster 127.0.0.1 6379 2
+   sentinel down-after-milliseconds mymaster 30000
+   sentinel parallel-syncs mymaster 1
+   sentinel failover-timeout mymaster 180000
+   ```
+
+   - **mymaster**:主节点别名
+   - **127.0.0.1 6379**:监视主节点,后面的2表示判断主节点失败至少需要2个Sentinel节点同意。
+
+
+
+2. 启动Sentinel节点
+
+   `redis-server redis-sentinel-26379.conf --sentinel`
+
+   `redis-sentinel redis-sentinel-26379.conf`
+
+
+
+3. 确认
+
+   ```bash
+   ➜  ~ redis-cli -p 26379 info Sentinel        
+   # Sentinel
+   sentinel_masters:1
+   sentinel_tilt:0
+   sentinel_running_scripts:0
+   sentinel_scripts_queue_length:0
+   sentinel_simulate_failure_flags:0
+   master0:name=mymaster,status=ok,address=127.0.0.1:6379,slaves=2,sentinels=1
+   ```
+
+   - 由于此时只启动了一个Sentinel节点，所以sentinel=1，全部启动后统计信息：
+
+   ```bash
+   ➜  redis_sentinel redis-cli -p 26381 info Sentinel        
+   # Sentinel
+   sentinel_masters:1
+   sentinel_tilt:0
+   sentinel_running_scripts:0
+   sentinel_scripts_queue_length:0
+   sentinel_simulate_failure_flags:0
+   master0:name=mymaster,status=ok,address=127.0.0.1:6379,slaves=2,sentinels=3
+   ```
+
+
+
+> 生产环境Sentinel节点应该部署在不同的物理机上
+>
+> Redis Sentinel 节点与Redis 数据节点在配置上没有任何区别。只是添加了一些Sentinel节点对它们的监控
+
+
+
+### 配置优化
+
+Redis安装目录下有一个 sentinel.conf，是默认的Sentinel节点配置文件。下面就以它为例子进行说明：
+
+```ini
+port 26379
+dir /opt/soft/redis/data
+sentinel monitor mymaster 127.0.0.1 6379 2
+sentinel down-after-milliseconds mymaster 30000
+sentinel parallel-syncs mymaster 1
+sentinel failover-timeout mymaster 180000
+#sentinel auth-pass <master-name> <password>
+#sentinel notification-script <master-name> <script-path> 
+#sentinel client-reconfig-script <master-name> <script-path>
+```
+
+
+
+#### 配置优化和说明
+
+##### sentinel monitor
+
+`sentinel monitor <master-name> <ip> <port> <quorum>`
+
+- master-name：主节点别名
+- ip、port:主节点IP、端口
+- quorum：判断主节点最终不可达所需票数。选举时，至少有max(quorum, sentinels/2+1)个节点才能选举出领导者
+
+
+
+##### sentinel down-after-milliseconds
+
+>  `sentinel down-after-milliseconds <master-name> <times>`
+
+​		每个Sentinel节点都要通过定期发送ping命令来判断Redis数据节点和其 余Sentinel节点是否可达，如果超过了down-after-milliseconds配置的时间且没 有有效的回复，则判定节点不可达，`<times>`(单位为毫秒)就是超时时 间。
+
+​	**注：虽然此配置项指定 `master-name`，但是对Sentinel节点、主节点、从节点可达性判断都生效。**
+
+
+
+##### sentinel parallel-syncs
+
+> `sentinel parallel-syncs <master-name> <nums>`
+
+​		限制故障转移后，每次向新节点发起复制的从节点个数
+
+
+
+sentinel failover-timeout
+
+> `sentinel failover-timeout <master-name> <times>`
+
+​		通常被解释成故障转移超时时间，实际上它作用与故障转移的各个阶段：
+
+- 如果Redis Sentinel对一个主节点故障转移失败，那么下次再对该主 节点做故障转移的起始时间是failover-timeout的2倍
+- 选举出来晋升的从节点执行`slaveof no one`失败，超过此超时时间则故障转移失败
+- 从节点晋升主节点成功后，Sentinel节点还会执行info命令来进行确认，如果此过程超时则故障转移失败
+- 其余从节点复制时超过此时间，则故障转移失败。注意即使超过了这个时间，Sentinel节点也会最终配置从 节点去同步最新的主节点。
+
+
+
+##### sentinel auth-pass
+
+> `sentinel auth-pass <master-name> <password>`
+
+​		如果Sentinel监控的主节点配置了密码，sentinel auth-pass配置通过添加 主节点的密码，防止Sentinel节点对主节点无法监控。
+
+
+
+##### sentinel notification-script
+
+> `sentinel notification-script <master-name> <script-path>`
+
+​		`sentinel notification-script`的作用是在故障转移期间，当一些警告级别的 Sentinel事件发生(指重要事件，例如-sdown:客观下线、-odown:主观下线)时，会触发对应路径的脚本，并向脚本发送相应的事件参数。
+
+​		例如在/opt/redis/scripts/下配置了notification.sh，该脚本会接收每个 Sentinel节点传过来的事件参数，可以利用这些参数作为邮件或者短信报警依据:
+
+```bash
+#!/bin/sh
+#获取所有参数
+msg=$* 
+#报警脚本或者接口，将msg作为参数 
+exit 0
+```
+
+
+
+##### sentinel client-reconfig-script
+
+> `sentinel client-reconfig-script <master-name> <script-path>`
+
+​		`sentinel client-reconfig-script`的作用是在故障转移结束后，会触发对应路 径的脚本，并向脚本发送故障转移结果的相关参数。和notification-script类 似，可以在/opt/redis/scripts/下配置了client-reconfig.sh，该脚本会接收每个 Sentinel节点传过来的故障转移结果参数，并触发类似短信和邮件报警:
+
+​	发送的具体内容如下：
+
+------
+
+`<master-name> <role> <state> <from-ip> <from-port> <to-ip> <to-port>`
+
+------
+
+**注：**
+
+1. `<script-path>`必须有可执行权限。
+2. `<script-path>`开头必须包含shell脚本头(例如#!/bin/sh)，否则事件发生时Redis将无法执行脚本产生如下错误 
+3. Redis规定脚本的最大执行时间不能超过60秒，超过后脚本将被杀掉。
+4. 如果shell脚本以exit 1结束，那么脚本稍后重试执行。如果以exit 2或者更高的值结束，那么脚本不会重试。正常返回值是exit 0。
+5. 如果需要运维的Redis Sentinel比较多，建议不要使用这种脚本的形式来进行通知，这样会增加部署的成本
+
+
+
+#### 监控多个主节点
+
+配置如下
+
+```ini
+sentinel monitor master-business-1 10.10.xx.1 6379 2 
+sentinel down-after-milliseconds master-business-1 60000 
+sentinel failover-timeout master-business-1 180000 
+sentinel parallel-syncs master-business-1 1
+
+sentinel monitor master-business-2 10.16.xx.2 6380 2 
+sentinel down-after-milliseconds master-business-2 10000 
+sentinel failover-timeout master-business-2 180000 
+sentinel parallel-syncs master-business-2 1
+```
+
+
+
+#### 调整配置
+
+>  `sentinel set <param> <value>`
+
+| 参数                    | 使用方法                                                |
+| ----------------------- | ------------------------------------------------------- |
+| quorum                  | sentinel set mymaster quorum 2                          |
+| down-after-milliseconds | sentinel set mymaster down-after-milliseconds 30000     |
+| failover-timeout        | sentinel set mymaster failover-timeout 360000           |
+| parallel-syncs          | sentinel set mymaster parallel-syncs 2                  |
+| notification-script     | sentinel set mymaster notification-script /opt/xx.sh    |
+| client-reconfig-script  | sentinel set mymaster client-reconfig-script /opt/yy.sh |
+| auth-pass               | sentinel set mymaster auth-pass masterPassword          |
+
+**有几点需要注意：**
+
+- sentinel set命令只对当前Sentinel节点有效。
+- sentinel set命令如果执行成功会立即刷新配置文件，这点和Redis普 通数据节点设置配置需要执行config rewrite刷新到配置文件不同。
+- 建议所有Sentinel节点的配置尽可能一致，这样在故障发现和转移时 比较容易达成一致。
+- 表9中为sentinel set支持的参数，具体可以参考源码中的sentinel.c的 sentinelSetCommand函数。
+- Sentinel对外不支持config命令。
+
+
+
+### 部署技巧
+
+1. Sentinel节点不应该部署在一台物理“机器”上
+
+2. 部署至少三个且奇数个的Sentinel节点
+
+   领导者选举需要至少一半加一个节点，保证判断准确的情况下，至少3个，奇数相对于偶数节省一个Sentinel节点。
+
+3. 只有一套Sentinel，还是每个主节点配置一套Sentinel?
+
+   如果Sentinel节点集合监控的是同一个业务的多个主节点集合，那么使用方案一。否则一般建议采用方案二。
+
+
+
+
+
+## 相关阅读
+
+- [你管这破玩意叫 Redis 哨兵？](https://mp.weixin.qq.com/s/nHBpqZe8v7KTo1hj08hx7A)
+

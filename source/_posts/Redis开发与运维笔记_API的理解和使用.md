@@ -1,13 +1,13 @@
 ---
-title: Redis开发与运维笔记-API的理解和使用
+title: Redis开发与运维笔记_API的理解和使用
 categories:
-  - 数据库
-  - Redis
+  - DB
+  - redis
 tags:
-  - Redis
-author: 长歌
+  - redis
+author: leithda
 abbrlink: 4241361649
-date: 2021-03-01 18:25:00
+date: 2021-05-25 22:25:00
 ---
 
 {% cq %}
@@ -15,7 +15,7 @@ Redis提供了5种数据结构，理解每种数据结构的特点对于Redis开
 {% endcq %}
 <!-- more -->
 
-以下内容为笔者看 [《Redis开发与运维》](https://book.douban.com/subject/26971561/) 的总结。
+参考书籍：[Redis开发与运维](https://book.douban.com/subject/26971561/)
 <hr>
 
 # API的理解和使用
@@ -71,8 +71,11 @@ type key
 > 实际上，每种数据结构都有自己底层的内部编码实现
 > 可以使用`object encoding key`命令获取当前键使用的内部编码
 
-{% asset_img redis的五种数据结构.png redis的五种数据结构 %}
-{% asset_img Redis数据结构和内部编码.png Redis数据结构和内部编码 %}
+![redis的五种数据结构](Redis开发与运维笔记_API的理解和使用/redis的五种数据结构.png)
+
+
+
+![Redis数据结构和内部编码](Redis开发与运维笔记_API的理解和使用/Redis数据结构和内部编码.png)
 
   Redis这样设计有两点好处：1）改进内部编码时，对外的数据结构和命令没有影响。2）不同的内部编码具有不同的优势。如:ziplist比较节省内存。
 

@@ -1,13 +1,13 @@
 ---
 abbrlink: 1097430507
 title: Redis开发与运维笔记_初识Redis
-date: 2021-03-01 10:00:00
+date: 2021-05-25 22:00:00
 categories:
-  - 数据库
-  - Redis
+  - DB
+  - redis
 tags:
-  - Redis
-author: 长歌
+  - redis
+author: leithda
 ---
 
 {% cq %}
@@ -15,10 +15,10 @@ author: 长歌
 {% endcq %}
 <!-- more -->
 
-以下内容为笔者看 [《Redis开发与运维》](https://book.douban.com/subject/26971561/) 的总结。
+参考书籍：[Redis开发与运维](https://book.douban.com/subject/26971561/)
 <hr>
 
-# 初始Redis
+# 初识Redis
 
 ## 盛赞Redis
 
