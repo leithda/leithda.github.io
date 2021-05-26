@@ -22,28 +22,28 @@
   <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
 
 <script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;leithda.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:&quot;enable&quot;,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:&quot;utterances&quot;,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null,&quot;activeClass&quot;:&quot;utterances&quot;},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;},&quot;path&quot;:&quot;&#x2F;search.xml&quot;,&quot;localsearch&quot;:{&quot;enable&quot;:true,&quot;trigger&quot;:&quot;auto&quot;,&quot;top_n_per_article&quot;:1,&quot;unescape&quot;:false,&quot;preload&quot;:false}}</script>
-<meta name="description" content="本章将带领读者进入Redis的世界，了解它的前世今生、众多特性、典型应用场景、安装配置、如何好用等，最后会对Redis发展过程中的重要版本进行说明">
+<meta name="description" content="Redis是典型的单线程架构，所有的读写操作都是在一条主线程中完成的。当Redis用于高并发场景时，这条线程就变成了它的生命线。如果出现阻塞，哪怕是很短时间，对于我们的应用来说都是噩梦">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis开发与运维笔记_初识Redis">
-<meta property="og:url" content="https://leithda.github.io/posts/1097430507.html">
+<meta property="og:title" content="Redis开发与运维笔记-Redis的噩梦-阻塞">
+<meta property="og:url" content="https://leithda.github.io/posts/3586754738.html">
 <meta property="og:site_name" content="Leithda&#39;s Blog">
-<meta property="og:description" content="本章将带领读者进入Redis的世界，了解它的前世今生、众多特性、典型应用场景、安装配置、如何好用等，最后会对Redis发展过程中的重要版本进行说明">
+<meta property="og:description" content="Redis是典型的单线程架构，所有的读写操作都是在一条主线程中完成的。当Redis用于高并发场景时，这条线程就变成了它的生命线。如果出现阻塞，哪怕是很短时间，对于我们的应用来说都是噩梦">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-05-25T14:00:00.000Z">
-<meta property="article:modified_time" content="2021-05-26T10:11:54.840Z">
+<meta property="article:published_time" content="2021-05-26T14:50:00.000Z">
+<meta property="article:modified_time" content="2021-05-26T10:12:29.304Z">
 <meta property="article:author" content="Leithda">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://leithda.github.io/posts/1097430507.html">
+<link rel="canonical" href="https://leithda.github.io/posts/3586754738.html">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;leithda.github.io&#x2F;posts&#x2F;1097430507.html&quot;,&quot;path&quot;:&quot;posts&#x2F;1097430507.html&quot;,&quot;title&quot;:&quot;Redis开发与运维笔记_初识Redis&quot;}</script>
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;leithda.github.io&#x2F;posts&#x2F;3586754738.html&quot;,&quot;path&quot;:&quot;posts&#x2F;3586754738.html&quot;,&quot;title&quot;:&quot;Redis开发与运维笔记-Redis的噩梦-阻塞&quot;}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
-<title>Redis开发与运维笔记_初识Redis | Leithda's Blog</title><script src="/js/config.js"></script>
+<title>Redis开发与运维笔记-Redis的噩梦-阻塞 | Leithda's Blog</title><script src="/js/config.js"></script>
   
 
   <script src="/js/third-party/analytics/baidu-analytics.js"></script>
@@ -154,7 +154,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9D%E8%AF%86redis"><span class="nav-number">1.</span> <span class="nav-text"> 初识Redis</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%9B%E8%B5%9Eredis"><span class="nav-number">1.1.</span> <span class="nav-text"> 盛赞Redis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis%E7%89%B9%E6%80%A7"><span class="nav-number">1.2.</span> <span class="nav-text"> Redis特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.3.</span> <span class="nav-text"> Redis的使用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis%E5%8F%AF%E4%BB%A5%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-number">1.3.1.</span> <span class="nav-text"> Redis可以做什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis%E4%B8%8D%E5%8F%AF%E4%BB%A5%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-number">1.3.2.</span> <span class="nav-text"> Redis不可以做什么</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E5%A5%BDredis%E7%9A%84%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.4.</span> <span class="nav-text"> 用好Redis的建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E7%A1%AE%E5%AE%89%E8%A3%85%E5%B9%B6%E5%90%AF%E5%8A%A8redis"><span class="nav-number">1.5.</span> <span class="nav-text"> 正确安装并启动Redis</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85redis"><span class="nav-number">1.5.1.</span> <span class="nav-text"> 安装Redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-%E5%90%AF%E5%8A%A8-%E6%93%8D%E4%BD%9C-%E5%85%B3%E9%97%ADredis"><span class="nav-number">1.5.2.</span> <span class="nav-text"> 配置、启动、操作、关闭Redis</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis%E7%9A%84%E9%87%8D%E5%A4%A7%E7%89%88%E6%9C%AC"><span class="nav-number">1.6.</span> <span class="nav-text"> Redis的重大版本</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#redis%E7%9A%84%E5%99%A9%E6%A2%A6-%E9%98%BB%E5%A1%9E"><span class="nav-number">1.</span> <span class="nav-text"> Redis的噩梦-阻塞</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E7%8E%B0%E9%98%BB%E5%A1%9E"><span class="nav-number">1.1.</span> <span class="nav-text"> 发现阻塞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%9C%A8%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.2.</span> <span class="nav-text"> 内在原因</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#api%E6%88%96%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%90%88%E7%90%86"><span class="nav-number">1.2.1.</span> <span class="nav-text"> API或数据结构使用不合理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cpu%E9%A5%B1%E5%92%8C%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.2.</span> <span class="nav-text"> CPU饱和的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96%E7%9B%B8%E5%85%B3%E7%9A%84%E9%98%BB%E5%A1%9E"><span class="nav-number">1.2.3.</span> <span class="nav-text"> 持久化相关的阻塞</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%96%E5%9C%A8%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.3.</span> <span class="nav-text"> 外在原因</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cpu%E7%AB%9E%E4%BA%89"><span class="nav-number">1.3.1.</span> <span class="nav-text"> CPU竞争</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E4%BA%A4%E6%8D%A2"><span class="nav-number">1.3.2.</span> <span class="nav-text"> 内存交换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98"><span class="nav-number">1.3.3.</span> <span class="nav-text"> 网络问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%8B%92%E7%BB%9D"><span class="nav-number">1.3.3.1.</span> <span class="nav-text"> 连接拒绝</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%BB%B6%E8%BF%9F"><span class="nav-number">1.3.3.2.</span> <span class="nav-text"> 网络延迟</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E5%8D%A1%E8%BD%AF%E4%B8%AD%E6%96%AD"><span class="nav-number">1.3.3.3.</span> <span class="nav-text"> 网卡软中断</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E7%AB%A0%E9%87%8D%E7%82%B9%E5%9B%9E%E9%A1%BE"><span class="nav-number">1.4.</span> <span class="nav-text"> 本章重点回顾</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -247,7 +247,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://leithda.github.io/posts/1097430507.html">
+    <link itemprop="mainEntityOfPage" href="https://leithda.github.io/posts/3586754738.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar.png">
@@ -260,7 +260,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Redis开发与运维笔记_初识Redis
+          Redis开发与运维笔记-Redis的噩梦-阻塞
         </h1>
 
         <div class="post-meta-container">
@@ -270,16 +270,10 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2021-05-25 22:00:00" itemprop="dateCreated datePublished" datetime="2021-05-25T22:00:00+08:00">2021-05-25</time>
+      <time title="创建时间：2021-05-26 22:50:00 / 修改时间：18:12:29" itemprop="dateCreated datePublished" datetime="2021-05-26T22:50:00+08:00">2021-05-26</time>
     </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-05-26 18:11:54" itemprop="dateModified" datetime="2021-05-26T18:11:54+08:00">2021-05-26</time>
-      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -302,7 +296,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.5k</span>
+      <span>2.6k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -321,196 +315,122 @@
     
     <div class="post-body" itemprop="articleBody">
         <blockquote class="blockquote-center">
-<p>本章将带领读者进入Redis的世界，了解它的前世今生、众多特性、典型应用场景、安装配置、如何好用等，最后会对Redis发展过程中的重要版本进行说明</p>
+<p>Redis是典型的单线程架构，所有的读写操作都是在一条主线程中完成的。当Redis用于高并发场景时，这条线程就变成了它的生命线。如果出现阻塞，哪怕是很短时间，对于我们的应用来说都是噩梦</p>
 
 </blockquote>
 <span id="more"></span>
+<blockquote>
 <p>参考书籍：<a target="_blank" rel="noopener" href="https://book.douban.com/subject/26971561/">Redis开发与运维</a></p>
+</blockquote>
 <hr>
-<h1 id="初识redis"><a class="markdownIt-Anchor" href="#初识redis"></a> 初识Redis</h1>
-<h2 id="盛赞redis"><a class="markdownIt-Anchor" href="#盛赞redis"></a> 盛赞Redis</h2>
-<p>Redis[1]是一种基于键值对(key-value)的NoSQL数据库，与很多键值对 数据库不同的是，Redis中的值可以是由string(字符串)、hash(哈希)、 list(列表)、set(集合)、zset(有序集合)、Bitmaps(位图)、 HyperLogLog、GEO(地理信息定位)等多种数据结构和算法组成，因此 Redis可以满足很多的应用场景，而且因为Redis会将所有数据都存放在内存 中，所以它的读写性能非常惊人。不仅如此，Redis还可以将内存的数据利 用快照和日志的形式保存到硬盘上，这样在发生类似断电或者机器故障的时 候，内存中的数据不会“丢失”。除了上述功能以外，Redis还提供了键过 期、发布订阅、事务、流水线、Lua脚本等附加功能。总之，如果在合适的 场景使用好Redis，它就会像一把瑞士军刀一样所向披靡。</p>
-<blockquote>
-<p>Redis官网：  <a target="_blank" rel="noopener" href="http://redis.io">redis.io</a></p>
-</blockquote>
-<h2 id="redis特性"><a class="markdownIt-Anchor" href="#redis特性"></a> Redis特性</h2>
+<h1 id="redis的噩梦-阻塞"><a class="markdownIt-Anchor" href="#redis的噩梦-阻塞"></a> Redis的噩梦-阻塞</h1>
+<h2 id="发现阻塞"><a class="markdownIt-Anchor" href="#发现阻塞"></a> 发现阻塞</h2>
+<p>通过收集Redis日志或者通过监控Redis的关键指标等发现Redis阻塞问题。</p>
+<h2 id="内在原因"><a class="markdownIt-Anchor" href="#内在原因"></a> 内在原因</h2>
+<h3 id="api或数据结构使用不合理"><a class="markdownIt-Anchor" href="#api或数据结构使用不合理"></a> API或数据结构使用不合理</h3>
+<p>对大数据量的hash结构执行<code>hgetall</code>操作，由于其算法复杂度为<code>O(n)</code>，这条命令执行速度必然很慢。这个问题就是典型的不合理使用API和数据结构。</p>
 <ol>
 <li>
-<p>速度快</p>
-<ul>
-<li>数据基于内存</li>
-<li>使用C语言实现，更接近操作系统</li>
-<li>Redis使用了单线程架构，避免多线程线程间切换开销</li>
-<li>Redis代码优化</li>
-</ul>
+<p>发现慢查询<br />
+通过<code>slowlog get &#123;n&#125;</code>获取慢查询日志。更多详情请查看<a href="./2425201134.html#%E6%85%A2%E6%9F%A5%E8%AF%A2%E5%88%86%E6%9E%90">Redis开发与运维笔记-小功能大用处</a></p>
 </li>
 <li>
-<p>5种数据结构</p>
-<p>String(字符串)、Hash(哈希)、List(列表)、Set(集合)、ZSet(有序集合)</p>
-</li>
-<li>
-<p>丰富的功能</p>
-<ul>
-<li>过期功能：方便缓存的实现</li>
-<li>发布/订阅功能：可以实现消息系统</li>
-<li>支持Lua脚本，可以利用Lua创造出新的Redis命令</li>
-<li>提供了简单的事务</li>
-<li>提供了Pipeline(流水线)功能，可以减少网络开销</li>
-</ul>
-</li>
-<li>
-<p>稳定简单</p>
-<p>源码剪短而不简单</p>
-</li>
-<li>
-<p>客户端语言多</p>
-<p>提供了多种语言的客户端</p>
-</li>
-<li>
-<p>持久化</p>
-<p>RDB和AOF</p>
-</li>
-<li>
-<p>主从复制</p>
-<p>Redis提供了复制功能，实现了多个数据相同的Redis副本</p>
-</li>
-<li>
-<p>高可用和分布式</p>
-<p>Redis 2.8版本实现了高可用实现<code>Redis Sentinel</code>，它能够保证Redis节点的故障发现和故障自动转移。Redis 3.0版本实现了分布式实现<code>Redis Cluster</code>，它是Redis真正的分布式实现，提供了高可用、读写和容量的扩展</p>
+<p>发现大对象<br />
+通过<code>redis-cli -h &#123;ip&#125; -p &#123;port&#125; bigkeys</code>发现大对象。其内部采用分段进行scan操作，把黎士扫描过的最大对象统计出来便于分析优化。</p>
 </li>
 </ol>
-<h2 id="redis的使用场景"><a class="markdownIt-Anchor" href="#redis的使用场景"></a> Redis的使用场景</h2>
-<h3 id="redis可以做什么"><a class="markdownIt-Anchor" href="#redis可以做什么"></a> Redis可以做什么</h3>
-<ol>
-<li>缓存</li>
-<li>排行榜</li>
-<li>计数器应用</li>
-<li>社交网络</li>
-<li>消息队列系统</li>
-</ol>
-<h3 id="redis不可以做什么"><a class="markdownIt-Anchor" href="#redis不可以做什么"></a> Redis不可以做什么</h3>
-<ol>
-<li>数据量过大不适合使用Redis，Redis数据存放在内存中，数据量过大会导致内存资源紧张</li>
-<li>常用热数据适合缓存，反之，冷数据如果缓存会造成内存资源的浪费</li>
-</ol>
-<h2 id="用好redis的建议"><a class="markdownIt-Anchor" href="#用好redis的建议"></a> 用好Redis的建议</h2>
-<ol>
-<li>使用者应了解Redis的<strong>单线程模型</strong>，<strong>持久化策略(RDB&amp;AOF)</strong>。</li>
-<li>阅读Redis源码，吃透原理并可以根据业务需求对Redis进行定制化开发</li>
-</ol>
-<h2 id="正确安装并启动redis"><a class="markdownIt-Anchor" href="#正确安装并启动redis"></a> 正确安装并启动Redis</h2>
-<h3 id="安装redis"><a class="markdownIt-Anchor" href="#安装redis"></a> 安装Redis</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.redis.io/releases/redis-3.0.7.tar.gz</span><br><span class="line">tar xzf redis-3.0.7.tar.gz</span><br><span class="line">ln -s redis-3.0.7 redis</span><br><span class="line"><span class="built_in">cd</span> redis</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-<ul>
-<li>下载Redis指定版本的源码压缩包到当前目录。</li>
-<li>解压缩Redis源码压缩包。</li>
-<li>建立一个redis目录的软连接，指向redis-3.0.7。</li>
-<li>进入redis目录。</li>
-<li>编译(编译之前确保操作系统已经安装gcc)。</li>
-<li>安装</li>
-</ul>
-<blockquote>
-<p>注： 安装后会将Redis相关运行文件放到<code>/usr/local/bin</code>目录下</p>
-</blockquote>
-<h3 id="配置-启动-操作-关闭redis"><a class="markdownIt-Anchor" href="#配置-启动-操作-关闭redis"></a> 配置、启动、操作、关闭Redis</h3>
-<p>Redis安装后，<code>/usr/local/bin</code>目录下会新增几个redis开头的可执行文件，说明如下：</p>
-<table>
-<thead>
-<tr>
-<th>可执行文件</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>redis-server</td>
-<td>启动Redis</td>
-</tr>
-<tr>
-<td>redis-cli</td>
-<td>Redis命令行工具</td>
-</tr>
-<tr>
-<td>redis-benchmark</td>
-<td>Redis基准测试工具</td>
-</tr>
-<tr>
-<td>redis-check-aof</td>
-<td>Redis AOF 持久化文件检测和修复工具</td>
-</tr>
-<tr>
-<td>redis-check-dump</td>
-<td>Redis RDB 持久化文件检测和修复工具</td>
-</tr>
-<tr>
-<td>redis-sentinel</td>
-<td>启动 Redis Sentinel</td>
-</tr>
-</tbody>
-</table>
+<h3 id="cpu饱和的问题"><a class="markdownIt-Anchor" href="#cpu饱和的问题"></a> CPU饱和的问题</h3>
+<p>通过<code>reids-cli --stat</code>获取当前Redis使用情况。<br />
+通过<code>top</code>命令获取进程对CPU的利用率等信息<br />
+通过<code>info commandstats</code>统计信息分析出命令不合理开销时间，查看是否是因为高算法复杂度或者过度的内存优化问题。</p>
+<h3 id="持久化相关的阻塞"><a class="markdownIt-Anchor" href="#持久化相关的阻塞"></a> 持久化相关的阻塞</h3>
 <ol>
 <li>
-<p>启动Redis</p>
-<ul>
-<li>
-<p>默认配置，执行<code>redis-server</code></p>
+<p>fork阻塞<br />
+持久化时，Redis调用fork操作产生共享内存的子进程，由子进程完成持久化文件重写工作。fork时间过长，阻塞主线程。<br />
+通过<code>info stats</code>命令获取到<code>latest_fork_usec</code>指标，表示Redis最近一次fork操作耗时</p>
 </li>
 <li>
-<p>运行启动，<code>redis-server --configKey1 configValue1 --configKey2 configValue2</code></p>
-<p>例如：<code>redis-server --port 6378</code></p>
+<p>AOF刷盘阻塞<br />
+开启AOF持久化后，文件刷盘一般1s一次，如果主线程发现距离上次fsync成功超过2秒，为了数据安全性它会阻塞直到后台线程执行fsync操作完成。通过Redis日志可以识别这种情况。也可以通过<code>info persistence</code>统计中的<code>aof_delayed_fsync</code>指标，每次发生fdatasync阻塞主线程时会累加。</p>
 </li>
 <li>
-<p>配置文件启动，<code>redis-server /opt/redis/redis.conf</code></p>
-</li>
-</ul>
-</li>
-<li>
-<p>Redis命令行客户端</p>
-<p><code>redis-cli -h &#123;host&#125; -p &#123;port&#125;</code>，例如<code>redis-cli -h 127.0.0.1 -p 6379</code></p>
-</li>
-<li>
-<p>停止Redis服务</p>
-<p><code>redis-cli shutdown</code></p>
+<p>HugePage写操作阻塞<br />
+子进程在执行重写期间利用Linux写时复制技术降低内存开销，因此只有写操作时Redis才复制要修改的内存页。对于开启**Transparent HugePages<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>**的操作系统，，每次写复制的内存页单位由4K变为2MB，会拖慢写操作的执行时间，导致大量写操作慢查询。</p>
 </li>
 </ol>
-<h2 id="redis的重大版本"><a class="markdownIt-Anchor" href="#redis的重大版本"></a> Redis的重大版本</h2>
-<blockquote>
-<p>Redis借鉴了Linux对于版本号的命名规则，版本号第二位为奇数则表示版本为非稳定版本，且为下一稳定版本的开发版本</p>
-</blockquote>
+<h2 id="外在原因"><a class="markdownIt-Anchor" href="#外在原因"></a> 外在原因</h2>
+<h3 id="cpu竞争"><a class="markdownIt-Anchor" href="#cpu竞争"></a> CPU竞争</h3>
+<ul>
+<li>进程竞争： Redis是典型的CPU密集型应用，不建议和其他多核CPU密集型服务部署在一起.通过<code>top</code>、<code>sar</code>命令定位CPU消耗的时间点和具体进程</li>
+<li>绑定CPU：部署Redis时为了充分利用多核CPU，通常在一个机器上部署多个实例。常见的一种优化是将Redis进程绑定在CPU上，用于降低CPU频繁上下文切换的开销。但是当Redis进行RDB/AOF重写时，如果绑定CPU，子进程重写时会大量消耗CPU资源，对Redis主进程造成影响。因此对于开启持久化或复制的主节点不建议绑定CPU。</li>
+</ul>
+<h3 id="内存交换"><a class="markdownIt-Anchor" href="#内存交换"></a> 内存交换</h3>
+<p>内存交换是非常致命的。Redis保证高性能主要原因是所有数据在内存中，如果操作系统把Redis使用的部分内存换出到硬盘，会造成性能的机制下降。识别Redis内存交换的检查方法如下：</p>
 <ol>
-<li>Redis 2.6
+<li>查询Redis进程号</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">reids-cli -p 6383 info server | grep process_id</span><br><span class="line">process_id: 4476</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>根据进程号查询内存交换信息</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/4476/smaps | grep Swap</span><br><span class="line">Swap: 0kB</span><br><span class="line">Swap: 0kB</span><br><span class="line">Swap: 4kB</span><br><span class="line">Swap: 0kB</span><br><span class="line">Swap: 0kB</span><br><span class="line">.....</span><br></pre></td></tr></table></figure>
+<p>如果交换量都是0KB或者个别的是4KB，则正常。预防内存交换的方法由：</p>
 <ul>
-<li>服务端支持Lua脚本。</li>
-<li>去掉虚拟内存相关功能。</li>
-<li>放开对客户端连接数的硬编码限制。</li>
-<li>键的过期时间支持毫秒。</li>
-<li>从节点提供只读功能。</li>
-<li>两个新的位图命令:bitcount和bitop。</li>
-<li>增强了redis-benchmark的功能:支持定制化的压测，CSV输出等功能。</li>
-<li>基于浮点数自增命令:incrbyfloat和hincrbyfloat。</li>
-<li>redis-cli可以使用–eval参数实现Lua脚本执行。</li>
-<li>shutdown命令增强。</li>
-<li>info可以按照section输出，并且添加了一些统计项。</li>
-<li>重构了大量的核心代码，所有集群相关的代码都去掉了，cluster功 能将会是3.0版本最大的亮点。</li>
-<li>sort命令优化。</li>
+<li>保证机器充足的可用内存</li>
+<li>确保所有Redis实例设置最大可用内存(maxmemory)，防止极端情况Redis内存不可控的增长</li>
+<li>降低系统使用swap优先级，如<code>echo 10 &gt; /proc/sys/vm/swappiness</code></li>
 </ul>
+<h3 id="网络问题"><a class="markdownIt-Anchor" href="#网络问题"></a> 网络问题</h3>
+<h4 id="连接拒绝"><a class="markdownIt-Anchor" href="#连接拒绝"></a> 连接拒绝</h4>
+<ol>
+<li>
+<p>网络闪断<br />
+一般发生在网络切割或者带宽耗尽的情况，对于网络闪断的识别比较困难，常见做法是通过<code>sar -n DEV</code>查看本机历史流量是否正常，或者借助外部系统监控工具如<code>Ganglia</code>进行识别。</p>
 </li>
-<li>Redis 2.8
-<ul>
-<li>添加部分主从复制的功能，在一定程度上降低了由于网络问题，造成频繁全量复制生成RDB对系统造成的压力。</li>
-<li>尝试性地支持IPv6。</li>
-<li>可以通过config set命令设置maxclients。</li>
-<li>可以用bind命令绑定多个IP地址。</li>
-<li>Redis设置了明显的进程名，方便使用ps命令查看系统进程。</li>
-<li>config rewrite命令可以将config set持久化到Redis配置文件中。</li>
-<li>发布订阅添加了pubsub命令。</li>
-<li>Redis Sentinel第二版，相比于Redis2.6的Redis Sentinel，此版本已经 变成生产可用。</li>
-</ul>
+<li>
+<p>Redis连接拒绝<br />
+Redis客户端数量超过<code>maxclients</code>限制时，会拒绝新的连接接入。<code>info stats</code>中的<code>rejected_connections</code>统计指标记录被拒绝连接的数量。</p>
 </li>
 </ol>
 <blockquote>
-<p>可以通过github仓库查看各版本重大改动： <a target="_blank" rel="noopener" href="https://github.com/redis/redis/tags">Redis版本</a></p>
+<p>建议根据情况设置<code>tcp-keepalive</code>和<code>timeout</code>参数让Redis主动检查和关闭无效连接。</p>
 </blockquote>
+<ol start="3">
+<li>连接溢出
+<ol>
+<li>操作系统文件句柄数限制 <code>ulimit -n</code></li>
+<li>backlog队列溢出<br />
+系统对于特定的TCP连接使用backlog队列保存。Redis通过<code>tcp-backlog</code>设置，默认511.系统的backlog默认128，使用<code>echo 511 &gt; /proc/sys/net/core/somaxconn</code>命令修改。<br />
+通过<code>netstat -s | grep overflowed</code>查看因backlog队列溢出造成的连接拒绝统计指标。</li>
+</ol>
+</li>
+</ol>
+<h4 id="网络延迟"><a class="markdownIt-Anchor" href="#网络延迟"></a> 网络延迟</h4>
+<p>网络延迟经常出现在跨机房的部署结构上，对于机房之间延迟比较严重的场景需要调整拓扑结构。<br />
+测试网络延迟可以使用<code>redis-cli --latency</code>相关命令进行测试。<br />
+带宽瓶颈通常出现在以下几个方面：</p>
+<ul>
+<li>机器网卡带宽</li>
+<li>机器交换机带宽</li>
+<li>机房之间专线带宽</li>
+</ul>
+<h4 id="网卡软中断"><a class="markdownIt-Anchor" href="#网卡软中断"></a> 网卡软中断</h4>
+<p>网卡软中断是指由于单个网卡队列只能使用一个CPU，高并发下数据交互都集中在一个CPU上，导致无法充分利用多核CPU的情况。网卡软中断瓶颈一般出现在网络高流量吞吐的场景，使用<code>top</code>后按数字<code>1</code>查看CPU使用情况，其中<code>si</code>为软中断参数</p>
+<h2 id="本章重点回顾"><a class="markdownIt-Anchor" href="#本章重点回顾"></a> 本章重点回顾</h2>
+<ol>
+<li>客户端最先感知阻塞等Redis超时行为，加入日志监控报警工具可快速定位阻塞问题，同时需要对Redis进程和机器做全面监控。</li>
+<li>阻塞的内在原因：确认主线程是否存在阻塞，检查慢查询等信息，发现不合理使用API或数据结构的情况，如<code>keys</code>、<code>sort</code>、<code>hgetall</code>等。关注CPU使用率防止单核跑满。当硬盘IO资源紧张时，AOF追加也会阻塞主进程。</li>
+<li>阻塞的外在原因：CPU竞争、内存交换、网络问题等。</li>
+</ol>
+<hr>
+<hr class="footnotes-sep" />
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>关于Huge Pages与 Transparent Huge Pages的关系与区别请参阅博客<a target="_blank" rel="noopener" href="https://www.cnblogs.com/kerrycode/p/7760026.html">潇湘隐者 - Linux传统Huge Pages与Transparent Huge Pages再次学习总结</a> <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
 
     </div>
 
@@ -554,13 +474,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/posts/4a17b156.html" rel="prev" title="Hello World">
-                  <i class="fa fa-chevron-left"></i> Hello World
+                <a href="/posts/3460365957.html" rel="prev" title="Redis开发与运维笔记-复制">
+                  <i class="fa fa-chevron-left"></i> Redis开发与运维笔记-复制
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/posts/4241361649.html" rel="next" title="Redis开发与运维笔记_API的理解和使用">
-                  Redis开发与运维笔记_API的理解和使用 <i class="fa fa-chevron-right"></i>
+                <a href="/posts/1495994843.html" rel="next" title="Redis开发与运维笔记-理解内存">
+                  Redis开发与运维笔记-理解内存 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>

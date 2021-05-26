@@ -6,7 +6,7 @@
   <link href="https://leithda.github.io/atom.xml" rel="self"/>
   
   <link href="https://leithda.github.io/"/>
-  <updated>2021-05-25T07:54:40.899Z</updated>
+  <updated>2021-05-26T10:40:34.195Z</updated>
   <id>https://leithda.github.io/</id>
   
   <author>
@@ -17,26 +17,155 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Hello World</title>
-    <link href="https://leithda.github.io/posts/4a17b156.html"/>
-    <id>https://leithda.github.io/posts/4a17b156.html</id>
-    <published>2021-05-25T06:03:17.103Z</published>
-    <updated>2021-05-25T07:54:40.899Z</updated>
+    <title>Redis开发与运维笔记-哨兵</title>
+    <link href="https://leithda.github.io/posts/2400819807.html"/>
+    <id>https://leithda.github.io/posts/2400819807.html</id>
+    <published>2021-05-26T15:15:00.000Z</published>
+    <updated>2021-05-26T10:40:34.195Z</updated>
     
     
-    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt; for more info. If you get any problems when using Hexo, you can find the answer in &lt;a href=&quot;https://hexo.io/docs/troubleshooting.html&quot;&gt;troubleshooting&lt;/a&gt; or you can ask me on &lt;a href=&quot;https://github.com/hexojs/hexo/issues&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;</summary>
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Redis的主从复制模式下，一旦主节点由于故障不能提供服务，需要人 工将从节点晋升为主节点，同时还要通知应用方更新主节点地址，对于很多 应用场景这种故障处理的方式是无法接受的。可喜的是Redis从2.8开始正式 提供了Redis Sentinel(哨兵)架构来解决这个问题。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
     
     
     
+    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
+    
+    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
+    
+    
+    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
     
   </entry>
   
   <entry>
-    <title>Redis开发与运维笔记-小功能大用处</title>
+    <title>Redis开发与运维笔记-理解内存</title>
+    <link href="https://leithda.github.io/posts/1495994843.html"/>
+    <id>https://leithda.github.io/posts/1495994843.html</id>
+    <published>2021-05-26T15:05:00.000Z</published>
+    <updated>2021-05-26T07:33:21.573Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Redis所有的数据都存在内存中，高效利用Redis内存首先需要理解Redis内存消耗在哪里，如何管理内存，最后才能考虑如何优化内存。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
+    
+    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
+    
+    
+    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis开发与运维笔记-Redis的噩梦-阻塞</title>
+    <link href="https://leithda.github.io/posts/3586754738.html"/>
+    <id>https://leithda.github.io/posts/3586754738.html</id>
+    <published>2021-05-26T14:50:00.000Z</published>
+    <updated>2021-05-26T10:12:29.304Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Redis是典型的单线程架构，所有的读写操作都是在一条主线程中完成的。当Redis用于高并发场景时，这条线程就变成了它的生命线。如果出现阻塞，哪怕是很短时间，对于我们的应用来说都是噩梦&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
+    
+    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
+    
+    
+    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis开发与运维笔记-复制</title>
+    <link href="https://leithda.github.io/posts/3460365957.html"/>
+    <id>https://leithda.github.io/posts/3460365957.html</id>
+    <published>2021-05-26T14:40:00.000Z</published>
+    <updated>2021-05-26T07:24:36.553Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;在分布式系统中为了解决单点问题，通常会把数据复制多个副本部署到其他机器，满足故障恢复和负载均衡等需求。Redis也是如此，它为我们提供了复制功能，实现了相同数据的多个Redis副本。复制功能是高可用Redis的基础，后面章节的哨兵和集群都是在复制的基础上实现高可用的。复制也是Redis日常运维的常见维护点&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
+    
+    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
+    
+    
+    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis开发与运维笔记_持久化</title>
+    <link href="https://leithda.github.io/posts/1023191841.html"/>
+    <id>https://leithda.github.io/posts/1023191841.html</id>
+    <published>2021-05-26T14:20:00.000Z</published>
+    <updated>2021-05-26T07:13:55.264Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Redis支持RDB和AOF两种持久化机制，持久化功能有效地避免因进程退出造成的数据丢失问题，当下次重启时利用之前持久化的文件即可实现数据恢复&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
+    
+    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
+    
+    
+    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis开发与运维笔记_客户端</title>
+    <link href="https://leithda.github.io/posts/3206834815.html"/>
+    <id>https://leithda.github.io/posts/3206834815.html</id>
+    <published>2021-05-26T14:00:00.000Z</published>
+    <updated>2021-05-26T07:24:40.444Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Redis是用单线程来处理多个客户端的访问，因此作为Redis的开发和运维人员需要了解Redis服务端和客户端的通信协议，以及主流编程语言的Redis客户端使用方法，同时还需要了解客户端管理的相应API以及开发运维中可能遇到的问题&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
+    
+    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
+    
+    
+    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis开发与运维笔记_小功能大用处</title>
     <link href="https://leithda.github.io/posts/2425201134.html"/>
     <id>https://leithda.github.io/posts/2425201134.html</id>
-    <published>2021-03-01T22:40:00.000Z</published>
-    <updated>2021-05-25T05:57:34.783Z</updated>
+    <published>2021-05-25T14:40:00.000Z</published>
+    <updated>2021-05-26T07:24:48.255Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
@@ -46,21 +175,21 @@
     
     
     
-    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
     
-    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
+    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
     
     
-    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
+    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
     
   </entry>
   
   <entry>
-    <title>Redis开发与运维笔记-API的理解和使用</title>
+    <title>Redis开发与运维笔记_API的理解和使用</title>
     <link href="https://leithda.github.io/posts/4241361649.html"/>
     <id>https://leithda.github.io/posts/4241361649.html</id>
-    <published>2021-03-01T10:25:00.000Z</published>
-    <updated>2021-05-25T12:07:57.621Z</updated>
+    <published>2021-05-25T14:25:00.000Z</published>
+    <updated>2021-05-26T07:24:52.342Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
@@ -70,12 +199,12 @@
     
     
     
-    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
     
-    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
+    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
     
     
-    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
+    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
     
   </entry>
   
@@ -83,8 +212,8 @@
     <title>Redis开发与运维笔记_初识Redis</title>
     <link href="https://leithda.github.io/posts/1097430507.html"/>
     <id>https://leithda.github.io/posts/1097430507.html</id>
-    <published>2021-03-01T02:00:00.000Z</published>
-    <updated>2021-05-25T12:07:46.000Z</updated>
+    <published>2021-05-25T14:00:00.000Z</published>
+    <updated>2021-05-26T10:11:54.840Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
@@ -94,12 +223,27 @@
     
     
     
-    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
     
-    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
+    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
     
     
-    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
+    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="https://leithda.github.io/posts/4a17b156.html"/>
+    <id>https://leithda.github.io/posts/4a17b156.html</id>
+    <published>2021-05-24T15:00:00.000Z</published>
+    <updated>2021-05-26T09:43:09.605Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt; for more info. If you get any problems when using Hexo, you can find the answer in &lt;a href=&quot;https://hexo.io/docs/troubleshooting.html&quot;&gt;troubleshooting&lt;/a&gt; or you can ask me on &lt;a href=&quot;https://github.com/hexojs/hexo/issues&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;</summary>
+    
+    
+    
     
   </entry>
   

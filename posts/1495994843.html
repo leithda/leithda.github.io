@@ -22,28 +22,31 @@
   <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
 
 <script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;leithda.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:&quot;enable&quot;,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:&quot;utterances&quot;,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null,&quot;activeClass&quot;:&quot;utterances&quot;},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;},&quot;path&quot;:&quot;&#x2F;search.xml&quot;,&quot;localsearch&quot;:{&quot;enable&quot;:true,&quot;trigger&quot;:&quot;auto&quot;,&quot;top_n_per_article&quot;:1,&quot;unescape&quot;:false,&quot;preload&quot;:false}}</script>
-<meta name="description" content="本章将带领读者进入Redis的世界，了解它的前世今生、众多特性、典型应用场景、安装配置、如何好用等，最后会对Redis发展过程中的重要版本进行说明">
+<meta name="description" content="Redis所有的数据都存在内存中，高效利用Redis内存首先需要理解Redis内存消耗在哪里，如何管理内存，最后才能考虑如何优化内存。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis开发与运维笔记_初识Redis">
-<meta property="og:url" content="https://leithda.github.io/posts/1097430507.html">
+<meta property="og:title" content="Redis开发与运维笔记-理解内存">
+<meta property="og:url" content="https://leithda.github.io/posts/1495994843.html">
 <meta property="og:site_name" content="Leithda&#39;s Blog">
-<meta property="og:description" content="本章将带领读者进入Redis的世界，了解它的前世今生、众多特性、典型应用场景、安装配置、如何好用等，最后会对Redis发展过程中的重要版本进行说明">
+<meta property="og:description" content="Redis所有的数据都存在内存中，高效利用Redis内存首先需要理解Redis内存消耗在哪里，如何管理内存，最后才能考虑如何优化内存。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-05-25T14:00:00.000Z">
-<meta property="article:modified_time" content="2021-05-26T10:11:54.840Z">
+<meta property="og:image" content="https://leithda.github.io/posts/1495994843/redisObject.png">
+<meta property="og:image" content="https://leithda.github.io/posts/1495994843/sds.png">
+<meta property="article:published_time" content="2021-05-26T15:05:00.000Z">
+<meta property="article:modified_time" content="2021-05-26T07:33:21.573Z">
 <meta property="article:author" content="Leithda">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://leithda.github.io/posts/1495994843/redisObject.png">
 
 
-<link rel="canonical" href="https://leithda.github.io/posts/1097430507.html">
+<link rel="canonical" href="https://leithda.github.io/posts/1495994843.html">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;leithda.github.io&#x2F;posts&#x2F;1097430507.html&quot;,&quot;path&quot;:&quot;posts&#x2F;1097430507.html&quot;,&quot;title&quot;:&quot;Redis开发与运维笔记_初识Redis&quot;}</script>
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;leithda.github.io&#x2F;posts&#x2F;1495994843.html&quot;,&quot;path&quot;:&quot;posts&#x2F;1495994843.html&quot;,&quot;title&quot;:&quot;Redis开发与运维笔记-理解内存&quot;}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
-<title>Redis开发与运维笔记_初识Redis | Leithda's Blog</title><script src="/js/config.js"></script>
+<title>Redis开发与运维笔记-理解内存 | Leithda's Blog</title><script src="/js/config.js"></script>
   
 
   <script src="/js/third-party/analytics/baidu-analytics.js"></script>
@@ -154,7 +157,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9D%E8%AF%86redis"><span class="nav-number">1.</span> <span class="nav-text"> 初识Redis</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%9B%E8%B5%9Eredis"><span class="nav-number">1.1.</span> <span class="nav-text"> 盛赞Redis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis%E7%89%B9%E6%80%A7"><span class="nav-number">1.2.</span> <span class="nav-text"> Redis特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.3.</span> <span class="nav-text"> Redis的使用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis%E5%8F%AF%E4%BB%A5%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-number">1.3.1.</span> <span class="nav-text"> Redis可以做什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis%E4%B8%8D%E5%8F%AF%E4%BB%A5%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-number">1.3.2.</span> <span class="nav-text"> Redis不可以做什么</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E5%A5%BDredis%E7%9A%84%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.4.</span> <span class="nav-text"> 用好Redis的建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E7%A1%AE%E5%AE%89%E8%A3%85%E5%B9%B6%E5%90%AF%E5%8A%A8redis"><span class="nav-number">1.5.</span> <span class="nav-text"> 正确安装并启动Redis</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85redis"><span class="nav-number">1.5.1.</span> <span class="nav-text"> 安装Redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-%E5%90%AF%E5%8A%A8-%E6%93%8D%E4%BD%9C-%E5%85%B3%E9%97%ADredis"><span class="nav-number">1.5.2.</span> <span class="nav-text"> 配置、启动、操作、关闭Redis</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis%E7%9A%84%E9%87%8D%E5%A4%A7%E7%89%88%E6%9C%AC"><span class="nav-number">1.6.</span> <span class="nav-text"> Redis的重大版本</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E5%86%85%E5%AD%98"><span class="nav-number">1.</span> <span class="nav-text"> 理解内存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%B6%88%E8%80%97"><span class="nav-number">1.1.</span> <span class="nav-text"> 内存消耗</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E7%BB%9F%E8%AE%A1"><span class="nav-number">1.1.1.</span> <span class="nav-text"> 内存使用统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%B6%88%E8%80%97%E5%88%92%E5%88%86"><span class="nav-number">1.1.2.</span> <span class="nav-text"> 内存消耗划分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%90%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%B6%88%E8%80%97"><span class="nav-number">1.1.3.</span> <span class="nav-text"> 子进程内存消耗</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text"> 内存管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96"><span class="nav-number">1.3.</span> <span class="nav-text"> 内存优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#redisobject%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.3.1.</span> <span class="nav-text"> redisObject对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%A9%E5%87%8F%E9%94%AE%E5%80%BC%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.3.2.</span> <span class="nav-text"> 缩减键值对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E5%AF%B9%E8%B1%A1%E6%B1%A0"><span class="nav-number">1.3.3.</span> <span class="nav-text"> 共享对象池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%BC%98%E5%8C%96"><span class="nav-number">1.3.4.</span> <span class="nav-text"> 字符串优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%BB%93%E6%9E%84"><span class="nav-number">1.3.4.1.</span> <span class="nav-text"> 字符串结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%84%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6"><span class="nav-number">1.3.4.2.</span> <span class="nav-text"> 预分配机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%87%8D%E6%9E%84"><span class="nav-number">1.3.4.3.</span> <span class="nav-text"> 字符串重构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E4%BC%98%E5%8C%96"><span class="nav-number">1.3.5.</span> <span class="nav-text"> 编码优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E9%94%AE%E7%9A%84%E6%95%B0%E9%87%8F"><span class="nav-number">1.3.6.</span> <span class="nav-text"> 控制键的数量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E7%AB%A0%E9%87%8D%E7%82%B9%E5%9B%9E%E9%A1%BE"><span class="nav-number">1.4.</span> <span class="nav-text"> 本章重点回顾</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -247,7 +250,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://leithda.github.io/posts/1097430507.html">
+    <link itemprop="mainEntityOfPage" href="https://leithda.github.io/posts/1495994843.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar.png">
@@ -260,7 +263,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Redis开发与运维笔记_初识Redis
+          Redis开发与运维笔记-理解内存
         </h1>
 
         <div class="post-meta-container">
@@ -270,16 +273,10 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2021-05-25 22:00:00" itemprop="dateCreated datePublished" datetime="2021-05-25T22:00:00+08:00">2021-05-25</time>
+      <time title="创建时间：2021-05-26 23:05:00 / 修改时间：15:33:21" itemprop="dateCreated datePublished" datetime="2021-05-26T23:05:00+08:00">2021-05-26</time>
     </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-05-26 18:11:54" itemprop="dateModified" datetime="2021-05-26T18:11:54+08:00">2021-05-26</time>
-      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -302,14 +299,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.5k</span>
+      <span>2.8k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
+      <span>3 分钟</span>
     </span>
 </div>
 
@@ -321,196 +318,183 @@
     
     <div class="post-body" itemprop="articleBody">
         <blockquote class="blockquote-center">
-<p>本章将带领读者进入Redis的世界，了解它的前世今生、众多特性、典型应用场景、安装配置、如何好用等，最后会对Redis发展过程中的重要版本进行说明</p>
+<p>Redis所有的数据都存在内存中，高效利用Redis内存首先需要理解Redis内存消耗在哪里，如何管理内存，最后才能考虑如何优化内存。</p>
 
 </blockquote>
 <span id="more"></span>
+<blockquote>
 <p>参考书籍：<a target="_blank" rel="noopener" href="https://book.douban.com/subject/26971561/">Redis开发与运维</a></p>
+</blockquote>
 <hr>
-<h1 id="初识redis"><a class="markdownIt-Anchor" href="#初识redis"></a> 初识Redis</h1>
-<h2 id="盛赞redis"><a class="markdownIt-Anchor" href="#盛赞redis"></a> 盛赞Redis</h2>
-<p>Redis[1]是一种基于键值对(key-value)的NoSQL数据库，与很多键值对 数据库不同的是，Redis中的值可以是由string(字符串)、hash(哈希)、 list(列表)、set(集合)、zset(有序集合)、Bitmaps(位图)、 HyperLogLog、GEO(地理信息定位)等多种数据结构和算法组成，因此 Redis可以满足很多的应用场景，而且因为Redis会将所有数据都存放在内存 中，所以它的读写性能非常惊人。不仅如此，Redis还可以将内存的数据利 用快照和日志的形式保存到硬盘上，这样在发生类似断电或者机器故障的时 候，内存中的数据不会“丢失”。除了上述功能以外，Redis还提供了键过 期、发布订阅、事务、流水线、Lua脚本等附加功能。总之，如果在合适的 场景使用好Redis，它就会像一把瑞士军刀一样所向披靡。</p>
-<blockquote>
-<p>Redis官网：  <a target="_blank" rel="noopener" href="http://redis.io">redis.io</a></p>
-</blockquote>
-<h2 id="redis特性"><a class="markdownIt-Anchor" href="#redis特性"></a> Redis特性</h2>
-<ol>
-<li>
-<p>速度快</p>
-<ul>
-<li>数据基于内存</li>
-<li>使用C语言实现，更接近操作系统</li>
-<li>Redis使用了单线程架构，避免多线程线程间切换开销</li>
-<li>Redis代码优化</li>
-</ul>
-</li>
-<li>
-<p>5种数据结构</p>
-<p>String(字符串)、Hash(哈希)、List(列表)、Set(集合)、ZSet(有序集合)</p>
-</li>
-<li>
-<p>丰富的功能</p>
-<ul>
-<li>过期功能：方便缓存的实现</li>
-<li>发布/订阅功能：可以实现消息系统</li>
-<li>支持Lua脚本，可以利用Lua创造出新的Redis命令</li>
-<li>提供了简单的事务</li>
-<li>提供了Pipeline(流水线)功能，可以减少网络开销</li>
-</ul>
-</li>
-<li>
-<p>稳定简单</p>
-<p>源码剪短而不简单</p>
-</li>
-<li>
-<p>客户端语言多</p>
-<p>提供了多种语言的客户端</p>
-</li>
-<li>
-<p>持久化</p>
-<p>RDB和AOF</p>
-</li>
-<li>
-<p>主从复制</p>
-<p>Redis提供了复制功能，实现了多个数据相同的Redis副本</p>
-</li>
-<li>
-<p>高可用和分布式</p>
-<p>Redis 2.8版本实现了高可用实现<code>Redis Sentinel</code>，它能够保证Redis节点的故障发现和故障自动转移。Redis 3.0版本实现了分布式实现<code>Redis Cluster</code>，它是Redis真正的分布式实现，提供了高可用、读写和容量的扩展</p>
-</li>
-</ol>
-<h2 id="redis的使用场景"><a class="markdownIt-Anchor" href="#redis的使用场景"></a> Redis的使用场景</h2>
-<h3 id="redis可以做什么"><a class="markdownIt-Anchor" href="#redis可以做什么"></a> Redis可以做什么</h3>
-<ol>
-<li>缓存</li>
-<li>排行榜</li>
-<li>计数器应用</li>
-<li>社交网络</li>
-<li>消息队列系统</li>
-</ol>
-<h3 id="redis不可以做什么"><a class="markdownIt-Anchor" href="#redis不可以做什么"></a> Redis不可以做什么</h3>
-<ol>
-<li>数据量过大不适合使用Redis，Redis数据存放在内存中，数据量过大会导致内存资源紧张</li>
-<li>常用热数据适合缓存，反之，冷数据如果缓存会造成内存资源的浪费</li>
-</ol>
-<h2 id="用好redis的建议"><a class="markdownIt-Anchor" href="#用好redis的建议"></a> 用好Redis的建议</h2>
-<ol>
-<li>使用者应了解Redis的<strong>单线程模型</strong>，<strong>持久化策略(RDB&amp;AOF)</strong>。</li>
-<li>阅读Redis源码，吃透原理并可以根据业务需求对Redis进行定制化开发</li>
-</ol>
-<h2 id="正确安装并启动redis"><a class="markdownIt-Anchor" href="#正确安装并启动redis"></a> 正确安装并启动Redis</h2>
-<h3 id="安装redis"><a class="markdownIt-Anchor" href="#安装redis"></a> 安装Redis</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.redis.io/releases/redis-3.0.7.tar.gz</span><br><span class="line">tar xzf redis-3.0.7.tar.gz</span><br><span class="line">ln -s redis-3.0.7 redis</span><br><span class="line"><span class="built_in">cd</span> redis</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-<ul>
-<li>下载Redis指定版本的源码压缩包到当前目录。</li>
-<li>解压缩Redis源码压缩包。</li>
-<li>建立一个redis目录的软连接，指向redis-3.0.7。</li>
-<li>进入redis目录。</li>
-<li>编译(编译之前确保操作系统已经安装gcc)。</li>
-<li>安装</li>
-</ul>
-<blockquote>
-<p>注： 安装后会将Redis相关运行文件放到<code>/usr/local/bin</code>目录下</p>
-</blockquote>
-<h3 id="配置-启动-操作-关闭redis"><a class="markdownIt-Anchor" href="#配置-启动-操作-关闭redis"></a> 配置、启动、操作、关闭Redis</h3>
-<p>Redis安装后，<code>/usr/local/bin</code>目录下会新增几个redis开头的可执行文件，说明如下：</p>
+<h1 id="理解内存"><a class="markdownIt-Anchor" href="#理解内存"></a> 理解内存</h1>
+<h2 id="内存消耗"><a class="markdownIt-Anchor" href="#内存消耗"></a> 内存消耗</h2>
+<h3 id="内存使用统计"><a class="markdownIt-Anchor" href="#内存使用统计"></a> 内存使用统计</h3>
+<p><code>info memory</code></p>
 <table>
 <thead>
 <tr>
-<th>可执行文件</th>
-<th>作用</th>
+<th>属性名</th>
+<th>属性说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>redis-server</td>
-<td>启动Redis</td>
+<td>used_memory</td>
+<td>Redis分配器分配的内存总量，也就是内部存储的所有数据的内存占用量</td>
 </tr>
 <tr>
-<td>redis-cli</td>
-<td>Redis命令行工具</td>
+<td>used_memory_human</td>
+<td>以可读的格式返回used_memory</td>
 </tr>
 <tr>
-<td>redis-benchmark</td>
-<td>Redis基准测试工具</td>
+<td>used_memory_rss</td>
+<td>从操作系统的角度显示Redis进程占用的物理内存总量</td>
 </tr>
 <tr>
-<td>redis-check-aof</td>
-<td>Redis AOF 持久化文件检测和修复工具</td>
+<td>used_memory_peak</td>
+<td>内存使用的最大值，表示used_memory的峰值</td>
 </tr>
 <tr>
-<td>redis-check-dump</td>
-<td>Redis RDB 持久化文件检测和修复工具</td>
+<td>used_memory_peak_human</td>
+<td>以可读的格式返回used_memory_peak</td>
 </tr>
 <tr>
-<td>redis-sentinel</td>
-<td>启动 Redis Sentinel</td>
+<td>used_memory_lua</td>
+<td>Lua引擎所消耗的内存大小</td>
+</tr>
+<tr>
+<td>mem_fragmentation_retio</td>
+<td>used_memory_rss/used_memory比值，表示内存碎片率</td>
+</tr>
+<tr>
+<td>mem_allocator</td>
+<td>Redis所使用的内存分配器。默认为jemalloc</td>
 </tr>
 </tbody>
 </table>
-<ol>
-<li>
-<p>启动Redis</p>
+<p>重点关注的指标：<code>used_memory_rss</code>、<code>used_memory</code>以及<code>mem_fragmentation_ratio</code></p>
+<p>mem_fragmentation&gt;1，说明存在内存碎片。&lt;1时说明操作系统Reids内存交换(Swap)到硬盘。</p>
+<h3 id="内存消耗划分"><a class="markdownIt-Anchor" href="#内存消耗划分"></a> 内存消耗划分</h3>
+<p>Redis进程内消耗主要包括：自身内存+对象内存+缓存内存+内存碎片。</p>
 <ul>
 <li>
-<p>默认配置，执行<code>redis-server</code></p>
+<p>对象内存<br />
+是Redis内存占用最大的一块，存储着用户所有的数据。</p>
 </li>
 <li>
-<p>运行启动，<code>redis-server --configKey1 configValue1 --configKey2 configValue2</code></p>
-<p>例如：<code>redis-server --port 6378</code></p>
-</li>
-<li>
-<p>配置文件启动，<code>redis-server /opt/redis/redis.conf</code></p>
-</li>
+<p>缓存内存</p>
+<ul>
+<li>客户端缓冲：接入到服务器TCP了解的输入输出缓冲。输入缓冲无法控制，最大为1G。输出缓冲通过<code>client-output-buffer-limit</code>控制。普通客户端要注意控制数量，从客户端不要挂载过多，订阅客户端要注意生产及消费消息的速度</li>
+<li>复制积压缓冲区：用于实现部分复制功能，Redis提供的一个缓冲区，建议在合理范围内调大，可以有效避免全量复制</li>
+<li>AOF缓冲区：这部分空间用于在Redis重写期间保存最近的写入命令。</li>
 </ul>
 </li>
 <li>
-<p>Redis命令行客户端</p>
-<p><code>redis-cli -h &#123;host&#125; -p &#123;port&#125;</code>，例如<code>redis-cli -h 127.0.0.1 -p 6379</code></p>
-</li>
-<li>
-<p>停止Redis服务</p>
-<p><code>redis-cli shutdown</code></p>
-</li>
+<p>内存碎片<br />
+容易出现高内存碎片的场景：</p>
+<ol>
+<li>频繁做更新操作，例如频繁对已存在的键执行<code>append、setrange</code>等更新操作</li>
+<li>大量过期键删除，键对象过期删除后，释放的空间无法得到充分利用，导致碎片率上升。</li>
+<li>解决以上问题的方法：1）尽量做到数据对齐，2）安全重启</li>
 </ol>
-<h2 id="redis的重大版本"><a class="markdownIt-Anchor" href="#redis的重大版本"></a> Redis的重大版本</h2>
-<blockquote>
-<p>Redis借鉴了Linux对于版本号的命名规则，版本号第二位为奇数则表示版本为非稳定版本，且为下一稳定版本的开发版本</p>
-</blockquote>
+</li>
+</ul>
+<h3 id="子进程内存消耗"><a class="markdownIt-Anchor" href="#子进程内存消耗"></a> 子进程内存消耗</h3>
+<p>主要发生在AOF/RDB重写时Redis创建的子进程内存消耗。总结如下：</p>
 <ol>
-<li>Redis 2.6
+<li>Redis产生的子进程因为写时复制技术，并不需要消耗1倍的父进程内存。预留足够内存防止溢出即可</li>
+<li>需要设置<code>sysctl vm.overcommit_memory=1</code>允许内核可以分配所有物理内存，防止Redis进程执行fork时因系统剩余内存不足而失败</li>
+<li>排查当前系统是否支持并开启THP，如果开启建议关闭，防止copy-on-write期间内存过度消耗</li>
+</ol>
+<h2 id="内存管理"><a class="markdownIt-Anchor" href="#内存管理"></a> 内存管理</h2>
+<ol>
+<li>通过<code>maxmemory</code>设置Redis最大内存，需要注意的是由于碎片率的存在，实际消耗的内存可能会比<code>maxmemory</code>设置的更大</li>
+<li>通过<code>config set maxmemory 2GB</code>可以动态调整内存上限</li>
+<li>内存回收策略
 <ul>
-<li>服务端支持Lua脚本。</li>
-<li>去掉虚拟内存相关功能。</li>
-<li>放开对客户端连接数的硬编码限制。</li>
-<li>键的过期时间支持毫秒。</li>
-<li>从节点提供只读功能。</li>
-<li>两个新的位图命令:bitcount和bitop。</li>
-<li>增强了redis-benchmark的功能:支持定制化的压测，CSV输出等功能。</li>
-<li>基于浮点数自增命令:incrbyfloat和hincrbyfloat。</li>
-<li>redis-cli可以使用–eval参数实现Lua脚本执行。</li>
-<li>shutdown命令增强。</li>
-<li>info可以按照section输出，并且添加了一些统计项。</li>
-<li>重构了大量的核心代码，所有集群相关的代码都去掉了，cluster功 能将会是3.0版本最大的亮点。</li>
-<li>sort命令优化。</li>
+<li>过期键删除策略：惰性删除和定时任务删除</li>
+<li>内存溢出控制策略，通过<code>maxmemory-policy</code>参数控制
+<ul>
+<li><code>noeviction</code>:默认策略，不删除数据。拒绝所有写入操作并返回客户端错误信息<code>(error)OOM command not allowed when used memory</code>，此时Redis只响应读操作</li>
+<li><code>vloatile-lru</code>：根据LRU算法删除设置了超时的键，直到腾出足够空间。如果没有可删除的键，回退到<code>noeviction</code></li>
+<li><code>allkeys-lru</code>：根据LRU算法删除键。直到腾出足够空间</li>
+<li><code>allkeys-random</code>：随机删除所有键，直到腾出足够空间</li>
+<li><code>volatile-ttl</code>：根据键值对象的ttl，删除最近要过期的数据，如果没有，回退到noeviction策略</li>
+<li>设置了<code>maxmemory</code>时，当<code>used_memory&gt;maxmemory</code>的状态下，会触发回收内存操作。应设置足够大的<code>maxmemory</code>避免长期处于这种状态下。</li>
 </ul>
 </li>
-<li>Redis 2.8
-<ul>
-<li>添加部分主从复制的功能，在一定程度上降低了由于网络问题，造成频繁全量复制生成RDB对系统造成的压力。</li>
-<li>尝试性地支持IPv6。</li>
-<li>可以通过config set命令设置maxclients。</li>
-<li>可以用bind命令绑定多个IP地址。</li>
-<li>Redis设置了明显的进程名，方便使用ps命令查看系统进程。</li>
-<li>config rewrite命令可以将config set持久化到Redis配置文件中。</li>
-<li>发布订阅添加了pubsub命令。</li>
-<li>Redis Sentinel第二版，相比于Redis2.6的Redis Sentinel，此版本已经 变成生产可用。</li>
 </ul>
 </li>
 </ol>
+<h2 id="内存优化"><a class="markdownIt-Anchor" href="#内存优化"></a> 内存优化</h2>
+<h3 id="redisobject对象"><a class="markdownIt-Anchor" href="#redisobject对象"></a> redisObject对象</h3>
 <blockquote>
-<p>可以通过github仓库查看各版本重大改动： <a target="_blank" rel="noopener" href="https://github.com/redis/redis/tags">Redis版本</a></p>
+<p>Redis存储的所有值对象在内部定义为redisObject结构体，内部结构如图：</p>
 </blockquote>
+<img src="/posts/1495994843/redisObject.png" class="" title="redisObject">
+<ul>
+<li>type:当前对象数据类型。可以使用<code>type &#123;key&#125;</code>查看对象所属类型</li>
+<li>encoding:redis内部编码类型</li>
+<li>lru:对象最后一次被访问的时间。可以使用<code>object idletime &#123;key&#125;</code>在不更新lru字段情况下查看键的空闲时间</li>
+<li>refcount:记录对象被引用次数</li>
+<li>*ptr:整数直接存储数据，否则为指向数据的指针</li>
+</ul>
+<h3 id="缩减键值对象"><a class="markdownIt-Anchor" href="#缩减键值对象"></a> 缩减键值对象</h3>
+<blockquote>
+<p>在保证业务的前提下，缩减键<code>key</code>和值<code>value</code>的长度。</p>
+</blockquote>
+<h3 id="共享对象池"><a class="markdownIt-Anchor" href="#共享对象池"></a> 共享对象池</h3>
+<p>Redis内部维护[0-9999]的整数对象池。优先使用整型数字有助于节省内存开销。需要注意的是对象池与<code>maxmemory</code>和<code>LRU</code>淘汰算法冲突。</p>
+<h3 id="字符串优化"><a class="markdownIt-Anchor" href="#字符串优化"></a> 字符串优化</h3>
+<h4 id="字符串结构"><a class="markdownIt-Anchor" href="#字符串结构"></a> 字符串结构</h4>
+<blockquote>
+<p>Redis实现了自己的字符串结构，内部简单动态字符串(simple dynamic string,SDS).结构如图：</p>
+</blockquote>
+<img src="/posts/1495994843/sds.png" class="" title="sds">
+<p>Redis字符串结构的特点：</p>
+<ol>
+<li>字符串长度，已用长度，未用长度的操作复杂度为O(1)</li>
+<li>可用于保存字节数组，支持安全的二进制数据存储</li>
+<li>预分配机制，降低内存再分配次数</li>
+<li>惰性删除机制，字符串缩减后的空间不释放，作为预分配空间保留</li>
+</ol>
+<h4 id="预分配机制"><a class="markdownIt-Anchor" href="#预分配机制"></a> 预分配机制</h4>
+<ol>
+<li>第一次创建len属性等于数据实际大小，free等于0，不做预分配</li>
+<li>修改后如果free空间不够且数据小于1M，每次预分配一倍的容量</li>
+<li>修改后如果free空间不够且数据大于1M，每次预分配1MB的容量</li>
+</ol>
+<h4 id="字符串重构"><a class="markdownIt-Anchor" href="#字符串重构"></a> 字符串重构</h4>
+<blockquote>
+<p>JSON数据不一定要用string来存储，可以改为通过hash结构实现，同时使用hash结构也可以使用hmget、hmset命令支持字段的部分读取修改，而不用每次全部读取。</p>
+</blockquote>
+<h3 id="编码优化"><a class="markdownIt-Anchor" href="#编码优化"></a> 编码优化</h3>
+<blockquote>
+<p>主要是根据业务场景，选择合适的参数保证Redis使用合适的内部编码进而在性能和内存上进行取舍。</p>
+</blockquote>
+<h3 id="控制键的数量"><a class="markdownIt-Anchor" href="#控制键的数量"></a> 控制键的数量</h3>
+<blockquote>
+<p>客户端可以预估键的数量规模，把大量键映射到多个hash结构中降低键的数量</p>
+</blockquote>
+<ul>
+<li>hash的field可以记录原始key字符串，方便哈希查找</li>
+<li>hash的value保存原始值对象，确保不要超过<code>hash-max-ziplist-value</code>限制</li>
+</ul>
+<h2 id="本章重点回顾"><a class="markdownIt-Anchor" href="#本章重点回顾"></a> 本章重点回顾</h2>
+<ol>
+<li>Redis实际内存消耗主要包括：键值对象、缓冲区碎片、内存碎片</li>
+<li>通过<code>maxmemory</code>控制Redis最大可用内存。内存溢出时，根据<code>maxmemory-policy</code>控制内存回收策略</li>
+<li>内存资源宝贵，可以通过以下手段优化内存使用:
+<ol>
+<li>精简键值对大小，使用高效二进制序列化工具</li>
+<li>使用对象共享池优化小整数对象</li>
+<li>数据优先使用整数</li>
+<li>优化字符串的使用，避免预分配造成的内存浪费</li>
+<li>使用ziplist压缩编码优化hash、list等结构，注重效率和空间的平衡</li>
+<li>使用intset编码优化整数集合</li>
+</ol>
+</li>
+</ol>
 
     </div>
 
@@ -554,13 +538,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/posts/4a17b156.html" rel="prev" title="Hello World">
-                  <i class="fa fa-chevron-left"></i> Hello World
+                <a href="/posts/3586754738.html" rel="prev" title="Redis开发与运维笔记-Redis的噩梦-阻塞">
+                  <i class="fa fa-chevron-left"></i> Redis开发与运维笔记-Redis的噩梦-阻塞
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/posts/4241361649.html" rel="next" title="Redis开发与运维笔记_API的理解和使用">
-                  Redis开发与运维笔记_API的理解和使用 <i class="fa fa-chevron-right"></i>
+                <a href="/posts/2400819807.html" rel="next" title="Redis开发与运维笔记-哨兵">
+                  Redis开发与运维笔记-哨兵 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
