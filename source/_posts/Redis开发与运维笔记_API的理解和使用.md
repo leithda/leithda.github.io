@@ -15,7 +15,7 @@ Redis提供了5种数据结构，理解每种数据结构的特点对于Redis开
 {% endcq %}
 <!-- more -->
 
-参考书籍：[Redis开发与运维](https://book.douban.com/subject/26971561/)
+以下内容为笔者看 [《Redis开发与运维》](https://book.douban.com/subject/26971561/) 的总结。
 <hr>
 
 # API的理解和使用
@@ -313,7 +313,7 @@ long incrVideoCount(long id){
     for article in {articles}
       hgetall {article}
     ```
-  
+
   > - 分页获取文章个数过多时，多次hgetall可能存在性能问题
   > - `lrange` 在列表两端时性能较好，列表数据过大时，可以考虑做二次拆分减小列表长度
 

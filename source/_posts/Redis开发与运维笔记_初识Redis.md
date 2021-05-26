@@ -1,6 +1,6 @@
 ---
 abbrlink: 1097430507
-title: Redis开发与运维笔记-初识Redis
+title: Redis开发与运维笔记_初识Redis
 date: 2021-03-01 10:00:00
 categories:
   - 数据库
@@ -15,14 +15,14 @@ author: 长歌
 {% endcq %}
 <!-- more -->
 
-参考书籍：[Redis开发与运维](https://book.douban.com/subject/26971561/)
+以下内容为笔者看 [《Redis开发与运维》](https://book.douban.com/subject/26971561/) 的总结。
 <hr>
 
 # 初始Redis
 
 ## 盛赞Redis
 
-​  Redis[1]是一种基于键值对(key-value)的NoSQL数据库，与很多键值对 数据库不同的是，Redis中的值可以是由string(字符串)、hash(哈希)、 list(列表)、set(集合)、zset(有序集合)、Bitmaps(位图)、 HyperLogLog、GEO(地理信息定位)等多种数据结构和算法组成，因此 Redis可以满足很多的应用场景，而且因为Redis会将所有数据都存放在内存 中，所以它的读写性能非常惊人。不仅如此，Redis还可以将内存的数据利 用快照和日志的形式保存到硬盘上，这样在发生类似断电或者机器故障的时 候，内存中的数据不会“丢失”。除了上述功能以外，Redis还提供了键过 期、发布订阅、事务、流水线、Lua脚本等附加功能。总之，如果在合适的 场景使用好Redis，它就会像一把瑞士军刀一样所向披靡。
+  Redis[1]是一种基于键值对(key-value)的NoSQL数据库，与很多键值对 数据库不同的是，Redis中的值可以是由string(字符串)、hash(哈希)、 list(列表)、set(集合)、zset(有序集合)、Bitmaps(位图)、 HyperLogLog、GEO(地理信息定位)等多种数据结构和算法组成，因此 Redis可以满足很多的应用场景，而且因为Redis会将所有数据都存放在内存 中，所以它的读写性能非常惊人。不仅如此，Redis还可以将内存的数据利 用快照和日志的形式保存到硬盘上，这样在发生类似断电或者机器故障的时 候，内存中的数据不会“丢失”。除了上述功能以外，Redis还提供了键过 期、发布订阅、事务、流水线、Lua脚本等附加功能。总之，如果在合适的 场景使用好Redis，它就会像一把瑞士军刀一样所向披靡。
 
 > Redis官网：  [redis.io](http://redis.io)
 
@@ -111,7 +111,7 @@ make install
 
 ### 配置、启动、操作、关闭Redis
 
-​  Redis安装后，`/usr/local/bin`目录下会新增几个redis开头的可执行文件，说明如下：
+  Redis安装后，`/usr/local/bin`目录下会新增几个redis开头的可执行文件，说明如下：
 
 | 可执行文件       | 作用                               |
 | ---------------- | ---------------------------------- |

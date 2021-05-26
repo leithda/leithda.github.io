@@ -1,3 +1,7 @@
+---
+comments: false
+---
+
 {% cq %}
 [Github](https://github.com/leithda) | [Gitee](https://gitee.com/leithda) 
 {% endcq %}
