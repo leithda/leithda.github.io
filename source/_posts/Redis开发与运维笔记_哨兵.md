@@ -414,9 +414,86 @@ sentinel parallel-syncs master-business-2 1
 
 
 
+## API
 
+
+
+### `sentinel masters`
+
+​		展示所有被监控的主节点状态以及相关的统计信息
+
+
+
+###  `sentinel master <master name>`
+
+​		展示指定`<master name>`的主节点状态以及相关的统计信息
+
+
+
+### `sentinel slaves <master name>`
+
+​		展示指定`<master name>`的从节点状态以及相关的统计信息
+
+
+
+### `sentinel sentinels <master name>`
+
+​		展示指定`<master name>`的Sentinel节点集合(不包含当前Sentinel节点)
+
+
+
+### `sentinel get-master-addr-by-name <master name>`
+
+​		返回指定`<master name>`主节点的IP地址和端口
+
+
+
+### `sentinel reset <pattern>`
+
+​		当前Sentinel节点对符合`<pattern>(通配符风格)`主节点的配置进行重 置，包含清除主节点的相关状态(例如故障转移)，重新发现从节点和 Sentinel节点
+
+
+
+### `sentinel failover <master name>`
+
+​		对指定`<master name>`主节点进行强制故障转移(没有和其他Sentinel节 点“协商”)，当故障转移完成后，其他Sentinel节点按照故障转移的结果更 新自身配置，这个命令在Redis Sentinel的日常运维中非常有用
+
+
+
+### `sentinel ckquorum <master name>`
+
+​		检测当前可达的Sentinel节点总数是否达到`<quorum>`的个数。例如 quorum=3，而当前可达的Sentinel节点个数为2个，那么将无法进行故障转 移，Redis Sentinel的高可用特性也将失去
+
+
+
+### `sentinel flushconfig`
+
+​		将Sentinel节点的配置强制刷到磁盘上，这个命令Sentinel节点自身用得 比较多，对于开发和运维人员只有当外部原因(例如磁盘损坏)造成配置文 件损坏或者丢失时，这个命令是很有用的。
+
+
+
+### `sentinel remove <master name>`
+
+​		取消当前Sentinel节点对于指定`<master name>`主节点的监控
+
+
+
+### `sentinel monitor<master name><ip><port><quorum>`
+
+​		与配置文件中的命令相同
+
+
+
+### `sentinel set<master name>`
+
+​		修改Sentinel配置
+
+
+
+### `sentinel is-master-down-by-addr`
+
+​		Sentinel节点之间用来交换对主节点是否下线的判断，根据参数的不 同，还可以作为Sentinel领导者选举的通信方式。具体细节后面介绍。  
 
 ## 相关阅读
 
 - [你管这破玩意叫 Redis 哨兵？](https://mp.weixin.qq.com/s/nHBpqZe8v7KTo1hj08hx7A)
-
