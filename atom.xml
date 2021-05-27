@@ -6,7 +6,7 @@
   <link href="https://leithda.github.io/atom.xml" rel="self"/>
   
   <link href="https://leithda.github.io/"/>
-  <updated>2021-05-26T11:00:35.812Z</updated>
+  <updated>2021-05-27T09:20:59.023Z</updated>
   <id>https://leithda.github.io/</id>
   
   <author>
@@ -17,35 +17,453 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Redis开发与运维笔记-哨兵</title>
-    <link href="https://leithda.github.io/posts/2400819807.html"/>
-    <id>https://leithda.github.io/posts/2400819807.html</id>
-    <published>2021-05-26T15:15:00.000Z</published>
-    <updated>2021-05-26T11:00:35.812Z</updated>
+    <title>Markdown-数学公式</title>
+    <link href="https://leithda.github.io/_posts/2665394633.html"/>
+    <id>https://leithda.github.io/_posts/2665394633.html</id>
+    <published>2021-05-27T11:10:00.000Z</published>
+    <updated>2021-05-27T09:20:59.023Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;Redis的主从复制模式下，一旦主节点由于故障不能提供服务，需要人 工将从节点晋升为主节点，同时还要通知应用方更新主节点地址，对于很多 应用场景这种故障处理的方式是无法接受的。可喜的是Redis从2.8开始正式 提供了Redis Sentinel(哨兵)架构来解决这个问题。&lt;/p&gt;
+&lt;p&gt;mathjax是一个开源的数学公式渲染器，通过特定语法可以输出不同的数学公式&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
     
     
-    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
+    <category term="工具" scheme="https://leithda.github.io/categories/%E5%B7%A5%E5%85%B7/"/>
     
-    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
+    <category term="日常" scheme="https://leithda.github.io/categories/%E5%B7%A5%E5%85%B7/%E6%97%A5%E5%B8%B8/"/>
+    
+    <category term="Markdown" scheme="https://leithda.github.io/categories/%E5%B7%A5%E5%85%B7/%E6%97%A5%E5%B8%B8/Markdown/"/>
     
     
-    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
+    <category term="Markdown" scheme="https://leithda.github.io/tags/Markdown/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Markdown-流程图</title>
+    <link href="https://leithda.github.io/_posts/3540196146.html"/>
+    <id>https://leithda.github.io/_posts/3540196146.html</id>
+    <published>2021-05-27T11:05:00.000Z</published>
+    <updated>2021-05-27T09:13:06.891Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Markdown可以使用指定语法绘制流程图、时序图、甘特图等&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="工具" scheme="https://leithda.github.io/categories/%E5%B7%A5%E5%85%B7/"/>
+    
+    <category term="日常" scheme="https://leithda.github.io/categories/%E5%B7%A5%E5%85%B7/%E6%97%A5%E5%B8%B8/"/>
+    
+    <category term="Markdown" scheme="https://leithda.github.io/categories/%E5%B7%A5%E5%85%B7/%E6%97%A5%E5%B8%B8/Markdown/"/>
+    
+    
+    <category term="Markdown" scheme="https://leithda.github.io/tags/Markdown/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Markdown-基本语法</title>
+    <link href="https://leithda.github.io/_posts/1069057006.html"/>
+    <id>https://leithda.github.io/_posts/1069057006.html</id>
+    <published>2021-05-27T11:00:00.000Z</published>
+    <updated>2021-05-27T09:07:08.726Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="工具" scheme="https://leithda.github.io/categories/%E5%B7%A5%E5%85%B7/"/>
+    
+    <category term="日常" scheme="https://leithda.github.io/categories/%E5%B7%A5%E5%85%B7/%E6%97%A5%E5%B8%B8/"/>
+    
+    <category term="Markdown" scheme="https://leithda.github.io/categories/%E5%B7%A5%E5%85%B7/%E6%97%A5%E5%B8%B8/Markdown/"/>
+    
+    
+    <category term="Markdown" scheme="https://leithda.github.io/tags/Markdown/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>中介者模式</title>
+    <link href="https://leithda.github.io/_posts/83831917.html"/>
+    <id>https://leithda.github.io/_posts/83831917.html</id>
+    <published>2021-05-27T04:50:00.000Z</published>
+    <updated>2021-05-27T08:54:57.138Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;中介者模式（Mediator Pattern）是用来降低多个对象和类之间的通信复杂性。这种模式提供了一个中介类，该类通常处理不同类之间的通信，并支持松耦合，使代码易于维护&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
+    
+    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>享元模式</title>
+    <link href="https://leithda.github.io/_posts/2031750427.html"/>
+    <id>https://leithda.github.io/_posts/2031750427.html</id>
+    <published>2021-05-27T04:50:00.000Z</published>
+    <updated>2021-05-27T07:18:23.397Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;享元模式(Flyweight Pattern)主要用于减少创建对象的数量，以减少内存占用和提高性能。这种类型的设计模式属于结构型模式，它提供了减少对象数量从而改善应用所需的对象结构的方式。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
+    
+    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>原型模式</title>
+    <link href="https://leithda.github.io/_posts/153761970.html"/>
+    <id>https://leithda.github.io/_posts/153761970.html</id>
+    <published>2021-05-27T04:50:00.000Z</published>
+    <updated>2021-05-27T07:18:10.792Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;使用原型实例指定要创建对象的类型，通过复制这个原型来创建新对象。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
+    
+    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>命令模式</title>
+    <link href="https://leithda.github.io/_posts/256138576.html"/>
+    <id>https://leithda.github.io/_posts/256138576.html</id>
+    <published>2021-05-27T04:50:00.000Z</published>
+    <updated>2021-05-27T07:19:32.149Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;请求以命令的形式包裹在对象中，并传给调用对象。调用对象寻找可以处理该命令的合适的对象，并把该命令传给相应的对象，该对象执行命令。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
+    
+    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>外观模式</title>
+    <link href="https://leithda.github.io/_posts/4158556840.html"/>
+    <id>https://leithda.github.io/_posts/4158556840.html</id>
+    <published>2021-05-27T04:50:00.000Z</published>
+    <updated>2021-05-27T08:51:25.133Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;外观模式（Facade Pattern）隐藏系统的复杂性，并向客户端提供了一个客户端可以访问系统的接口。这种类型的设计模式属于结构型模式，它向现有的系统添加一个接口，来隐藏系统的复杂性&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
+    
+    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>桥接模式</title>
+    <link href="https://leithda.github.io/_posts/3468020877.html"/>
+    <id>https://leithda.github.io/_posts/3468020877.html</id>
+    <published>2021-05-27T04:50:00.000Z</published>
+    <updated>2021-05-27T08:40:59.404Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;桥接模式(Bridge),将抽象部分与它的实线部分分离，使他们都可以独立地变化。&lt;/p&gt;
+&lt;p&gt;对于两个独立变化的维度，使用桥接模式可以避免通过继承导致的类爆炸&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
+    
+    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>模板模式</title>
+    <link href="https://leithda.github.io/_posts/2374608698.html"/>
+    <id>https://leithda.github.io/_posts/2374608698.html</id>
+    <published>2021-05-27T04:50:00.000Z</published>
+    <updated>2021-05-27T07:19:14.230Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;在模板模式（Template Pattern）中，一个抽象类公开定义了执行它的方法的方式/模板。它的子类可以按需要重写方法实现，但调用将以抽象类中定义的方式进行&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
+    
+    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>状态模式</title>
+    <link href="https://leithda.github.io/_posts/307019047.html"/>
+    <id>https://leithda.github.io/_posts/307019047.html</id>
+    <published>2021-05-27T04:50:00.000Z</published>
+    <updated>2021-05-27T08:15:24.777Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;状态模式(State):当一个对象的内在状态改变时允许改变其行为，这个对象看起来像是改变了一个类&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
+    
+    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>空对象模式</title>
+    <link href="https://leithda.github.io/_posts/3159547075.html"/>
+    <id>https://leithda.github.io/_posts/3159547075.html</id>
+    <published>2021-05-27T04:50:00.000Z</published>
+    <updated>2021-05-27T08:30:50.569Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;在空对象模式（Null Object Pattern）中，一个空对象取代 NULL 对象实例的检查。Null 对象不是检查空值，&lt;br&gt;
+而是反应一个不做任何动作的关系。这样的 Null 对象也可以在数据不可用的时候提供默认的行为。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
+    
+    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>组合模式</title>
+    <link href="https://leithda.github.io/_posts/1191195587.html"/>
+    <id>https://leithda.github.io/_posts/1191195587.html</id>
+    <published>2021-05-27T04:50:00.000Z</published>
+    <updated>2021-05-27T08:44:01.977Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;组合模式(Composite),将对象组合成树形结构以表示’部分-整体’的层次结构。组合模式使得用户对单个对象和组合对象的使用具有一致性&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
+    
+    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>装饰者模式</title>
+    <link href="https://leithda.github.io/_posts/1942064508.html"/>
+    <id>https://leithda.github.io/_posts/1942064508.html</id>
+    <published>2021-05-27T04:50:00.000Z</published>
+    <updated>2021-05-27T08:46:32.364Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;装饰器模式（Decorator Pattern）允许向一个现有的对象添加新的功能，同时又不改变其结构&lt;br&gt;
+这种模式创建了一个装饰类，用来包装原有的类，并在保持类方法签名完整性的前提下，提供了额外的功能。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
+    
+    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>责任链模式</title>
+    <link href="https://leithda.github.io/_posts/1644716670.html"/>
+    <id>https://leithda.github.io/_posts/1644716670.html</id>
+    <published>2021-05-27T04:50:00.000Z</published>
+    <updated>2021-05-27T08:54:52.737Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;顾名思义，责任链模式(Chain of Responsibility Pattern) 为请求创建了一个接收者对象的链。这种模式给予请求的类型，对请求的发送者和接收者进行解耦。这种类型的设计模式属于行为型模式。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
+    
+    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>适配器模式</title>
+    <link href="https://leithda.github.io/_posts/4123342314.html"/>
+    <id>https://leithda.github.io/_posts/4123342314.html</id>
+    <published>2021-05-27T04:50:00.000Z</published>
+    <updated>2021-05-27T08:36:49.424Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;将一个接口转换成客户希望的另一个接口，使接口不兼容的那些类可以一起工作，其别名为包装器(Wrapper)。适配器模式既可以作为类结构型模式，也可以作为对象结构型模式&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
+    
+    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>单例模式</title>
+    <link href="https://leithda.github.io/_posts/4049607742.html"/>
+    <id>https://leithda.github.io/_posts/4049607742.html</id>
+    <published>2021-05-27T04:50:00.000Z</published>
+    <updated>2021-05-27T06:27:28.919Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;单例模式（Singleton Pattern）是 Java 中最简单的设计模式之一。这种类型的设计模式属于创建型模式，它提供了一种创建对象的最佳方式。&lt;/p&gt;
+&lt;p&gt;这种模式涉及到一个单一的类，该类负责创建自己的对象，同时确保只有单个对象被创建。这个类提供了一种访问其唯一的对象的方式，可以直接访问，不需要实例化该类的对象。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
+    
+    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis开发与运维笔记-哨兵</title>
+    <link href="https://leithda.github.io/_posts/2400819807.html"/>
+    <id>https://leithda.github.io/_posts/2400819807.html</id>
+    <published>2021-05-26T15:15:00.000Z</published>
+    <updated>2021-05-27T06:29:31.394Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Redis的主从复制模式下，一旦主节点由于故障不能提供服务，需要人 工将从节点晋升为主节点，同时还要通知应用方更新主节点地址，对于很多应用场景这种故障处理的方式是无法接受的。可喜的是Redis从2.8开始正式 提供了Redis Sentinel(哨兵)架构来解决这个问题。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
+    
+    
+    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
     
   </entry>
   
   <entry>
     <title>Redis开发与运维笔记-理解内存</title>
-    <link href="https://leithda.github.io/posts/1495994843.html"/>
-    <id>https://leithda.github.io/posts/1495994843.html</id>
+    <link href="https://leithda.github.io/_posts/1495994843.html"/>
+    <id>https://leithda.github.io/_posts/1495994843.html</id>
     <published>2021-05-26T15:05:00.000Z</published>
-    <updated>2021-05-26T07:33:21.573Z</updated>
+    <updated>2021-05-27T06:29:28.024Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
@@ -55,21 +473,21 @@
     
     
     
-    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
+    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
-    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
+    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
     
     
-    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
+    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
     
   </entry>
   
   <entry>
     <title>Redis开发与运维笔记-Redis的噩梦-阻塞</title>
-    <link href="https://leithda.github.io/posts/3586754738.html"/>
-    <id>https://leithda.github.io/posts/3586754738.html</id>
+    <link href="https://leithda.github.io/_posts/3586754738.html"/>
+    <id>https://leithda.github.io/_posts/3586754738.html</id>
     <published>2021-05-26T14:50:00.000Z</published>
-    <updated>2021-05-26T10:12:29.304Z</updated>
+    <updated>2021-05-27T06:29:40.933Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
@@ -79,171 +497,12 @@
     
     
     
-    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
+    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
-    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
-    
-    
-    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis开发与运维笔记-复制</title>
-    <link href="https://leithda.github.io/posts/3460365957.html"/>
-    <id>https://leithda.github.io/posts/3460365957.html</id>
-    <published>2021-05-26T14:40:00.000Z</published>
-    <updated>2021-05-26T07:24:36.553Z</updated>
+    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
     
     
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;在分布式系统中为了解决单点问题，通常会把数据复制多个副本部署到其他机器，满足故障恢复和负载均衡等需求。Redis也是如此，它为我们提供了复制功能，实现了相同数据的多个Redis副本。复制功能是高可用Redis的基础，后面章节的哨兵和集群都是在复制的基础上实现高可用的。复制也是Redis日常运维的常见维护点&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
-    
-    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
-    
-    
-    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis开发与运维笔记_持久化</title>
-    <link href="https://leithda.github.io/posts/1023191841.html"/>
-    <id>https://leithda.github.io/posts/1023191841.html</id>
-    <published>2021-05-26T14:20:00.000Z</published>
-    <updated>2021-05-26T07:13:55.264Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;Redis支持RDB和AOF两种持久化机制，持久化功能有效地避免因进程退出造成的数据丢失问题，当下次重启时利用之前持久化的文件即可实现数据恢复&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
-    
-    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
-    
-    
-    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis开发与运维笔记_客户端</title>
-    <link href="https://leithda.github.io/posts/3206834815.html"/>
-    <id>https://leithda.github.io/posts/3206834815.html</id>
-    <published>2021-05-26T14:00:00.000Z</published>
-    <updated>2021-05-26T07:24:40.444Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;Redis是用单线程来处理多个客户端的访问，因此作为Redis的开发和运维人员需要了解Redis服务端和客户端的通信协议，以及主流编程语言的Redis客户端使用方法，同时还需要了解客户端管理的相应API以及开发运维中可能遇到的问题&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
-    
-    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
-    
-    
-    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis开发与运维笔记_小功能大用处</title>
-    <link href="https://leithda.github.io/posts/2425201134.html"/>
-    <id>https://leithda.github.io/posts/2425201134.html</id>
-    <published>2021-05-25T14:40:00.000Z</published>
-    <updated>2021-05-26T07:24:48.255Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;Redis提供的5种数据结构已经足够强大，但除此之外，Redis还提供了诸如慢查询分析、功能强大的Redis Shell、Pipeline、事务与Lua脚本、 Bitmaps、HyperLogLog、发布订阅、GEO等附加功能，这些功能可以在某些场景发挥重要的作用&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
-    
-    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
-    
-    
-    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis开发与运维笔记_API的理解和使用</title>
-    <link href="https://leithda.github.io/posts/4241361649.html"/>
-    <id>https://leithda.github.io/posts/4241361649.html</id>
-    <published>2021-05-25T14:25:00.000Z</published>
-    <updated>2021-05-26T07:24:52.342Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;Redis提供了5种数据结构，理解每种数据结构的特点对于Redis开发运维非常重要，同时掌握Redis的单线程命令处理机制，会使数据结构和命令的选择事半功倍&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
-    
-    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
-    
-    
-    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis开发与运维笔记_初识Redis</title>
-    <link href="https://leithda.github.io/posts/1097430507.html"/>
-    <id>https://leithda.github.io/posts/1097430507.html</id>
-    <published>2021-05-25T14:00:00.000Z</published>
-    <updated>2021-05-26T10:11:54.840Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;本章将带领读者进入Redis的世界，了解它的前世今生、众多特性、典型应用场景、安装配置、如何好用等，最后会对Redis发展过程中的重要版本进行说明&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="DB" scheme="https://leithda.github.io/categories/DB/"/>
-    
-    <category term="redis" scheme="https://leithda.github.io/categories/DB/redis/"/>
-    
-    
-    <category term="redis" scheme="https://leithda.github.io/tags/redis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="https://leithda.github.io/posts/4a17b156.html"/>
-    <id>https://leithda.github.io/posts/4a17b156.html</id>
-    <published>2021-05-24T15:00:00.000Z</published>
-    <updated>2021-05-26T09:43:09.605Z</updated>
-    
-    
-    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt; for more info. If you get any problems when using Hexo, you can find the answer in &lt;a href=&quot;https://hexo.io/docs/troubleshooting.html&quot;&gt;troubleshooting&lt;/a&gt; or you can ask me on &lt;a href=&quot;https://github.com/hexojs/hexo/issues&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;</summary>
-    
-    
-    
+    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
     
   </entry>
   
