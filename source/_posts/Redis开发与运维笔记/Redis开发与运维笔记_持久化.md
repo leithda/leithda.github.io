@@ -3,12 +3,11 @@ abbrlink: 1023191841
 title: Redis开发与运维笔记_持久化
 date: 2021-05-26 22:20:00
 categories:
-  - DB
-  - redis
+  - 数据库
+  - Redis
 tags:
-  - redis
-author: 长歌
-
+  - Redis
+author: leithda
 ---
 
 {% cq %}

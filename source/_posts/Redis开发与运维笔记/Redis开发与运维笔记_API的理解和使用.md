@@ -1,10 +1,10 @@
 ---
 title: Redis开发与运维笔记_API的理解和使用
 categories:
-  - DB
-  - redis
+  - 数据库
+  - Redis
 tags:
-  - redis
+  - Redis
 author: leithda
 abbrlink: 4241361649
 date: 2021-05-25 22:25:00
@@ -81,7 +81,7 @@ type key
 
 ### 单线程架构
 
-> Redis使用了单线程架构和**I/O多路复用模型[^1]**来实现高性能的内存数据库服务
+> Redis使用了单线程架构和**I/O多路复用模型**[^1]来实现高性能的内存数据库服务
 
 #### 单线程模型
 
@@ -90,7 +90,7 @@ type key
 #### 为什么单线程这么快
   通常来讲，单线程处理能力要比多线程差，为什么Redis这么快？
   1. 纯内存访问
-  2. 非阻塞I/O，Redis使用**epoll[^2]**作为I/O多路复用技术的实现
+  2. 非阻塞I/O，Redis使用**epoll**[^2]作为I/O多路复用技术的实现
   3. 单线程避免了线程切换和竞争产生的消耗
 
 > 单线程简化了数据结构和算法的实现，避免了线程切换和线程竞争的消耗。但是存在如下问题：单线程模型对每条命令的执行时间是有要求的。如果某个命令执行时间过长，会造成其他命令的阻塞。
@@ -287,7 +287,7 @@ long incrVideoCount(long id){
 - `ziplist(压缩列表)`：元素个数小于`list-max-ziplist-entries(512)`,同时列表中每个元素的值都小于`list-max-ziplist-value(64字节)`,Redis会使用`ziplist`作为`list`的内部编码来减少内存的使用。
 - `linkedlist(链表)`: 不满足ziplist的条件时，使用`linkedlist`作为`list`的内部编码实现
 
-> Redis3.2版本提供了quicklist内部编码，简单地说它是以一个ziplist为节点的linkedlist，它结合了ziplist和linkedlist两者的优势，为列表类型提供了一 种更为优秀的内部编码实现，它的设计原理可以参考Redis的另一个作者 **Matt Stancliff的博客[^3]**
+> Redis3.2版本提供了quicklist内部编码，简单地说它是以一个ziplist为节点的linkedlist，它结合了ziplist和linkedlist两者的优势，为列表类型提供了一 种更为优秀的内部编码实现，它的设计原理可以参考Redis的另一个作者 **Matt Stancliff的博客**[^3]
 
 ### 使用场景
 

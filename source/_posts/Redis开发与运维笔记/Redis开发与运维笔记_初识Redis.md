@@ -3,10 +3,10 @@ abbrlink: 1097430507
 title: Redis开发与运维笔记_初识Redis
 date: 2021-05-25 22:00:00
 categories:
-  - DB
-  - redis
+  - 数据库
+  - Redis
 tags:
-  - redis
+  - Redis
 author: leithda
 ---
 

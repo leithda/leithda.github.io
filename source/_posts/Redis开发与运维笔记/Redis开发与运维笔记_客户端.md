@@ -1,10 +1,10 @@
 ---
 title: Redis开发与运维笔记_客户端
 categories:
-  - DB
-  - redis
+  - 数据库
+  - Redis
 tags:
-  - redis
+  - Redis
 author: leithda
 abbrlink: 3206834815
 date: 2021-05-26 22:00:00

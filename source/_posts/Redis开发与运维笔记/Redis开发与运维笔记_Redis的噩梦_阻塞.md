@@ -1,10 +1,10 @@
 ---
 title: Redis开发与运维笔记-Redis的噩梦-阻塞
 categories:
-  - DB
-  - redis
+  - 数据库
+  - Redis
 tags:
-  - redis
+  - Redis
 author: leithda
 abbrlink: 3586754738
 date: 2021-05-26 22:50:00

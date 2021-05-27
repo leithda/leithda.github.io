@@ -1,10 +1,10 @@
 ---
 title: Redis开发与运维笔记_小功能大用处
 categories:
-  - DB
-  - redis
+  - 数据库
+  - Redis
 tags:
-  - redis
+  - Redis
 author: leithda
 abbrlink: 2425201134
 date: 2021-05-25 22:40:00
@@ -367,7 +367,7 @@ georadiusbymember key member radiusm|km|ft|mi [withcoord] [withdist] [withhash] 
 geohash key member [member ...]
 ```
 
-- **geohash[^4]** 的数据类型为zset，Redis将所有地理位置信息存放在zset中
+- **geohash**[^4] 的数据类型为zset，Redis将所有地理位置信息存放在zset中
 - 字符串越长，精确度越准确
 - 两个字符串越相似，它们之间的距离越近
 - geohash编码和经纬度可以相互转换

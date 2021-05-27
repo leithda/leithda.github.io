@@ -1,10 +1,10 @@
 ---
 title: Redis开发与运维笔记-哨兵
 categories:
-  - DB
-  - redis
+  - 数据库
+  - Redis
 tags:
-  - redis
+  - Redis
 author: 长歌
 abbrlink: 2400819807
 date: 2021-05-26 23:15:00
@@ -14,7 +14,7 @@ date: 2021-05-26 23:15:00
 
 {% cq %}
 
-Redis的主从复制模式下，一旦主节点由于故障不能提供服务，需要人 工将从节点晋升为主节点，同时还要通知应用方更新主节点地址，对于很多 应用场景这种故障处理的方式是无法接受的。可喜的是Redis从2.8开始正式 提供了Redis Sentinel(哨兵)架构来解决这个问题。
+Redis的主从复制模式下，一旦主节点由于故障不能提供服务，需要人 工将从节点晋升为主节点，同时还要通知应用方更新主节点地址，对于很多应用场景这种故障处理的方式是无法接受的。可喜的是Redis从2.8开始正式 提供了Redis Sentinel(哨兵)架构来解决这个问题。
 
 {% endcq %}
 
@@ -492,7 +492,202 @@ sentinel parallel-syncs master-business-2 1
 
 ### `sentinel is-master-down-by-addr`
 
-​		Sentinel节点之间用来交换对主节点是否下线的判断，根据参数的不 同，还可以作为Sentinel领导者选举的通信方式。具体细节后面介绍。  
+​		Sentinel节点之间用来交换对主节点是否下线的判断，根据参数的不同，还可以作为Sentinel领导者选举的通信方式。具体细节后面介绍。  
+
+
+
+## 客户端连接
+
+### Redis Sentinel的客户端
+
+​		编程语言的客户端，如果需要正确地连接Redis Sentinel，必须有Sentinel节点集合和 masterName两个参数。
+
+
+
+### Redis Sentinel客户端基本实现原理
+
+基本步骤如下：
+
+1. 遍历Sentinel节点集合获取一个可用的Sentinel节点，后面会介绍 Sentinel节点之间可以共享数据，所以从任意一个Sentinel节点获取主节点信息都是可以的
+2. 通过sentinel get-master-addr-by-name master-name这个API来获取对应主节点的相关信息
+3. 验证当前获取的“主节点”是真正的主节点，这样做的目的是为了防止故障转移期间主节点的变化
+4. 保持和Sentinel节点集合的“联系”，时刻获取关于主节点的相关“信息”
+
+
+
+### Java操作Redis Sentinel
+
+连接池初始化
+
+```java
+public JedisSentinelPool(String masterName, Set<String> sentinels,
+  final GenericObjectPoolConfig poolConfig, final int connectionTimeout, final int soTimeout,
+  final String password, final int database,
+  final String clientName){ 
+  //... 
+}
+
+```
+
+- masterName——主节点名
+- sentinels——Sentinel节点集合
+- poolConfig——common-pool连接池配置
+- connectTimeout——连接超时
+- soTimeout——读写超时
+- password——主节点密码
+- database——当前数据库索引
+- clientName——客户端名
+
+
+
+连接池初始化重要函数`#initSentinels`
+
+```java
+private HostAndPort initSentinels(Set<String> sentinels, final String masterName) { // 主节点
+  HostAndPort master = null;
+  // 遍历所有sentinel节点
+  for (String sentinel : sentinels) {
+    // 连接sentinel节点
+    HostAndPort hap = toHostAndPort(Arrays.asList(sentinel.split(":"))); 
+    Jedis jedis = new Jedis(hap.getHost(), hap.getPort());
+    // 使用sentinel get-master-addr-by-name masterName获取主节点信息
+    List<String> masterAddr = jedis.sentinelGetMasterAddrByName(masterName); 
+    // 命令返回列表为空或者长度不为2，继续从下一个sentinel节点查询
+    if (masterAddr == null || masterAddr.size() != 2) {
+      continue; 
+    }
+    // 解析masterAddr获取主节点信息
+    master = toHostAndPort(masterAddr); // 找到后直接跳出for循环
+    break;
+  }
+  if (master == null) {
+    // 直接抛出异常，
+    throw new Exception(); 
+  }
+  // 为每个sentinel节点开启主节点switch的监控线程 
+  for (String sentinel : sentinels) {
+    final HostAndPort hap = toHostAndPort(Arrays.asList(sentinel.split(":"))); 
+    MasterListener masterListener = new MasterListener(masterName, hap.getHost(),hap.getPort()); 
+    masterListener.start();
+  }
+  // 返回结果 
+	return master;
+}
+```
+
+
+
+故障转移监听函数：
+
+```java
+Jedis sentinelJedis = new Jedis(sentinelHost, sentinelPort); 
+// 客户端订阅Sentinel节点上"+switch-master"(切换主节点)频道 
+  sentinelJedis.subscribe(new JedisPubSub() {
+  @Override
+  public void onMessage(String channel, String message) {
+  	String[] switchMasterMsg = message.split(" "); 
+    if (switchMasterMsg.length > 3) {
+      // 判断是否为当前masterName
+      if (masterName.equals(switchMasterMsg[0])) {
+        // 发现当前masterName发生switch，使用initPool重新初始化连接池
+        initPool(toHostAndPort(switchMasterMsg[3], switchMasterMsg[4])); 
+      }
+    } 
+  }
+}, "+switch-master");
+```
+
+
+
+## 实现原理
+
+### 三个定时监控任务
+
+1. 每隔10秒，每个Sentinel节点会向主节点和从节点发送info命令获取最新的拓扑结构，作用如下：
+
+   - 通过向主节点执行info命令，获取从节点的信息，这也是为什么 Sentinel节点不需要显式配置监控从节点
+   - 当有新的从节点加入时都可以立刻感知出来
+   - 节点不可达或者故障转移后，可以通过info命令实时更新节点拓扑信息
+
+   
+
+2. 每隔2秒，每个Sentinel节点会向Redis数据节点的__sentinel__:hello 频道上发送该Sentinel节点对于主节点的判断以及当前Sentinel节点的信息，时每个Sentinel节点也会订阅该频道，来了解其他 Sentinel节点以及它们对主节点的判断，所以这个定时任务可以完成以下两个工作：
+
+   - 发现新的Sentinel节点:通过订阅主节点的__sentinel__:hello了解其他 的Sentinel节点信息，如果是新加入的Sentinel节点，将该Sentinel节点信息保 存起来，并与该Sentinel节点创建连接
+   - Sentinel节点之间交换主节点的状态，作为后面客观下线以及领导者选举的依据。
+
+
+
+3. 每隔1秒，每个Sentinel节点会向主节点、从节点、其余Sentinel节点 发送一条ping命令做一次心跳检测
+
+
+
+### 主观下线和客观下线
+
+1. 主观下线
+
+   ​		每个Sentinel节点向主节点、从节点、其他Sentinel节点发送ping命令时，如果超过`down-after-milliseconds`时间没有进行有效回复，Sentinel节点就会对该节点做失败 判定，这个行为叫做主观下线。
+
+2. 客观下线
+
+   ​		当Sentinel主观下线的节点是主节点时，该Sentinel节点会通过sentinel is- master-down-by-addr命令向其他Sentinel节点询问对主节点的判断，当超过 \<quorum\>个数，Sentinel节点认为主节点确实有问题，这时该Sentinel节点会 做出客观下线的决定
+
+> 从节点、Sentinel节点在主观下线后，没有后续的故障转移操作。
+>
+> 这里需要介绍一下`sentinel is-master-down-by-addr`命令：
+>
+> > ​	`sentinel is-master-down-by-addr <ip> <port> <current_epoch> <runid>`
+>
+> - current-epoch:当前配置纪元
+> - runid：参数有两种类型，不同类型决定了此API作用的不同
+>   - runid = "*"时，作用是Sentinel节点直接交换对主节点下线的判定
+>   - 当runid等于当前Sentinel节点的runid时，作用是当前Sentinel节点希望目标Sentinel节点同意自己成为领导者的请求
+
+
+
+### 领导者Sentinel节点选举
+
+​		Redis使用了Raft算法实 现领导者选举，具体流程如下：
+
+1. 每个在线的Sentinel节点都有资格成为领导者，当它确认主节点主观 下线时候，会向其他Sentinel节点发送sentinel is-master-down-by-addr命令， 要求将自己设置为领导者
+2. 收到命令的Sentinel节点，如果没有同意过其他Sentinel节点的sentinel is-master-down-by-addr命令，将同意该请求，否则拒绝
+3. 如果该Sentinel节点发现自己的票数已经大于等于max(quorum， num(sentinels)/2+1)，那么它将成为领导者
+4. 如果此过程没有选举出领导者，将进入下一次选举
+
+
+
+### 故障转移
+
+​		领导者选举处的Sentinel节点负责故障转移，具体步骤如下：
+
+
+
+#### 在从节点列表中选出一个节点作为新的主节点
+
+1. 过滤：主观下线(断线)，5s内没回复Sentinel的ping响应，与主节点失联超过down-after-milliseconds*10秒
+2. 选择`slave-priority`(优先级)最高的从节点列表，如果存在则返回，不存在则继续
+3. 选择复制偏移量最大的从节点，如果存在则返回，不存在继续
+4. 选择runId最小的从节点
+
+
+
+#### 晋升主节点
+
+​		Sentinel对选中从节点执行`slaveof no one`使其晋升为主节点
+
+
+
+#### 复制新主节点
+
+​		Sentinel领导者节点会向剩余的从节点发送命令，让它们成为新主节 点的从节点，复制规则和parallel-syncs参数有关
+
+
+
+#### 原主节点处理
+
+​		Sentinel节点集合会将原来的主节点更新为从节点，并保持着对其关注，当其恢复后命令它去复制新的主节点
+
+
 
 ## 相关阅读
 
