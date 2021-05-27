@@ -20,7 +20,7 @@ timezone: ''
 url: https://leithda.github.io/
 # permalink: :year/:month/:day/:title/
 # permalink_defaults:
-permalink: _posts/:abbrlink.html
+permalink: posts/:abbrlink.html
 abbrlink:
   alg: crc32  # 算法：crc16(default) and crc32
   rep: hex    # 进制：dec(default) and hex
