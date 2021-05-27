@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>Hello World</title>
-    <url>/_posts/4a17b156.html</url>
+    <url>/posts/4a17b156.html</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
 <span id="more"></span>
 <h2 id="Quick-Start"><a class="header-anchor" href="#Quick-Start"></a>Quick Start</h2>
@@ -22,7 +22,7 @@
   </entry>
   <entry>
     <title>Redis开发与运维笔记-Redis的噩梦-阻塞</title>
-    <url>/_posts/3586754738.html</url>
+    <url>/posts/3586754738.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>Redis是典型的单线程架构，所有的读写操作都是在一条主线程中完成的。当Redis用于高并发场景时，这条线程就变成了它的生命线。如果出现阻塞，哪怕是很短时间，对于我们的应用来说都是噩梦</p>
 
@@ -151,7 +151,7 @@ Redis客户端数量超过<code>maxclients</code>限制时，会拒绝新的连�
   </entry>
   <entry>
     <title>Redis开发与运维笔记_初识Redis</title>
-    <url>/_posts/1097430507.html</url>
+    <url>/posts/1097430507.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>本章将带领读者进入Redis的世界，了解它的前世今生、众多特性、典型应用场景、安装配置、如何好用等，最后会对Redis发展过程中的重要版本进行说明</p>
 
@@ -354,7 +354,7 @@ Redis客户端数量超过<code>maxclients</code>限制时，会拒绝新的连�
   </entry>
   <entry>
     <title>Redis开发与运维笔记-复制</title>
-    <url>/_posts/3460365957.html</url>
+    <url>/posts/3460365957.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>在分布式系统中为了解决单点问题，通常会把数据复制多个副本部署到其他机器，满足故障恢复和负载均衡等需求。Redis也是如此，它为我们提供了复制功能，实现了相同数据的多个Redis副本。复制功能是高可用Redis的基础，后面章节的哨兵和集群都是在复制的基础上实现高可用的。复制也是Redis日常运维的常见维护点</p>
 
@@ -463,7 +463,7 @@ Redis客户端数量超过<code>maxclients</code>限制时，会拒绝新的连�
 </li>
 </ol>
 <h3 id="全量复制"><a class="header-anchor" href="#全量复制"></a>全量复制</h3>
-<img src="/_posts/3460365957/%E5%85%A8%E9%87%8F%E5%A4%8D%E5%88%B6.png" class="" title="全量复制">
+<img src="/posts/3460365957/%E5%85%A8%E9%87%8F%E5%A4%8D%E5%88%B6.png" class="" title="全量复制">
 <ol>
 <li>
 <p>从节点没有主节点运行ID和偏移量数据，发送<code>psync -1</code>请求全量复制</p>
@@ -573,7 +573,7 @@ Redis客户端数量超过<code>maxclients</code>限制时，会拒绝新的连�
   </entry>
   <entry>
     <title>Redis开发与运维笔记_客户端</title>
-    <url>/_posts/3206834815.html</url>
+    <url>/posts/3206834815.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>Redis是用单线程来处理多个客户端的访问，因此作为Redis的开发和运维人员需要了解Redis服务端和客户端的通信协议，以及主流编程语言的Redis客户端使用方法，同时还需要了解客户端管理的相应API以及开发运维中可能遇到的问题</p>
 
@@ -732,7 +732,7 @@ Jedis提供了JedisPool这个类作为Jedis的连接池对象，使用Apache的�
   </entry>
   <entry>
     <title>Redis开发与运维笔记_小功能大用处</title>
-    <url>/_posts/2425201134.html</url>
+    <url>/posts/2425201134.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>Redis提供的5种数据结构已经足够强大，但除此之外，Redis还提供了诸如慢查询分析、功能强大的Redis Shell、Pipeline、事务与Lua脚本、 Bitmaps、HyperLogLog、发布订阅、GEO等附加功能，这些功能可以在某些场景发挥重要的作用</p>
 
@@ -1030,7 +1030,7 @@ bitop是一个复合操作，它可以做多个Bitmaps的and(交集)、or(并 �
   </entry>
   <entry>
     <title>Redis开发与运维笔记_持久化</title>
-    <url>/_posts/1023191841.html</url>
+    <url>/posts/1023191841.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>Redis支持RDB和AOF两种持久化机制，持久化功能有效地避免因进程退出造成的数据丢失问题，当下次重启时利用之前持久化的文件即可实现数据恢复</p>
 
@@ -1055,7 +1055,7 @@ bitop是一个复合操作，它可以做多个Bitmaps的and(交集)、or(并 �
 <li>默认情况下执行<code>shutdown</code>命令，如果没有开启AOF持久化功能则自动执行<code>bgsave</code></li>
 </ul>
 <h3 id="流程说明"><a class="header-anchor" href="#流程说明"></a>流程说明</h3>
-<img src="/_posts/1023191841/bgsave.png" class="" title="bgsave">
+<img src="/posts/1023191841/bgsave.png" class="" title="bgsave">
 <ol>
 <li>执行bgsave命令，Redis父进程判断是否存在正在执行的子进程，如RDB/AOF子进程，如果存在bgsave命令直接返回</li>
 <li>父进程执行fork操作创建子进程，fork操作过程中父进程会阻塞，通过<code>info stats</code>命令查看<code>lasted_fork_usec</code>选项，可以获取最近一个fork操作的耗时，单位为微妙</li>
@@ -1085,7 +1085,7 @@ Redis加载孙欢的RDB文件时拒绝启动，并打印如下日志<code># Shor
 <p>AOF(append only file)持久化：以独立日志的方式记录每次写命令，重启时再重新执行AOF文件中的命令达到恢复数据的目的。AOF主要解决的数据持久化的实时性，目前已经是Redis持久化的主流方式。</p>
 <h3 id="使用AOF"><a class="header-anchor" href="#使用AOF"></a>使用AOF</h3>
 <p>AOF通过<code>appendonl yes</code>开启，默认不开启，AOF文件名通过<code>appendfilename</code>配置进行配置，保存路径同RDB一直，通过<code>dir</code>指定。AOF的工作流程如下：</p>
-<img src="/_posts/1023191841/AOF%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.png" class="" title="AOF工作流程">
+<img src="/posts/1023191841/AOF%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.png" class="" title="AOF工作流程">
 <ol>
 <li>所有的写入命令会追加到aof_buf(缓冲区)中</li>
 <li>AOF缓冲区根据对应的策略向硬盘做同步操作</li>
@@ -1153,7 +1153,7 @@ Redis加载孙欢的RDB文件时拒绝启动，并打印如下日志<code># Shor
 </li>
 </ul>
 <p>AOF重写流程：</p>
-<img src="/_posts/1023191841/AOF%E9%87%8D%E5%86%99%E6%B5%81%E7%A8%8B.png" class="" title="AOF重写流程">
+<img src="/posts/1023191841/AOF%E9%87%8D%E5%86%99%E6%B5%81%E7%A8%8B.png" class="" title="AOF重写流程">
 <ol>
 <li>
 <p>如果当前进程正在执行AOF重写，请求不执行并返回如下响应<br>
@@ -1237,7 +1237,7 @@ RDB重写时，Redis日志输出内容如下：</p>
 </blockquote>
 <h3 id="AOF追加阻塞"><a class="header-anchor" href="#AOF追加阻塞"></a>AOF追加阻塞</h3>
 <p>AOF持久化常用的同步硬盘策略是<code>everysec</code>，用于平衡性能和数据安全性。对于这种方式，Redis使用另一条线程每秒执行<code>fsync</code>同步硬盘。当系统硬盘资源繁忙时，会造成Redis主线程阻塞。如下图所示</p>
-<img src="/_posts/1023191841/everysec%E7%AD%96%E7%95%A5.png" class="" title="everysec策略">
+<img src="/posts/1023191841/everysec%E7%AD%96%E7%95%A5.png" class="" title="everysec策略">
 <p>阻塞流程分析：</p>
 <ol>
 <li>主线程负责写入AOF缓冲区</li>
@@ -1288,7 +1288,7 @@ RDB重写时，Redis日志输出内容如下：</p>
   </entry>
   <entry>
     <title>Redis开发与运维笔记-理解内存</title>
-    <url>/_posts/1495994843.html</url>
+    <url>/posts/1495994843.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>Redis所有的数据都存在内存中，高效利用Redis内存首先需要理解Redis内存消耗在哪里，如何管理内存，最后才能考虑如何优化内存。</p>
 
@@ -1403,7 +1403,7 @@ RDB重写时，Redis日志输出内容如下：</p>
 <blockquote>
 <p>Redis存储的所有值对象在内部定义为redisObject结构体，内部结构如图：</p>
 </blockquote>
-<img src="/_posts/1495994843/redisObject.png" class="" title="redisObject">
+<img src="/posts/1495994843/redisObject.png" class="" title="redisObject">
 <ul>
 <li>type:当前对象数据类型。可以使用<code>type &#123;key&#125;</code>查看对象所属类型</li>
 <li>encoding:redis内部编码类型</li>
@@ -1422,7 +1422,7 @@ RDB重写时，Redis日志输出内容如下：</p>
 <blockquote>
 <p>Redis实现了自己的字符串结构，内部简单动态字符串(simple dynamic string,SDS).结构如图：</p>
 </blockquote>
-<img src="/_posts/1495994843/sds.png" class="" title="sds">
+<img src="/posts/1495994843/sds.png" class="" title="sds">
 <p>Redis字符串结构的特点：</p>
 <ol>
 <li>字符串长度，已用长度，未用长度的操作复杂度为O(1)</li>
@@ -1478,7 +1478,7 @@ RDB重写时，Redis日志输出内容如下：</p>
   </entry>
   <entry>
     <title>Markdown-基本语法</title>
-    <url>/_posts/1069057006.html</url>
+    <url>/posts/1069057006.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档。</p>
 
@@ -1490,7 +1490,7 @@ RDB重写时，Redis日志输出内容如下：</p>
 <ul>
 <li>显示效果如下图</li>
 </ul>
-<img src="/_posts/1069057006/%E6%A0%87%E9%A2%98.png" class="">
+<img src="/posts/1069057006/%E6%A0%87%E9%A2%98.png" class="">
 <h2 id="段落和格式"><a class="header-anchor" href="#段落和格式"></a>段落和格式</h2>
 <h3 id="段落"><a class="header-anchor" href="#段落"></a>段落</h3>
 <p>段落的换行通过行尾加入两个以上空格加换行实现</p>
@@ -1682,7 +1682,7 @@ RDB重写时，Redis日志输出内容如下：</p>
 <ul>
 <li>效果如下:</li>
 </ul>
-<img src="/_posts/1069057006/%E6%A0%87%E9%A2%98.png" class="" title="标题">
+<img src="/posts/1069057006/%E6%A0%87%E9%A2%98.png" class="" title="标题">
 ]]></content>
       <categories>
         <category>工具</category>
@@ -1695,7 +1695,7 @@ RDB重写时，Redis日志输出内容如下：</p>
   </entry>
   <entry>
     <title>Markdown-数学公式</title>
-    <url>/_posts/2665394633.html</url>
+    <url>/posts/2665394633.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>mathjax是一个开源的数学公式渲染器，通过特定语法可以输出不同的数学公式</p>
 
@@ -1711,7 +1711,7 @@ RDB重写时，Redis日志输出内容如下：</p>
 <p>该文档使用typora完成编辑，Hexo显示不太准确，可以下载源文件从Typora打开。注意要打开如下设置</p>
 </li>
 </ol>
- <img src="/_posts/2665394633/image-20210527172000754.png" class="" title="image-20210527172000754">
+ <img src="/posts/2665394633/image-20210527172000754.png" class="" title="image-20210527172000754">
 </blockquote>
 <h2 id="基础语法"><a class="header-anchor" href="#基础语法"></a>基础语法</h2>
 <h3 id="公式片段"><a class="header-anchor" href="#公式片段"></a>公式片段</h3>
@@ -2031,7 +2031,7 @@ $$</p>
   </entry>
   <entry>
     <title>Markdown-流程图</title>
-    <url>/_posts/3540196146.html</url>
+    <url>/posts/3540196146.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>Markdown可以使用指定语法绘制流程图、时序图、甘特图等</p>
 
@@ -2140,14 +2140,14 @@ $$</p>
   </entry>
   <entry>
     <title>中介者模式</title>
-    <url>/_posts/83831917.html</url>
+    <url>/posts/83831917.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>中介者模式（Mediator Pattern）是用来降低多个对象和类之间的通信复杂性。这种模式提供了一个中介类，该类通常处理不同类之间的通信，并支持松耦合，使代码易于维护</p>
 
 </blockquote>
 <span id="more"></span>
 <h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<img src="/_posts/83831917/mediator.png" class="">
+<img src="/posts/83831917/mediator.png" class="">
 <h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
 <h3 id="封装消息类型"><a class="header-anchor" href="#封装消息类型"></a>封装消息类型</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Message</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 消息来源</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String from;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 消息内容</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String content;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 消息接收方</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String to;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 消息类型</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String type;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Message</span><span class="params">(String type)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.type = type;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Message <span class="title">setFrom</span><span class="params">(String from)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.from = from;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Message <span class="title">setContent</span><span class="params">(String content)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.content = content;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Message <span class="title">setTo</span><span class="params">(String to)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.to = to;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getFrom</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> from;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getContent</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> content;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getTo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> to;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getType</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> type;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2187,14 +2187,14 @@ $$</p>
   </entry>
   <entry>
     <title>享元模式</title>
-    <url>/_posts/2031750427.html</url>
+    <url>/posts/2031750427.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>享元模式(Flyweight Pattern)主要用于减少创建对象的数量，以减少内存占用和提高性能。这种类型的设计模式属于结构型模式，它提供了减少对象数量从而改善应用所需的对象结构的方式。</p>
 
 </blockquote>
 <span id="more"></span>
 <h2 id="Diagram"><a class="header-anchor" href="#Diagram"></a>Diagram</h2>
-<img src="/_posts/2031750427/%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F.png" class="">
+<img src="/posts/2031750427/%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F.png" class="">
 <h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
 <h3 id="享元接口"><a class="header-anchor" href="#享元接口"></a>享元接口</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Flyweight</span>  </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">doOperation</span><span class="params">(String extrinsicState)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2231,14 +2231,14 @@ $$</p>
   </entry>
   <entry>
     <title>代理模式</title>
-    <url>/_posts/3822496321.html</url>
+    <url>/posts/3822496321.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>代理模式(proxy)，为其他对象提供一种代理以控制对这个对象的访问。</p>
 
 </blockquote>
 <span id="more"></span>
 <h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<img src="/_posts/3822496321/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F.png" class="">
+<img src="/posts/3822496321/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F.png" class="">
 <h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
 <h3 id="代理接口"><a class="header-anchor" href="#代理接口"></a>代理接口</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Image</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">showImage</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2270,14 +2270,14 @@ $$</p>
   </entry>
   <entry>
     <title>原型模式</title>
-    <url>/_posts/153761970.html</url>
+    <url>/posts/153761970.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>使用原型实例指定要创建对象的类型，通过复制这个原型来创建新对象。</p>
 
 </blockquote>
 <span id="more"></span>
 <h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<img src="/_posts/153761970/prototype.png" class="">
+<img src="/posts/153761970/prototype.png" class="">
 <h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
 <h3 id="原型接口"><a class="header-anchor" href="#原型接口"></a>原型接口</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Prototype</span> </span>&#123;</span><br><span class="line">    <span class="function">Prototype <span class="title">clone</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">String <span class="title">getName</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2313,7 +2313,7 @@ $$</p>
   </entry>
   <entry>
     <title>命令模式</title>
-    <url>/_posts/256138576.html</url>
+    <url>/posts/256138576.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>请求以命令的形式包裹在对象中，并传给调用对象。调用对象寻找可以处理该命令的合适的对象，并把该命令传给相应的对象，该对象执行命令。</p>
 
@@ -2325,7 +2325,7 @@ $$</p>
 <li>Receiver：命令接收者，也就是命令真正的执行者</li>
 <li>Invoker：组织命令</li>
 </ul>
-<img src="/_posts/256138576/Command-Diagram.png" class="">
+<img src="/posts/256138576/Command-Diagram.png" class="">
 <h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
 <h3 id="命令接口"><a class="header-anchor" href="#命令接口"></a>命令接口</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Command</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2353,7 +2353,7 @@ $$</p>
   </entry>
   <entry>
     <title>备忘录模式</title>
-    <url>/_posts/400445220.html</url>
+    <url>/posts/400445220.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>备忘录模式（Memento Pattern）保存一个对象的某个状态，以便在适当的时候恢复对象</p>
 
@@ -2365,7 +2365,7 @@ $$</p>
 <li><code>Originator</code> 创建并在 Memento 对象中存储状态</li>
 <li><code>Caretaker</code> 对象负责从 Memento 中恢复对象的状态</li>
 </ul>
-<img src="/_posts/400445220/Memento.png" class="">
+<img src="/posts/400445220/Memento.png" class="">
 <h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
 <h3 id="备忘录"><a class="header-anchor" href="#备忘录"></a>备忘录</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Memento</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String state;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Memento</span><span class="params">(String state)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.state = state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(String state)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.state = state;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2396,7 +2396,7 @@ $$</p>
   </entry>
   <entry>
     <title>外观模式</title>
-    <url>/_posts/4158556840.html</url>
+    <url>/posts/4158556840.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>外观模式（Facade Pattern）隐藏系统的复杂性，并向客户端提供了一个客户端可以访问系统的接口。这种类型的设计模式属于结构型模式，它向现有的系统添加一个接口，来隐藏系统的复杂性</p>
 
@@ -2444,7 +2444,7 @@ $$</p>
   </entry>
   <entry>
     <title>工厂模式</title>
-    <url>/_posts/1417187187.html</url>
+    <url>/posts/1417187187.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>定义一个创建对象的接口，让其子类决定实例化哪个工厂类，工厂模式使其创建过程延迟到子类进行</p>
 
@@ -2493,15 +2493,50 @@ $$</p>
       </tags>
   </entry>
   <entry>
+    <title>抽象工厂模式</title>
+    <url>/posts/2506759259.html</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+<p>抽象工厂模式（Abstract Factory Pattern）是围绕一个超级工厂创建其他工厂。该超级工厂又称为其他工厂的工厂。这种类型的设计模式属于创建型模式，它提供了一种创建对象的最佳方式。</p>
+
+</blockquote>
+<span id="more"></span>
+<h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
+<img src="/posts/2506759259/abstractFactory.png" class="">
+<h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
+<h3 id="接口及其实现类"><a class="header-anchor" href="#接口及其实现类"></a>接口及其实现类</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Color</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">fill</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Rectangle</span> <span class="keyword">implements</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Inside Rectangle::draw() method.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Square</span> <span class="keyword">implements</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Inside Square::draw() method.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Green</span> <span class="keyword">implements</span> <span class="title">Color</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fill</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Inside Green::fill() method.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Red</span> <span class="keyword">implements</span> <span class="title">Color</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fill</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Inside Red::fill() method.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="抽象工厂"><a class="header-anchor" href="#抽象工厂"></a>抽象工厂</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractFactory</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Color <span class="title">getColor</span><span class="params">(String color)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Shape <span class="title">getShape</span><span class="params">(String shape)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="实例工厂类"><a class="header-anchor" href="#实例工厂类"></a>实例工厂类</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ColorFactory</span> <span class="keyword">extends</span> <span class="title">AbstractFactory</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Shape <span class="title">getShape</span><span class="params">(String shapeType)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Color <span class="title">getColor</span><span class="params">(String color)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(color == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(color.equalsIgnoreCase(<span class="string">&quot;RED&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Red();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(color.equalsIgnoreCase(<span class="string">&quot;GREEN&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Green();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShapeFactory</span> <span class="keyword">extends</span> <span class="title">AbstractFactory</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Color <span class="title">getColor</span><span class="params">(String color)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Shape <span class="title">getShape</span><span class="params">(String shapeType)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(shapeType == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(shapeType.equalsIgnoreCase(<span class="string">&quot;RECTANGLE&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Rectangle();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(shapeType.equalsIgnoreCase(<span class="string">&quot;SQUARE&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Square();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="工厂创建类"><a class="header-anchor" href="#工厂创建类"></a>工厂创建类</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryProducer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> AbstractFactory <span class="title">getFactory</span><span class="params">(String choice)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(choice.equalsIgnoreCase(<span class="string">&quot;SHAPE&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ShapeFactory();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(choice.equalsIgnoreCase(<span class="string">&quot;COLOR&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ColorFactory();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="测试"><a class="header-anchor" href="#测试"></a>测试</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractFactoryTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">//获取形状工厂</span></span><br><span class="line">        AbstractFactory shapeFactory = FactoryProducer.getFactory(<span class="string">&quot;SHAPE&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取形状为 Rectangle 的对象</span></span><br><span class="line">        Shape shape2 = shapeFactory.getShape(<span class="string">&quot;RECTANGLE&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用 Rectangle 的 draw 方法</span></span><br><span class="line">        shape2.draw();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取形状为 Square 的对象</span></span><br><span class="line">        Shape shape3 = shapeFactory.getShape(<span class="string">&quot;SQUARE&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用 Square 的 draw 方法</span></span><br><span class="line">        shape3.draw();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取颜色工厂</span></span><br><span class="line">        AbstractFactory colorFactory = FactoryProducer.getFactory(<span class="string">&quot;COLOR&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取颜色为 Red 的对象</span></span><br><span class="line">        Color color1 = colorFactory.getColor(<span class="string">&quot;RED&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用 Red 的 fill 方法</span></span><br><span class="line">        color1.fill();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取颜色为 Green 的对象</span></span><br><span class="line">        Color color2 = colorFactory.getColor(<span class="string">&quot;Green&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用 Green 的 fill 方法</span></span><br><span class="line">        color2.fill();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Example"><a class="header-anchor" href="#Example"></a>Example</h2>
+<ul>
+<li><a href="http://docs.oracle.com/javase/8/docs/api/javax/xml/xpath/XPathFactory.html#newInstance--">javax.xml.xpath.XPathFactory</a></li>
+<li><a href="http://docs.oracle.com/javase/8/docs/api/javax/xml/parsers/DocumentBuilderFactory.html">javax.xml.parsers.DocumentBuilderFactory</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>理论</category>
+        <category>设计模式</category>
+      </categories>
+      <tags>
+        <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>建造者模式</title>
-    <url>/_posts/3898751754.html</url>
+    <url>/posts/3898751754.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>建造者模式(Builder Pattern)，将一个复杂对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。</p>
 
 </blockquote>
 <span id="more"></span>
 <h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<img src="/_posts/3898751754/builderPattern.png" class="">
+<img src="/posts/3898751754/builderPattern.png" class="">
 <h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
 <h3 id="具体产品"><a class="header-anchor" href="#具体产品"></a>具体产品</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Computer</span> </span>&#123;</span><br><span class="line">    List&lt;String&gt; components = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(String component)</span></span>&#123;</span><br><span class="line">        components.add(component);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;个人电脑，组成如下:\n--------------&quot;</span>);</span><br><span class="line">        components.forEach((System.out::println));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2534,43 +2569,8 @@ $$</p>
       </tags>
   </entry>
   <entry>
-    <title>抽象工厂模式</title>
-    <url>/_posts/2506759259.html</url>
-    <content><![CDATA[<blockquote class="blockquote-center">
-<p>抽象工厂模式（Abstract Factory Pattern）是围绕一个超级工厂创建其他工厂。该超级工厂又称为其他工厂的工厂。这种类型的设计模式属于创建型模式，它提供了一种创建对象的最佳方式。</p>
-
-</blockquote>
-<span id="more"></span>
-<h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<img src="/_posts/2506759259/abstractFactory.png" class="">
-<h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
-<h3 id="接口及其实现类"><a class="header-anchor" href="#接口及其实现类"></a>接口及其实现类</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Color</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">fill</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Rectangle</span> <span class="keyword">implements</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Inside Rectangle::draw() method.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Square</span> <span class="keyword">implements</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Inside Square::draw() method.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Green</span> <span class="keyword">implements</span> <span class="title">Color</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fill</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Inside Green::fill() method.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Red</span> <span class="keyword">implements</span> <span class="title">Color</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fill</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Inside Red::fill() method.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="抽象工厂"><a class="header-anchor" href="#抽象工厂"></a>抽象工厂</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractFactory</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Color <span class="title">getColor</span><span class="params">(String color)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Shape <span class="title">getShape</span><span class="params">(String shape)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="实例工厂类"><a class="header-anchor" href="#实例工厂类"></a>实例工厂类</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ColorFactory</span> <span class="keyword">extends</span> <span class="title">AbstractFactory</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Shape <span class="title">getShape</span><span class="params">(String shapeType)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Color <span class="title">getColor</span><span class="params">(String color)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(color == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(color.equalsIgnoreCase(<span class="string">&quot;RED&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Red();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(color.equalsIgnoreCase(<span class="string">&quot;GREEN&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Green();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShapeFactory</span> <span class="keyword">extends</span> <span class="title">AbstractFactory</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Color <span class="title">getColor</span><span class="params">(String color)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Shape <span class="title">getShape</span><span class="params">(String shapeType)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(shapeType == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(shapeType.equalsIgnoreCase(<span class="string">&quot;RECTANGLE&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Rectangle();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(shapeType.equalsIgnoreCase(<span class="string">&quot;SQUARE&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Square();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="工厂创建类"><a class="header-anchor" href="#工厂创建类"></a>工厂创建类</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryProducer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> AbstractFactory <span class="title">getFactory</span><span class="params">(String choice)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(choice.equalsIgnoreCase(<span class="string">&quot;SHAPE&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ShapeFactory();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(choice.equalsIgnoreCase(<span class="string">&quot;COLOR&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ColorFactory();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="测试"><a class="header-anchor" href="#测试"></a>测试</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractFactoryTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">//获取形状工厂</span></span><br><span class="line">        AbstractFactory shapeFactory = FactoryProducer.getFactory(<span class="string">&quot;SHAPE&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取形状为 Rectangle 的对象</span></span><br><span class="line">        Shape shape2 = shapeFactory.getShape(<span class="string">&quot;RECTANGLE&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用 Rectangle 的 draw 方法</span></span><br><span class="line">        shape2.draw();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取形状为 Square 的对象</span></span><br><span class="line">        Shape shape3 = shapeFactory.getShape(<span class="string">&quot;SQUARE&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用 Square 的 draw 方法</span></span><br><span class="line">        shape3.draw();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取颜色工厂</span></span><br><span class="line">        AbstractFactory colorFactory = FactoryProducer.getFactory(<span class="string">&quot;COLOR&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取颜色为 Red 的对象</span></span><br><span class="line">        Color color1 = colorFactory.getColor(<span class="string">&quot;RED&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用 Red 的 fill 方法</span></span><br><span class="line">        color1.fill();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取颜色为 Green 的对象</span></span><br><span class="line">        Color color2 = colorFactory.getColor(<span class="string">&quot;Green&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用 Green 的 fill 方法</span></span><br><span class="line">        color2.fill();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Example"><a class="header-anchor" href="#Example"></a>Example</h2>
-<ul>
-<li><a href="http://docs.oracle.com/javase/8/docs/api/javax/xml/xpath/XPathFactory.html#newInstance--">javax.xml.xpath.XPathFactory</a></li>
-<li><a href="http://docs.oracle.com/javase/8/docs/api/javax/xml/parsers/DocumentBuilderFactory.html">javax.xml.parsers.DocumentBuilderFactory</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>理论</category>
-        <category>设计模式</category>
-      </categories>
-      <tags>
-        <tag>设计模式</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>桥接模式</title>
-    <url>/_posts/3468020877.html</url>
+    <url>/posts/3468020877.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>桥接模式(Bridge),将抽象部分与它的实线部分分离，使他们都可以独立地变化。</p>
 <p>对于两个独立变化的维度，使用桥接模式可以避免通过继承导致的类爆炸</p>
@@ -2578,7 +2578,7 @@ $$</p>
 </blockquote>
 <span id="more"></span>
 <h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<img src="/_posts/3468020877/%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F.png" class="">
+<img src="/posts/3468020877/%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F.png" class="">
 <h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
 <p>RemoteControl 表示遥控器，指代 Abstraction。</p>
 <p>TV 表示电视，指代 Implementor。</p>
@@ -2615,14 +2615,14 @@ $$</p>
   </entry>
   <entry>
     <title>模板模式</title>
-    <url>/_posts/2374608698.html</url>
+    <url>/posts/2374608698.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>在模板模式（Template Pattern）中，一个抽象类公开定义了执行它的方法的方式/模板。它的子类可以按需要重写方法实现，但调用将以抽象类中定义的方式进行</p>
 
 </blockquote>
 <span id="more"></span>
 <h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<img src="/_posts/2374608698/%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F.png" class="">
+<img src="/posts/2374608698/%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F.png" class="">
 <h2 id="Implemenation"><a class="header-anchor" href="#Implemenation"></a>Implemenation</h2>
 <h3 id="模板类"><a class="header-anchor" href="#模板类"></a>模板类</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Game</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">initialize</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">startPlay</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">endPlay</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//模板</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//初始化游戏</span></span><br><span class="line">        initialize();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//开始游戏</span></span><br><span class="line">        startPlay();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//结束游戏</span></span><br><span class="line">        endPlay();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2654,14 +2654,14 @@ $$</p>
   </entry>
   <entry>
     <title>状态模式</title>
-    <url>/_posts/307019047.html</url>
+    <url>/posts/307019047.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>状态模式(State):当一个对象的内在状态改变时允许改变其行为，这个对象看起来像是改变了一个类</p>
 
 </blockquote>
 <span id="more"></span>
 <h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<img src="/_posts/307019047/%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F.png" class="">
+<img src="/posts/307019047/%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F.png" class="">
 <h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
 <h3 id="状态接口"><a class="header-anchor" href="#状态接口"></a>状态接口</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">State</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> String desc;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">(Context context)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2689,7 +2689,7 @@ $$</p>
   </entry>
   <entry>
     <title>空对象模式</title>
-    <url>/_posts/3159547075.html</url>
+    <url>/posts/3159547075.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>在空对象模式（Null Object Pattern）中，一个空对象取代 NULL 对象实例的检查。Null 对象不是检查空值，<br>
 而是反应一个不做任何动作的关系。这样的 Null 对象也可以在数据不可用的时候提供默认的行为。</p>
@@ -2697,7 +2697,7 @@ $$</p>
 </blockquote>
 <span id="more"></span>
 <h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<img src="/_posts/3159547075/%E7%A9%BA%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%BC%8F.png" class="">
+<img src="/posts/3159547075/%E7%A9%BA%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%BC%8F.png" class="">
 <h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
 <h3 id="抽象对象"><a class="header-anchor" href="#抽象对象"></a>抽象对象</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractObject</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">request</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">boolean</span> <span class="title">isNil</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2724,7 +2724,7 @@ $$</p>
   </entry>
   <entry>
     <title>策略模式</title>
-    <url>/_posts/3932426784.html</url>
+    <url>/posts/3932426784.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>定义一系列算法，封装每个算法，并使它们可以互换。<br>
 策略模式(Strategy Pattern)可以让算法独立于使用它的客户端。</p>
@@ -2737,7 +2737,7 @@ $$</p>
 <li>ontext 是使用到该算法族的类，其中的 doSomething() 方法会调用 behavior()，setStrategy(Strategy) 方法可以动态地改变 strategy 对象，也就是说能动态地改变 Context 所使用的算法</li>
 <li>策略模式的策略类可以作为单例，如果设置为成员变量时可以不设置单例。</li>
 </ul>
-<img src="/_posts/3932426784/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F.png" class="">
+<img src="/posts/3932426784/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F.png" class="">
 <ul>
 <li>与状态模式的比较</li>
 </ul>
@@ -2778,14 +2778,14 @@ $$</p>
   </entry>
   <entry>
     <title>组合模式</title>
-    <url>/_posts/1191195587.html</url>
+    <url>/posts/1191195587.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>组合模式(Composite),将对象组合成树形结构以表示’部分-整体’的层次结构。组合模式使得用户对单个对象和组合对象的使用具有一致性</p>
 
 </blockquote>
 <span id="more"></span>
 <h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<img src="/_posts/1191195587/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F.png" class="">
+<img src="/posts/1191195587/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F.png" class="">
 <h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
 <h3 id="组件接口"><a class="header-anchor" href="#组件接口"></a>组件接口</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Component</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>&#123;</span><br><span class="line">        print(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">int</span> level)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(Component component)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(Component component)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2818,7 +2818,7 @@ $$</p>
   </entry>
   <entry>
     <title>装饰者模式</title>
-    <url>/_posts/1942064508.html</url>
+    <url>/posts/1942064508.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>装饰器模式（Decorator Pattern）允许向一个现有的对象添加新的功能，同时又不改变其结构<br>
 这种模式创建了一个装饰类，用来包装原有的类，并在保持类方法签名完整性的前提下，提供了额外的功能。</p>
@@ -2826,7 +2826,7 @@ $$</p>
 </blockquote>
 <span id="more"></span>
 <h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<img src="/_posts/1942064508/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F.png" class="">
+<img src="/posts/1942064508/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F.png" class="">
 <h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
 <h3 id="类接口"><a class="header-anchor" href="#类接口"></a>类接口</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Beverage</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String description = <span class="string">&quot;Unknown Beverage&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getDescription</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> description;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">double</span> <span class="title">cost</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2861,7 +2861,7 @@ $$</p>
   </entry>
   <entry>
     <title>观察者模式</title>
-    <url>/_posts/2586075670.html</url>
+    <url>/posts/2586075670.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>当对象间存在一对多关系时，则使用观察者模式（Observer Pattern）。比如，当一个对象被修改时，则会自动通知它的依赖对象。观察者模式属于行为型模式。</p>
 
@@ -2901,14 +2901,14 @@ $$</p>
   </entry>
   <entry>
     <title>解释器模式</title>
-    <url>/_posts/1940214718.html</url>
+    <url>/posts/1940214718.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>解释器模式（Interpreter Pattern）提供了评估语言的语法或表达式的方式，它属于行为型模式。这种模式实现了一个表达式接口，该接口解释一个特定的上下文。这种模式被用在 SQL 解析、符号处理引擎等。</p>
 
 </blockquote>
 <span id="more"></span>
 <h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<img src="/_posts/1940214718/interpreter.png" class="">
+<img src="/posts/1940214718/interpreter.png" class="">
 <h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
 <h3 id="表达式接口"><a class="header-anchor" href="#表达式接口"></a>表达式接口</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Expression</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">interpret</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2950,14 +2950,14 @@ $$</p>
   </entry>
   <entry>
     <title>访问者模式</title>
-    <url>/_posts/2960930216.html</url>
+    <url>/posts/2960930216.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>通过访问者模式，可以通过访问者类进行对固定数据的不同方式的访问。增加访问方式只要增加访问类而不需要更改数据对象。</p>
 
 </blockquote>
 <span id="more"></span>
 <h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<img src="/_posts/2960930216/visitor.png" class="">
+<img src="/posts/2960930216/visitor.png" class="">
 <h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
 <h3 id="数据接口"><a class="header-anchor" href="#数据接口"></a>数据接口</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Element</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">accept</span><span class="params">(Visitor visitor)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2993,7 +2993,7 @@ $$</p>
   </entry>
   <entry>
     <title>责任链模式</title>
-    <url>/_posts/1644716670.html</url>
+    <url>/posts/1644716670.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>顾名思义，责任链模式(Chain of Responsibility Pattern) 为请求创建了一个接收者对象的链。这种模式给予请求的类型，对请求的发送者和接收者进行解耦。这种类型的设计模式属于行为型模式。</p>
 
@@ -3020,14 +3020,14 @@ $$</p>
   </entry>
   <entry>
     <title>过滤器模式</title>
-    <url>/_posts/3277476179.html</url>
+    <url>/posts/3277476179.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>过滤器模式（Filter Pattern）或标准模式（Criteria Pattern）是一种设计模式，这种模式允许开发人员使用不同的标准来过滤一组对象，通过逻辑运算以解耦的方式把它们连接起来</p>
 
 </blockquote>
 <span id="more"></span>
 <h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<img src="/_posts/3277476179/%E8%BF%87%E6%BB%A4%E5%99%A8%E6%A8%A1%E5%BC%8F.png" class="">
+<img src="/posts/3277476179/%E8%BF%87%E6%BB%A4%E5%99%A8%E6%A8%A1%E5%BC%8F.png" class="">
 <h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
 <h3 id="过滤器接口"><a class="header-anchor" href="#过滤器接口"></a>过滤器接口</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Filter</span> </span>&#123;</span><br><span class="line">    &lt;T&gt; <span class="function">List&lt;T&gt; <span class="title">doFilter</span><span class="params">(List&lt;T&gt; list)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -3056,14 +3056,14 @@ $$</p>
   </entry>
   <entry>
     <title>迭代器模式</title>
-    <url>/_posts/1151138151.html</url>
+    <url>/posts/1151138151.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>一种模式用于顺序访问集合对象的元素，不需要知道集合对象的底层表示。</p>
 
 </blockquote>
 <span id="more"></span>
 <h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<img src="/_posts/1151138151/iterator.png" class="">
+<img src="/posts/1151138151/iterator.png" class="">
 <h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
 <h3 id="迭代器接口"><a class="header-anchor" href="#迭代器接口"></a>迭代器接口</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 是否有下一个元素</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 是|否</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取下一个元素</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 元素</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">E <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -3093,7 +3093,7 @@ $$</p>
   </entry>
   <entry>
     <title>适配器模式</title>
-    <url>/_posts/4123342314.html</url>
+    <url>/posts/4123342314.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>将一个接口转换成客户希望的另一个接口，使接口不兼容的那些类可以一起工作，其别名为包装器(Wrapper)。适配器模式既可以作为类结构型模式，也可以作为对象结构型模式</p>
 
@@ -3136,7 +3136,7 @@ $$</p>
 <ul>
 <li>对应结构如图:</li>
 </ul>
-<img src="/_posts/4123342314/adapter.png" class="">
+<img src="/posts/4123342314/adapter.png" class="">
 <h2 id="个人理解"><a class="header-anchor" href="#个人理解"></a>个人理解</h2>
 <blockquote>
 <p>想复用现有接口或者方法签名，但是需要增加额外功能时使用适配器模式</p>
@@ -3152,7 +3152,7 @@ $$</p>
   </entry>
   <entry>
     <title>单例模式</title>
-    <url>/_posts/4049607742.html</url>
+    <url>/posts/4049607742.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>单例模式（Singleton Pattern）是 Java 中最简单的设计模式之一。这种类型的设计模式属于创建型模式，它提供了一种创建对象的最佳方式。</p>
 <p>这种模式涉及到一个单一的类，该类负责创建自己的对象，同时确保只有单个对象被创建。这个类提供了一种访问其唯一的对象的方式，可以直接访问，不需要实例化该类的对象。</p>
@@ -3195,7 +3195,7 @@ $$</p>
   </entry>
   <entry>
     <title>Redis开发与运维笔记_API的理解和使用</title>
-    <url>/_posts/4241361649.html</url>
+    <url>/posts/4241361649.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>Redis提供了5种数据结构，理解每种数据结构的特点对于Redis开发运维非常重要，同时掌握Redis的单线程命令处理机制，会使数据结构和命令的选择事半功倍</p>
 
@@ -3247,8 +3247,8 @@ $$</p>
 实际上，每种数据结构都有自己底层的内部编码实现<br>
 可以使用<code>object encoding key</code>命令获取当前键使用的内部编码</p>
 </blockquote>
-<img src="/_posts/4241361649/redis%E7%9A%84%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png" class="" title="redis的五种数据结构">
-<img src="/_posts/4241361649/Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E5%86%85%E9%83%A8%E7%BC%96%E7%A0%81.png" class="" title="Redis数据结构和内部编码">
+<img src="/posts/4241361649/redis%E7%9A%84%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png" class="" title="redis的五种数据结构">
+<img src="/posts/4241361649/Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E5%86%85%E9%83%A8%E7%BC%96%E7%A0%81.png" class="" title="Redis数据结构和内部编码">
 <p>Redis这样设计有两点好处：1）改进内部编码时，对外的数据结构和命令没有影响。2）不同的内部编码具有不同的优势。如:ziplist比较节省内存。</p>
 <h3 id="单线程架构"><a class="header-anchor" href="#单线程架构"></a>单线程架构</h3>
 <blockquote>
@@ -3810,7 +3810,7 @@ pattern支持glob风格的通配符</p>
   </entry>
   <entry>
     <title>Redis开发与运维笔记-哨兵</title>
-    <url>/_posts/2400819807.html</url>
+    <url>/posts/2400819807.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>Redis的主从复制模式下，一旦主节点由于故障不能提供服务，需要人 工将从节点晋升为主节点，同时还要通知应用方更新主节点地址，对于很多应用场景这种故障处理的方式是无法接受的。可喜的是Redis从2.8开始正式 提供了Redis Sentinel(哨兵)架构来解决这个问题。</p>
 
@@ -3844,7 +3844,7 @@ pattern支持glob风格的通配符</p>
 <h3 id="Redis-Sentinel高可用"><a class="header-anchor" href="#Redis-Sentinel高可用"></a>Redis Sentinel高可用</h3>
 <p>当主节点出现故障时，Redis Sentinel能自动完成故障发现和故障转移，并通知应用方，从而实现真正的高可用。</p>
 <p>以1个主节点、2个从节点、3个Sentinel节点为例：拓扑结构如下图</p>
-<img src="/_posts/2400819807/sentinel%E7%A4%BA%E4%BE%8B.png" class="" title="sentinel示例">
+<img src="/posts/2400819807/sentinel%E7%A4%BA%E4%BE%8B.png" class="" title="sentinel示例">
 <p>当主节点出现故障时，从节点复制失败。整个故障转移的流程如下：</p>
 <ol>
 <li>
