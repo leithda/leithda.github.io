@@ -1,26 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/posts/4a17b156.html</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<span id="more"></span>
-<h2 id="Quick-Start"><a class="header-anchor" href="#Quick-Start"></a>Quick Start</h2>
-<h3 id="Create-a-new-post"><a class="header-anchor" href="#Create-a-new-post"></a>Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a class="header-anchor" href="#Run-server"></a>Run server</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a class="header-anchor" href="#Generate-static-files"></a>Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a class="header-anchor" href="#Deploy-to-remote-sites"></a>Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
     <title>Redis开发与运维笔记-Redis的噩梦-阻塞</title>
     <url>/posts/3586754738.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -1287,10 +1267,10 @@ RDB重写时，Redis日志输出内容如下：</p>
       </tags>
   </entry>
   <entry>
-    <title>Redis开发与运维笔记-理解内存</title>
-    <url>/posts/1495994843.html</url>
+    <title>Redis开发与运维笔记-集群</title>
+    <url>/posts/ddc0d24d.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
-<p>Redis所有的数据都存在内存中，高效利用Redis内存首先需要理解Redis内存消耗在哪里，如何管理内存，最后才能考虑如何优化内存。</p>
+<p>Redis Cluster是Redis的分布式解决方案，在3.0版本正式推出，有效地解决了Redis分布式方面的需求。当遇到单机内存、并发、流量等瓶颈时，可以采用Cluster架构方案达到负载均衡的目的。</p>
 
 </blockquote>
 <span id="more"></span>
@@ -1298,175 +1278,47 @@ RDB重写时，Redis日志输出内容如下：</p>
 <p>参考书籍：<a href="https://book.douban.com/subject/26971561/">Redis开发与运维</a></p>
 </blockquote>
 <hr>
-<h1>理解内存</h1>
-<h2 id="内存消耗"><a class="header-anchor" href="#内存消耗"></a>内存消耗</h2>
-<h3 id="内存使用统计"><a class="header-anchor" href="#内存使用统计"></a>内存使用统计</h3>
-<p><code>info memory</code></p>
-<table>
-<thead>
-<tr>
-<th>属性名</th>
-<th>属性说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>used_memory</td>
-<td>Redis分配器分配的内存总量，也就是内部存储的所有数据的内存占用量</td>
-</tr>
-<tr>
-<td>used_memory_human</td>
-<td>以可读的格式返回used_memory</td>
-</tr>
-<tr>
-<td>used_memory_rss</td>
-<td>从操作系统的角度显示Redis进程占用的物理内存总量</td>
-</tr>
-<tr>
-<td>used_memory_peak</td>
-<td>内存使用的最大值，表示used_memory的峰值</td>
-</tr>
-<tr>
-<td>used_memory_peak_human</td>
-<td>以可读的格式返回used_memory_peak</td>
-</tr>
-<tr>
-<td>used_memory_lua</td>
-<td>Lua引擎所消耗的内存大小</td>
-</tr>
-<tr>
-<td>mem_fragmentation_retio</td>
-<td>used_memory_rss/used_memory比值，表示内存碎片率</td>
-</tr>
-<tr>
-<td>mem_allocator</td>
-<td>Redis所使用的内存分配器。默认为jemalloc</td>
-</tr>
-</tbody>
-</table>
-<p>重点关注的指标：<code>used_memory_rss</code>、<code>used_memory</code>以及<code>mem_fragmentation_ratio</code></p>
-<p>mem_fragmentation&gt;1，说明存在内存碎片。&lt;1时说明操作系统Reids内存交换(Swap)到硬盘。</p>
-<h3 id="内存消耗划分"><a class="header-anchor" href="#内存消耗划分"></a>内存消耗划分</h3>
-<p>Redis进程内消耗主要包括：自身内存+对象内存+缓存内存+内存碎片。</p>
+<h1>集群</h1>
+<h2 id="数据分布"><a class="header-anchor" href="#数据分布"></a>数据分布</h2>
+<h3 id="Redis数据分布"><a class="header-anchor" href="#Redis数据分布"></a>Redis数据分布</h3>
+<p>Redis Cluser采用虚拟槽分区，所有的键根据哈希函数映射到0~16383整数槽内，计算公式：<code>slot=CRC16（key）&amp;16383</code></p>
+<p>Redis虚拟槽分区的特点：</p>
 <ul>
-<li>
-<p>对象内存<br>
-是Redis内存占用最大的一块，存储着用户所有的数据。</p>
-</li>
-<li>
-<p>缓存内存</p>
-<ul>
-<li>客户端缓冲：接入到服务器TCP了解的输入输出缓冲。输入缓冲无法控制，最大为1G。输出缓冲通过<code>client-output-buffer-limit</code>控制。普通客户端要注意控制数量，从客户端不要挂载过多，订阅客户端要注意生产及消费消息的速度</li>
-<li>复制积压缓冲区：用于实现部分复制功能，Redis提供的一个缓冲区，建议在合理范围内调大，可以有效避免全量复制</li>
-<li>AOF缓冲区：这部分空间用于在Redis重写期间保存最近的写入命令。</li>
+<li>解耦数据和节点之间的关系，简化了节点扩容和收缩难度。</li>
+<li>节点自身维护槽的映射关系，不需要客户端或者代理服务维护槽分区元数据。</li>
+<li>支持节点、槽、键之间的映射查询，用于数据路由、在线伸缩等场景</li>
 </ul>
-</li>
-<li>
-<p>内存碎片<br>
-容易出现高内存碎片的场景：</p>
+<h3 id="Redis分布式集群功能限制"><a class="header-anchor" href="#Redis分布式集群功能限制"></a>Redis分布式集群功能限制</h3>
 <ol>
-<li>频繁做更新操作，例如频繁对已存在的键执行<code>append、setrange</code>等更新操作</li>
-<li>大量过期键删除，键对象过期删除后，释放的空间无法得到充分利用，导致碎片率上升。</li>
-<li>解决以上问题的方法：1）尽量做到数据对齐，2）安全重启</li>
+<li>key批量操作支持有限。如mset、mget，目前只支持具有相同slot值的key执行批量操作。对于映射为不同slot值的key由于执行mget、mget等操作可 能存在于多个节点上因此不被支持。</li>
+<li>key事务操作支持有限。同理只支持多key在同一节点上的事务操作，当多个key分布在不同的节点上时无法使用事务功能。</li>
+<li>key作为数据分区的最小粒度，因此不能将一个大的键值对象如hash、list等映射到不同的节点。</li>
+<li>不支持多数据库空间。单机下的Redis可以支持16个数据库，集群模式下只能使用一个数据库空间，即db0。</li>
+<li>复制结构只支持一层，从节点只能复制主节点，不支持嵌套树状复制结构</li>
 </ol>
-</li>
-</ul>
-<h3 id="子进程内存消耗"><a class="header-anchor" href="#子进程内存消耗"></a>子进程内存消耗</h3>
-<p>主要发生在AOF/RDB重写时Redis创建的子进程内存消耗。总结如下：</p>
+<h2 id="搭建集群"><a class="header-anchor" href="#搭建集群"></a>搭建集群</h2>
+<p>搭建集群需要以下三个步骤：</p>
 <ol>
-<li>Redis产生的子进程因为写时复制技术，并不需要消耗1倍的父进程内存。预留足够内存防止溢出即可</li>
-<li>需要设置<code>sysctl vm.overcommit_memory=1</code>允许内核可以分配所有物理内存，防止Redis进程执行fork时因系统剩余内存不足而失败</li>
-<li>排查当前系统是否支持并开启THP，如果开启建议关闭，防止copy-on-write期间内存过度消耗</li>
+<li>准备节点</li>
+<li>节点握手</li>
+<li>分配槽</li>
 </ol>
-<h2 id="内存管理"><a class="header-anchor" href="#内存管理"></a>内存管理</h2>
-<ol>
-<li>通过<code>maxmemory</code>设置Redis最大内存，需要注意的是由于碎片率的存在，实际消耗的内存可能会比<code>maxmemory</code>设置的更大</li>
-<li>通过<code>config set maxmemory 2GB</code>可以动态调整内存上限</li>
-<li>内存回收策略
+<p>搭建集群部分可以参考 <a href="./778231993">搭建Redis集群</a></p>
+<h2 id="节点通信"><a class="header-anchor" href="#节点通信"></a>节点通信</h2>
+<p>​	Redis集群采用P2P的Gossip（流言）协议， Gossip协议工作原理就是节点彼此不断通信交换信息，一段时间后所有的节 点都会知道集群完整的信息，这种方式类似流言传播。</p>
+<h3 id="Gossip消息"><a class="header-anchor" href="#Gossip消息"></a>Gossip消息</h3>
+<p>常用的Goosip消息分为：ping消息、pong消息、meet消息、fail消息等</p>
 <ul>
-<li>过期键删除策略：惰性删除和定时任务删除</li>
-<li>内存溢出控制策略，通过<code>maxmemory-policy</code>参数控制
-<ul>
-<li><code>noeviction</code>:默认策略，不删除数据。拒绝所有写入操作并返回客户端错误信息<code>(error)OOM command not allowed when used memory</code>，此时Redis只响应读操作</li>
-<li><code>vloatile-lru</code>：根据LRU算法删除设置了超时的键，直到腾出足够空间。如果没有可删除的键，回退到<code>noeviction</code></li>
-<li><code>allkeys-lru</code>：根据LRU算法删除键。直到腾出足够空间</li>
-<li><code>allkeys-random</code>：随机删除所有键，直到腾出足够空间</li>
-<li><code>volatile-ttl</code>：根据键值对象的ttl，删除最近要过期的数据，如果没有，回退到noeviction策略</li>
-<li>设置了<code>maxmemory</code>时，当<code>used_memory&gt;maxmemory</code>的状态下，会触发回收内存操作。应设置足够大的<code>maxmemory</code>避免长期处于这种状态下。</li>
+<li>meet消息：用于通知新节点加入</li>
+<li>ping消息：每个节点向其他多个节点发送ping消息，消息中含有节点自身及其他部分节点的状态数据。</li>
+<li>pong消息：接收到meet、ping消息时作为返回数据，封装自身状态信息。也可以广播pong消息用于通知其他节点更新当前节点状态。</li>
+<li>fail消息：当节点判定其他节点下线时，会向集群内广播fail消息，其他节点收到消息后将标记节点设置为下线状态。</li>
 </ul>
-</li>
-</ul>
-</li>
-</ol>
-<h2 id="内存优化"><a class="header-anchor" href="#内存优化"></a>内存优化</h2>
-<h3 id="redisObject对象"><a class="header-anchor" href="#redisObject对象"></a>redisObject对象</h3>
-<blockquote>
-<p>Redis存储的所有值对象在内部定义为redisObject结构体，内部结构如图：</p>
-</blockquote>
-<img src="/posts/1495994843/redisObject.png" class="" title="redisObject">
-<ul>
-<li>type:当前对象数据类型。可以使用<code>type &#123;key&#125;</code>查看对象所属类型</li>
-<li>encoding:redis内部编码类型</li>
-<li>lru:对象最后一次被访问的时间。可以使用<code>object idletime &#123;key&#125;</code>在不更新lru字段情况下查看键的空闲时间</li>
-<li>refcount:记录对象被引用次数</li>
-<li>*ptr:整数直接存储数据，否则为指向数据的指针</li>
-</ul>
-<h3 id="缩减键值对象"><a class="header-anchor" href="#缩减键值对象"></a>缩减键值对象</h3>
-<blockquote>
-<p>在保证业务的前提下，缩减键<code>key</code>和值<code>value</code>的长度。</p>
-</blockquote>
-<h3 id="共享对象池"><a class="header-anchor" href="#共享对象池"></a>共享对象池</h3>
-<p>Redis内部维护[0-9999]的整数对象池。优先使用整型数字有助于节省内存开销。需要注意的是对象池与<code>maxmemory</code>和<code>LRU</code>淘汰算法冲突。</p>
-<h3 id="字符串优化"><a class="header-anchor" href="#字符串优化"></a>字符串优化</h3>
-<h4 id="字符串结构"><a class="header-anchor" href="#字符串结构"></a>字符串结构</h4>
-<blockquote>
-<p>Redis实现了自己的字符串结构，内部简单动态字符串(simple dynamic string,SDS).结构如图：</p>
-</blockquote>
-<img src="/posts/1495994843/sds.png" class="" title="sds">
-<p>Redis字符串结构的特点：</p>
-<ol>
-<li>字符串长度，已用长度，未用长度的操作复杂度为O(1)</li>
-<li>可用于保存字节数组，支持安全的二进制数据存储</li>
-<li>预分配机制，降低内存再分配次数</li>
-<li>惰性删除机制，字符串缩减后的空间不释放，作为预分配空间保留</li>
-</ol>
-<h4 id="预分配机制"><a class="header-anchor" href="#预分配机制"></a>预分配机制</h4>
-<ol>
-<li>第一次创建len属性等于数据实际大小，free等于0，不做预分配</li>
-<li>修改后如果free空间不够且数据小于1M，每次预分配一倍的容量</li>
-<li>修改后如果free空间不够且数据大于1M，每次预分配1MB的容量</li>
-</ol>
-<h4 id="字符串重构"><a class="header-anchor" href="#字符串重构"></a>字符串重构</h4>
-<blockquote>
-<p>JSON数据不一定要用string来存储，可以改为通过hash结构实现，同时使用hash结构也可以使用hmget、hmset命令支持字段的部分读取修改，而不用每次全部读取。</p>
-</blockquote>
-<h3 id="编码优化"><a class="header-anchor" href="#编码优化"></a>编码优化</h3>
-<blockquote>
-<p>主要是根据业务场景，选择合适的参数保证Redis使用合适的内部编码进而在性能和内存上进行取舍。</p>
-</blockquote>
-<h3 id="控制键的数量"><a class="header-anchor" href="#控制键的数量"></a>控制键的数量</h3>
-<blockquote>
-<p>客户端可以预估键的数量规模，把大量键映射到多个hash结构中降低键的数量</p>
-</blockquote>
-<ul>
-<li>hash的field可以记录原始key字符串，方便哈希查找</li>
-<li>hash的value保存原始值对象，确保不要超过<code>hash-max-ziplist-value</code>限制</li>
-</ul>
+<h2 id="集群伸缩"><a class="header-anchor" href="#集群伸缩"></a>集群伸缩</h2>
+<h2 id="请求路由"><a class="header-anchor" href="#请求路由"></a>请求路由</h2>
+<h2 id="故障转移"><a class="header-anchor" href="#故障转移"></a>故障转移</h2>
+<h2 id="集群运维"><a class="header-anchor" href="#集群运维"></a>集群运维</h2>
 <h2 id="本章重点回顾"><a class="header-anchor" href="#本章重点回顾"></a>本章重点回顾</h2>
-<ol>
-<li>Redis实际内存消耗主要包括：键值对象、缓冲区碎片、内存碎片</li>
-<li>通过<code>maxmemory</code>控制Redis最大可用内存。内存溢出时，根据<code>maxmemory-policy</code>控制内存回收策略</li>
-<li>内存资源宝贵，可以通过以下手段优化内存使用:
-<ol>
-<li>精简键值对大小，使用高效二进制序列化工具</li>
-<li>使用对象共享池优化小整数对象</li>
-<li>数据优先使用整数</li>
-<li>优化字符串的使用，避免预分配造成的内存浪费</li>
-<li>使用ziplist压缩编码优化hash、list等结构，注重效率和空间的平衡</li>
-<li>使用intset编码优化整数集合</li>
-</ol>
-</li>
-</ol>
 ]]></content>
       <categories>
         <category>数据库</category>
@@ -2030,6 +1882,196 @@ $$</p>
       </tags>
   </entry>
   <entry>
+    <title>Redis开发与运维笔记-理解内存</title>
+    <url>/posts/1495994843.html</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+<p>Redis所有的数据都存在内存中，高效利用Redis内存首先需要理解Redis内存消耗在哪里，如何管理内存，最后才能考虑如何优化内存。</p>
+
+</blockquote>
+<span id="more"></span>
+<blockquote>
+<p>参考书籍：<a href="https://book.douban.com/subject/26971561/">Redis开发与运维</a></p>
+</blockquote>
+<hr>
+<h1>理解内存</h1>
+<h2 id="内存消耗"><a class="header-anchor" href="#内存消耗"></a>内存消耗</h2>
+<h3 id="内存使用统计"><a class="header-anchor" href="#内存使用统计"></a>内存使用统计</h3>
+<p><code>info memory</code></p>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>used_memory</td>
+<td>Redis分配器分配的内存总量，也就是内部存储的所有数据的内存占用量</td>
+</tr>
+<tr>
+<td>used_memory_human</td>
+<td>以可读的格式返回used_memory</td>
+</tr>
+<tr>
+<td>used_memory_rss</td>
+<td>从操作系统的角度显示Redis进程占用的物理内存总量</td>
+</tr>
+<tr>
+<td>used_memory_peak</td>
+<td>内存使用的最大值，表示used_memory的峰值</td>
+</tr>
+<tr>
+<td>used_memory_peak_human</td>
+<td>以可读的格式返回used_memory_peak</td>
+</tr>
+<tr>
+<td>used_memory_lua</td>
+<td>Lua引擎所消耗的内存大小</td>
+</tr>
+<tr>
+<td>mem_fragmentation_retio</td>
+<td>used_memory_rss/used_memory比值，表示内存碎片率</td>
+</tr>
+<tr>
+<td>mem_allocator</td>
+<td>Redis所使用的内存分配器。默认为jemalloc</td>
+</tr>
+</tbody>
+</table>
+<p>重点关注的指标：<code>used_memory_rss</code>、<code>used_memory</code>以及<code>mem_fragmentation_ratio</code></p>
+<p>mem_fragmentation&gt;1，说明存在内存碎片。&lt;1时说明操作系统Reids内存交换(Swap)到硬盘。</p>
+<h3 id="内存消耗划分"><a class="header-anchor" href="#内存消耗划分"></a>内存消耗划分</h3>
+<p>Redis进程内消耗主要包括：自身内存+对象内存+缓存内存+内存碎片。</p>
+<ul>
+<li>
+<p>对象内存<br>
+是Redis内存占用最大的一块，存储着用户所有的数据。</p>
+</li>
+<li>
+<p>缓存内存</p>
+<ul>
+<li>客户端缓冲：接入到服务器TCP了解的输入输出缓冲。输入缓冲无法控制，最大为1G。输出缓冲通过<code>client-output-buffer-limit</code>控制。普通客户端要注意控制数量，从客户端不要挂载过多，订阅客户端要注意生产及消费消息的速度</li>
+<li>复制积压缓冲区：用于实现部分复制功能，Redis提供的一个缓冲区，建议在合理范围内调大，可以有效避免全量复制</li>
+<li>AOF缓冲区：这部分空间用于在Redis重写期间保存最近的写入命令。</li>
+</ul>
+</li>
+<li>
+<p>内存碎片<br>
+容易出现高内存碎片的场景：</p>
+<ol>
+<li>频繁做更新操作，例如频繁对已存在的键执行<code>append、setrange</code>等更新操作</li>
+<li>大量过期键删除，键对象过期删除后，释放的空间无法得到充分利用，导致碎片率上升。</li>
+<li>解决以上问题的方法：1）尽量做到数据对齐，2）安全重启</li>
+</ol>
+</li>
+</ul>
+<h3 id="子进程内存消耗"><a class="header-anchor" href="#子进程内存消耗"></a>子进程内存消耗</h3>
+<p>主要发生在AOF/RDB重写时Redis创建的子进程内存消耗。总结如下：</p>
+<ol>
+<li>Redis产生的子进程因为写时复制技术，并不需要消耗1倍的父进程内存。预留足够内存防止溢出即可</li>
+<li>需要设置<code>sysctl vm.overcommit_memory=1</code>允许内核可以分配所有物理内存，防止Redis进程执行fork时因系统剩余内存不足而失败</li>
+<li>排查当前系统是否支持并开启THP，如果开启建议关闭，防止copy-on-write期间内存过度消耗</li>
+</ol>
+<h2 id="内存管理"><a class="header-anchor" href="#内存管理"></a>内存管理</h2>
+<ol>
+<li>通过<code>maxmemory</code>设置Redis最大内存，需要注意的是由于碎片率的存在，实际消耗的内存可能会比<code>maxmemory</code>设置的更大</li>
+<li>通过<code>config set maxmemory 2GB</code>可以动态调整内存上限</li>
+<li>内存回收策略
+<ul>
+<li>过期键删除策略：惰性删除和定时任务删除</li>
+<li>内存溢出控制策略，通过<code>maxmemory-policy</code>参数控制
+<ul>
+<li><code>noeviction</code>:默认策略，不删除数据。拒绝所有写入操作并返回客户端错误信息<code>(error)OOM command not allowed when used memory</code>，此时Redis只响应读操作</li>
+<li><code>vloatile-lru</code>：根据LRU算法删除设置了超时的键，直到腾出足够空间。如果没有可删除的键，回退到<code>noeviction</code></li>
+<li><code>allkeys-lru</code>：根据LRU算法删除键。直到腾出足够空间</li>
+<li><code>allkeys-random</code>：随机删除所有键，直到腾出足够空间</li>
+<li><code>volatile-ttl</code>：根据键值对象的ttl，删除最近要过期的数据，如果没有，回退到noeviction策略</li>
+<li>设置了<code>maxmemory</code>时，当<code>used_memory&gt;maxmemory</code>的状态下，会触发回收内存操作。应设置足够大的<code>maxmemory</code>避免长期处于这种状态下。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="内存优化"><a class="header-anchor" href="#内存优化"></a>内存优化</h2>
+<h3 id="redisObject对象"><a class="header-anchor" href="#redisObject对象"></a>redisObject对象</h3>
+<blockquote>
+<p>Redis存储的所有值对象在内部定义为redisObject结构体，内部结构如图：</p>
+</blockquote>
+<img src="/posts/1495994843/redisObject.png" class="" title="redisObject">
+<ul>
+<li>type:当前对象数据类型。可以使用<code>type &#123;key&#125;</code>查看对象所属类型</li>
+<li>encoding:redis内部编码类型</li>
+<li>lru:对象最后一次被访问的时间。可以使用<code>object idletime &#123;key&#125;</code>在不更新lru字段情况下查看键的空闲时间</li>
+<li>refcount:记录对象被引用次数</li>
+<li>*ptr:整数直接存储数据，否则为指向数据的指针</li>
+</ul>
+<h3 id="缩减键值对象"><a class="header-anchor" href="#缩减键值对象"></a>缩减键值对象</h3>
+<blockquote>
+<p>在保证业务的前提下，缩减键<code>key</code>和值<code>value</code>的长度。</p>
+</blockquote>
+<h3 id="共享对象池"><a class="header-anchor" href="#共享对象池"></a>共享对象池</h3>
+<p>Redis内部维护[0-9999]的整数对象池。优先使用整型数字有助于节省内存开销。需要注意的是对象池与<code>maxmemory</code>和<code>LRU</code>淘汰算法冲突。</p>
+<h3 id="字符串优化"><a class="header-anchor" href="#字符串优化"></a>字符串优化</h3>
+<h4 id="字符串结构"><a class="header-anchor" href="#字符串结构"></a>字符串结构</h4>
+<blockquote>
+<p>Redis实现了自己的字符串结构，内部简单动态字符串(simple dynamic string,SDS).结构如图：</p>
+</blockquote>
+<img src="/posts/1495994843/sds.png" class="" title="sds">
+<p>Redis字符串结构的特点：</p>
+<ol>
+<li>字符串长度，已用长度，未用长度的操作复杂度为O(1)</li>
+<li>可用于保存字节数组，支持安全的二进制数据存储</li>
+<li>预分配机制，降低内存再分配次数</li>
+<li>惰性删除机制，字符串缩减后的空间不释放，作为预分配空间保留</li>
+</ol>
+<h4 id="预分配机制"><a class="header-anchor" href="#预分配机制"></a>预分配机制</h4>
+<ol>
+<li>第一次创建len属性等于数据实际大小，free等于0，不做预分配</li>
+<li>修改后如果free空间不够且数据小于1M，每次预分配一倍的容量</li>
+<li>修改后如果free空间不够且数据大于1M，每次预分配1MB的容量</li>
+</ol>
+<h4 id="字符串重构"><a class="header-anchor" href="#字符串重构"></a>字符串重构</h4>
+<blockquote>
+<p>JSON数据不一定要用string来存储，可以改为通过hash结构实现，同时使用hash结构也可以使用hmget、hmset命令支持字段的部分读取修改，而不用每次全部读取。</p>
+</blockquote>
+<h3 id="编码优化"><a class="header-anchor" href="#编码优化"></a>编码优化</h3>
+<blockquote>
+<p>主要是根据业务场景，选择合适的参数保证Redis使用合适的内部编码进而在性能和内存上进行取舍。</p>
+</blockquote>
+<h3 id="控制键的数量"><a class="header-anchor" href="#控制键的数量"></a>控制键的数量</h3>
+<blockquote>
+<p>客户端可以预估键的数量规模，把大量键映射到多个hash结构中降低键的数量</p>
+</blockquote>
+<ul>
+<li>hash的field可以记录原始key字符串，方便哈希查找</li>
+<li>hash的value保存原始值对象，确保不要超过<code>hash-max-ziplist-value</code>限制</li>
+</ul>
+<h2 id="本章重点回顾"><a class="header-anchor" href="#本章重点回顾"></a>本章重点回顾</h2>
+<ol>
+<li>Redis实际内存消耗主要包括：键值对象、缓冲区碎片、内存碎片</li>
+<li>通过<code>maxmemory</code>控制Redis最大可用内存。内存溢出时，根据<code>maxmemory-policy</code>控制内存回收策略</li>
+<li>内存资源宝贵，可以通过以下手段优化内存使用:
+<ol>
+<li>精简键值对大小，使用高效二进制序列化工具</li>
+<li>使用对象共享池优化小整数对象</li>
+<li>数据优先使用整数</li>
+<li>优化字符串的使用，避免预分配造成的内存浪费</li>
+<li>使用ziplist压缩编码优化hash、list等结构，注重效率和空间的平衡</li>
+<li>使用intset编码优化整数集合</li>
+</ol>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>Redis</category>
+      </categories>
+      <tags>
+        <tag>Redis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Markdown-流程图</title>
     <url>/posts/3540196146.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -2136,6 +2178,98 @@ $$</p>
       </categories>
       <tags>
         <tag>Markdown</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis集群搭建</title>
+    <url>/posts/778231993.html</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+<p>这里只是采用手工方式创建一个Redis集群，后续会补充集群的高级部分内容。</p>
+
+</blockquote>
+<span id="more"></span>
+<h1>搭建Redis集群</h1>
+<h2 id="安装Redis"><a class="header-anchor" href="#安装Redis"></a>安装Redis</h2>
+<blockquote>
+<p>此处以Linux(CentOS)为例。其他方式大同小异</p>
+</blockquote>
+<h3 id="下载"><a class="header-anchor" href="#下载"></a>下载</h3>
+<p>进入<a href="https://redis.io/">官网</a>下载，或者在服务器上执行一下命令下载Redis，注意版本。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ wget https://download.redis.io/releases/redis-6.2.3.tar.gz</span><br><span class="line">$ tar xzf redis-6.2.3.tar.gz</span><br></pre></td></tr></table></figure>
+<h3 id="安装"><a class="header-anchor" href="#安装"></a>安装</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> redis-6.2.3</span><br><span class="line">$ make</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>其中，如果报错<code>/bin/sh: cc: command not found</code>时，执行<code>sudo yum -y install gcc gcc-c++ libstdc++-devel</code> 安装gcc。执行<code>make distclean  &amp;&amp; make</code>继续安装。</p>
+</li>
+<li>
+<p>make完成会在src目录下生成<code>redis-server</code>等redis相关可执行文件。</p>
+</li>
+<li>
+<p>执行<code>make install</code>命令将redis相关命令加入到<code>/usr/local/bin</code>目录下</p>
+</li>
+</ul>
+<h2 id="准备节点"><a class="header-anchor" href="#准备节点"></a>准备节点</h2>
+<p>新建reids配置文件夹</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mkdir -p /home/dev/data/redis</span><br><span class="line"><span class="built_in">cd</span> /home/dev/data/redis</span><br><span class="line">mkdir conf data</span><br><span class="line">touch redis.conf</span><br></pre></td></tr></table></figure>
+<ul>
+<li>redis.conf文件为官网提供配置文件，用于参考。</li>
+</ul>
+<p>在<code>conf</code>目录下新建配置文件，名称采用<code>redis-&#123;port&#125;.conf</code>格式。配置如下：</p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="comment">#节点端口 </span></span><br><span class="line"><span class="attr">port</span> <span class="string">6379 </span></span><br><span class="line"><span class="comment"># 开启集群模式 </span></span><br><span class="line"><span class="meta">cluster-enabled</span> <span class="string">yes </span></span><br><span class="line"><span class="comment"># 节点超时时间，单位毫秒 </span></span><br><span class="line"><span class="meta">cluster-node-timeout</span> <span class="string">15000 </span></span><br><span class="line"><span class="comment"># 集群内部配置文件 </span></span><br><span class="line"><span class="meta">cluster-config-file</span> <span class="string">&quot;nodes-6379.conf&quot;</span></span><br><span class="line"><span class="comment"># 指定本地数据库文件名，默认值为dump.rdb</span></span><br><span class="line"><span class="attr">dbfilename</span> <span class="string">dump-6379.rdb</span></span><br><span class="line"><span class="comment"># dump 文件保存目录</span></span><br><span class="line"><span class="attr">dir</span> <span class="string">/home/dev/data/redis/data</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>配置后的文件目录如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">├── redis</span><br><span class="line">    ├── conf</span><br><span class="line">    │   ├── redis-6379.conf</span><br><span class="line">    │   ├── redis-6380.conf</span><br><span class="line">    │   ├── redis-6381.conf</span><br><span class="line">    │   ├── redis-6382.conf</span><br><span class="line">    │   ├── redis-6383.conf</span><br><span class="line">    │   └── redis-6384.conf</span><br><span class="line">    ├── data</span><br><span class="line">    └── redis.conf</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="启动"><a class="header-anchor" href="#启动"></a>启动</h2>
+<p>进入到<code>conf</code>目录依次执行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">redis-server redis-6379.conf &amp;</span><br><span class="line">redis-server redis-6380.conf &amp;</span><br><span class="line">redis-server redis-6381.conf &amp;</span><br><span class="line">redis-server redis-6382.conf &amp;</span><br><span class="line">redis-server redis-6383.conf &amp;</span><br><span class="line">redis-server redis-6384.conf &amp;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>此处可能遇到报错<code> Server can't set maximum open files to 10032 because of OS error: Operation not permitted.</code>。使用<code>ulimit -n</code>查看系统限制文件句柄数。处理方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># vi /etc/security/limits.conf 修改后重启</span></span><br><span class="line">* soft nofile 65535</span><br><span class="line">* hard nofile 65535</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>连接到集群内节点查看集群状态</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[dev@localhost data]$ redis-cli</span><br><span class="line">127.0.0.1:6379&gt; cluster info</span><br><span class="line">cluster_state:fail</span><br><span class="line">cluster_slots_assigned:0</span><br><span class="line">cluster_slots_ok:0</span><br><span class="line">cluster_slots_pfail:0</span><br><span class="line">cluster_slots_fail:0</span><br><span class="line">cluster_known_nodes:1</span><br><span class="line">cluster_size:0</span><br><span class="line">cluster_current_epoch:0</span><br><span class="line">cluster_my_epoch:0</span><br><span class="line">cluster_stats_messages_sent:0</span><br><span class="line">cluster_stats_messages_received:0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="节点握手"><a class="header-anchor" href="#节点握手"></a>节点握手</h2>
+<p>使用<code>cluster meet &#123;host&#125; &#123;port&#125;</code>加入6380、6381后的集群状态。</p>
+<blockquote>
+<p>建议新开一个会话用于操作，由于之前启动使用&amp;方式，使用当前会话会因为输出日志影响阅读效果。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">127.0.0.1:6379&gt; cluster meet 127.0.0.1 6381</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; 2077:M 29 May 2021 07:19:54.654 <span class="comment"># IP address for this node updated to 127.0.0.1</span></span><br><span class="line">127.0.0.1:6379&gt; </span><br><span class="line">127.0.0.1:6379&gt; cluster info</span><br><span class="line">cluster_state:fail</span><br><span class="line">cluster_slots_assigned:0</span><br><span class="line">cluster_slots_ok:0</span><br><span class="line">cluster_slots_pfail:0</span><br><span class="line">cluster_slots_fail:0</span><br><span class="line">cluster_known_nodes:3</span><br><span class="line">cluster_size:0</span><br><span class="line">cluster_current_epoch:2</span><br><span class="line">cluster_my_epoch:2</span><br><span class="line">cluster_stats_messages_ping_sent:30</span><br><span class="line">cluster_stats_messages_pong_sent:32</span><br><span class="line">cluster_stats_messages_meet_sent:2</span><br><span class="line">cluster_stats_messages_sent:64</span><br><span class="line">cluster_stats_messages_ping_received:32</span><br><span class="line">cluster_stats_messages_pong_received:32</span><br><span class="line">cluster_stats_messages_received:64</span><br><span class="line">127.0.0.1:6379&gt; cluster nodes</span><br><span class="line">118cc85c73c3f9bee9653d2cbca7881dbbd7957f 127.0.0.1:6380@16380 master - 0 1622272870594 1 connected</span><br><span class="line">7366db1f582ad74dadda9691368959285f9e4255 127.0.0.1:6379@16379 myself,master - 0 1622272868000 2 connected</span><br><span class="line">bce5759afdbbee47ad417b683ea43a5f5bbfade7 127.0.0.1:6381@16381 master - 0 1622272871601 0 connected</span><br></pre></td></tr></table></figure>
+<h2 id="分配槽"><a class="header-anchor" href="#分配槽"></a>分配槽</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">redis-cli -h 127.0.0.1 -p 6379 cluster addslots &#123;0..5461&#125;</span><br><span class="line">redis-cli -h 127.0.0.1 -p 6380 cluster addslots &#123;5462..10922&#125;</span><br><span class="line">redis-cli -h 127.0.0.1 -p 6381 cluster addslots &#123;10923..16383&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>分配槽后进入到使用客户端查看集群状态</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[dev@localhost data]$ redis-cli</span><br><span class="line">127.0.0.1:6379&gt; cluster info</span><br><span class="line">cluster_state:ok</span><br><span class="line">cluster_slots_assigned:16384</span><br><span class="line">cluster_slots_ok:16384</span><br><span class="line">cluster_slots_pfail:0</span><br><span class="line">cluster_slots_fail:0</span><br><span class="line">cluster_known_nodes:6</span><br><span class="line">cluster_size:3</span><br><span class="line">cluster_current_epoch:5</span><br><span class="line">cluster_my_epoch:2</span><br><span class="line">cluster_stats_messages_ping_sent:1457</span><br><span class="line">cluster_stats_messages_pong_sent:1458</span><br><span class="line">cluster_stats_messages_meet_sent:5</span><br><span class="line">cluster_stats_messages_sent:2920</span><br><span class="line">cluster_stats_messages_ping_received:1458</span><br><span class="line">cluster_stats_messages_pong_received:1462</span><br><span class="line">cluster_stats_messages_received:2920</span><br><span class="line">127.0.0.1:6379&gt; cluster nodes</span><br><span class="line">2b52cbf5867de9a88b97510d7cc584f7aa37bc88 127.0.0.1:6384@16384 master - 0 1622274276210 5 connected</span><br><span class="line">bce5759afdbbee47ad417b683ea43a5f5bbfade7 127.0.0.1:6381@16381 master - 0 1622274275204 3 connected 10923-16383</span><br><span class="line">fd341da7a76df6dcab2b1e75e58eb8a74799703c 127.0.0.1:6382@16382 master - 0 1622274273192 0 connected</span><br><span class="line">118cc85c73c3f9bee9653d2cbca7881dbbd7957f 127.0.0.1:6380@16380 master - 0 1622274274198 1 connected 5462-10922</span><br><span class="line">7366db1f582ad74dadda9691368959285f9e4255 127.0.0.1:6379@16379 myself,master - 0 1622274275000 2 connected 0-5461</span><br><span class="line">a7d978b2609a41e108cbc12f115ee66bb1dfa14e 127.0.0.1:6383@16383 master - 0 1622274277216 4 connected</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>设置从节点。<code>cluster replicate &#123;nodeId&#125;</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[dev@localhost data]$ redis-cli -h 127.0.0.1 -p 6382</span><br><span class="line">127.0.0.1:6382&gt; cluster replicate 7366db1f582ad74dadda9691368959285f9e4255</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>6383和6384分别设置为6380和6381的从节点</p>
+</li>
+<li>
+<p>此时集群节点状态</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">127.0.0.1:6384&gt; cluster nodes</span><br><span class="line">bce5759afdbbee47ad417b683ea43a5f5bbfade7 127.0.0.1:6381@16381 master - 0 1622274665381 3 connected 10923-16383</span><br><span class="line">fd341da7a76df6dcab2b1e75e58eb8a74799703c 127.0.0.1:6382@16382 slave 7366db1f582ad74dadda9691368959285f9e4255 0 1622274664000 2 connected</span><br><span class="line">7366db1f582ad74dadda9691368959285f9e4255 127.0.0.1:6379@16379 master - 0 1622274666390 2 connected 0-5461</span><br><span class="line">a7d978b2609a41e108cbc12f115ee66bb1dfa14e 127.0.0.1:6383@16383 slave 118cc85c73c3f9bee9653d2cbca7881dbbd7957f 0 1622274667395 1 connected</span><br><span class="line">2b52cbf5867de9a88b97510d7cc584f7aa37bc88 127.0.0.1:6384@16384 myself,slave bce5759afdbbee47ad417b683ea43a5f5bbfade7 0 1622274665000 3 connected</span><br><span class="line">118cc85c73c3f9bee9653d2cbca7881dbbd7957f 127.0.0.1:6380@16380 master - 0 1622274665000 1 connected 5462-10922</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>至此，一个简单的集群搭建完成，关于集群动态伸缩，请求路由，故障转移部分的内容，后会无期~</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>瞎折腾</category>
+      </categories>
+      <tags>
+        <tag>Redis</tag>
       </tags>
   </entry>
   <entry>
@@ -2352,49 +2486,6 @@ $$</p>
       </tags>
   </entry>
   <entry>
-    <title>备忘录模式</title>
-    <url>/posts/400445220.html</url>
-    <content><![CDATA[<blockquote class="blockquote-center">
-<p>备忘录模式（Memento Pattern）保存一个对象的某个状态，以便在适当的时候恢复对象</p>
-
-</blockquote>
-<span id="more"></span>
-<h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<ul>
-<li><code>Memento</code> 包含了要被恢复的对象的状态</li>
-<li><code>Originator</code> 创建并在 Memento 对象中存储状态</li>
-<li><code>Caretaker</code> 对象负责从 Memento 中恢复对象的状态</li>
-</ul>
-<img src="/posts/400445220/Memento.png" class="">
-<h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
-<h3 id="备忘录"><a class="header-anchor" href="#备忘录"></a>备忘录</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Memento</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String state;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Memento</span><span class="params">(String state)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.state = state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(String state)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.state = state;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="备忘录记录"><a class="header-anchor" href="#备忘录记录"></a>备忘录记录</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CareTaker</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;Memento&gt; mementoList = <span class="keyword">new</span> ArrayList&lt;Memento&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(Memento memento)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mementoList.add(memento);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Memento <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mementoList.get(index);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="备忘录记录者"><a class="header-anchor" href="#备忘录记录者"></a>备忘录记录者</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Originator</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String state;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(String state)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.state = state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Memento <span class="title">createMemento</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Memento(state);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMemento</span><span class="params">(Memento memento)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.state = memento.getState();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;State : &quot;</span> + state);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="测试类"><a class="header-anchor" href="#测试类"></a>测试类</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MementoTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">        CareTaker careTaker = <span class="keyword">new</span> CareTaker();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 初始化并建立备忘录</span></span><br><span class="line">        Originator o = <span class="keyword">new</span> Originator();</span><br><span class="line">        o.setState(<span class="string">&quot;init&quot;</span>);</span><br><span class="line">        o.show();</span><br><span class="line">        careTaker.add(o.createMemento());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 状态错误</span></span><br><span class="line">        o.setState(<span class="string">&quot;error&quot;</span>);</span><br><span class="line">        o.show();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 从备忘录中恢复</span></span><br><span class="line">        o.setMemento(careTaker.get(<span class="number">0</span>));</span><br><span class="line">        o.show();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Example"><a class="header-anchor" href="#Example"></a>Example</h2>
-<ul>
-<li>java.io.Serializable</li>
-</ul>
-<h2 id="Reflence"><a class="header-anchor" href="#Reflence"></a>Reflence</h2>
-<ul>
-<li><a href="https://book.douban.com/subject/2334288/">&lt;大话设计模式&gt;</a></li>
-<li><a href="https://www.runoob.com/design-pattern/design-pattern-tutorial.html">设计模式 | 菜鸟教程</a></li>
-<li><a href="https://github.com/CyC2018/CS-Notes/blob/master/notes/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%20-%20%E7%9B%AE%E5%BD%95.md">Github | CyC2018</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>理论</category>
-        <category>设计模式</category>
-      </categories>
-      <tags>
-        <tag>设计模式</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>外观模式</title>
     <url>/posts/4158556840.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -2433,6 +2524,49 @@ $$</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Computer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> CPU cpu;</span><br><span class="line">    <span class="keyword">private</span> Memory memory;</span><br><span class="line">    <span class="keyword">private</span> Disk disk;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Computer</span><span class="params">()</span></span>&#123;</span><br><span class="line">        cpu = <span class="keyword">new</span> CPU();</span><br><span class="line">        memory = <span class="keyword">new</span> Memory();</span><br><span class="line">        disk = <span class="keyword">new</span> Disk();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startup</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;start the computer!&quot;</span>);</span><br><span class="line">        cpu.startup();</span><br><span class="line">        memory.startup();</span><br><span class="line">        disk.startup();</span><br><span class="line">        System.out.println(<span class="string">&quot;start computer finished!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">shutdown</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;begin to close the computer!&quot;</span>);</span><br><span class="line">        cpu.shutdown();</span><br><span class="line">        memory.shutdown();</span><br><span class="line">        disk.shutdown();</span><br><span class="line">        System.out.println(<span class="string">&quot;computer closed!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <h2 id="测试"><a class="header-anchor" href="#测试"></a>测试</h2>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FacadeTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testBootstrap</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        Computer computer = <span class="keyword">new</span> Computer();</span><br><span class="line">        computer.startup();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testShutdown</span><span class="params">()</span> <span class="keyword">throws</span>  Exception</span>&#123;</span><br><span class="line">        Computer computer = <span class="keyword">new</span> Computer();</span><br><span class="line">        computer.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>理论</category>
+        <category>设计模式</category>
+      </categories>
+      <tags>
+        <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>备忘录模式</title>
+    <url>/posts/400445220.html</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+<p>备忘录模式（Memento Pattern）保存一个对象的某个状态，以便在适当的时候恢复对象</p>
+
+</blockquote>
+<span id="more"></span>
+<h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
+<ul>
+<li><code>Memento</code> 包含了要被恢复的对象的状态</li>
+<li><code>Originator</code> 创建并在 Memento 对象中存储状态</li>
+<li><code>Caretaker</code> 对象负责从 Memento 中恢复对象的状态</li>
+</ul>
+<img src="/posts/400445220/Memento.png" class="">
+<h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
+<h3 id="备忘录"><a class="header-anchor" href="#备忘录"></a>备忘录</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Memento</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String state;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Memento</span><span class="params">(String state)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.state = state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(String state)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.state = state;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="备忘录记录"><a class="header-anchor" href="#备忘录记录"></a>备忘录记录</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CareTaker</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;Memento&gt; mementoList = <span class="keyword">new</span> ArrayList&lt;Memento&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(Memento memento)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mementoList.add(memento);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Memento <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mementoList.get(index);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="备忘录记录者"><a class="header-anchor" href="#备忘录记录者"></a>备忘录记录者</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Originator</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String state;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(String state)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.state = state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Memento <span class="title">createMemento</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Memento(state);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMemento</span><span class="params">(Memento memento)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.state = memento.getState();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;State : &quot;</span> + state);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="测试类"><a class="header-anchor" href="#测试类"></a>测试类</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MementoTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">        CareTaker careTaker = <span class="keyword">new</span> CareTaker();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 初始化并建立备忘录</span></span><br><span class="line">        Originator o = <span class="keyword">new</span> Originator();</span><br><span class="line">        o.setState(<span class="string">&quot;init&quot;</span>);</span><br><span class="line">        o.show();</span><br><span class="line">        careTaker.add(o.createMemento());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 状态错误</span></span><br><span class="line">        o.setState(<span class="string">&quot;error&quot;</span>);</span><br><span class="line">        o.show();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 从备忘录中恢复</span></span><br><span class="line">        o.setMemento(careTaker.get(<span class="number">0</span>));</span><br><span class="line">        o.show();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Example"><a class="header-anchor" href="#Example"></a>Example</h2>
+<ul>
+<li>java.io.Serializable</li>
+</ul>
+<h2 id="Reflence"><a class="header-anchor" href="#Reflence"></a>Reflence</h2>
+<ul>
+<li><a href="https://book.douban.com/subject/2334288/">&lt;大话设计模式&gt;</a></li>
+<li><a href="https://www.runoob.com/design-pattern/design-pattern-tutorial.html">设计模式 | 菜鸟教程</a></li>
+<li><a href="https://github.com/CyC2018/CS-Notes/blob/master/notes/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%20-%20%E7%9B%AE%E5%BD%95.md">Github | CyC2018</a></li>
+</ul>
 ]]></content>
       <categories>
         <category>理论</category>
@@ -2493,41 +2627,6 @@ $$</p>
       </tags>
   </entry>
   <entry>
-    <title>抽象工厂模式</title>
-    <url>/posts/2506759259.html</url>
-    <content><![CDATA[<blockquote class="blockquote-center">
-<p>抽象工厂模式（Abstract Factory Pattern）是围绕一个超级工厂创建其他工厂。该超级工厂又称为其他工厂的工厂。这种类型的设计模式属于创建型模式，它提供了一种创建对象的最佳方式。</p>
-
-</blockquote>
-<span id="more"></span>
-<h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<img src="/posts/2506759259/abstractFactory.png" class="">
-<h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
-<h3 id="接口及其实现类"><a class="header-anchor" href="#接口及其实现类"></a>接口及其实现类</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Color</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">fill</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Rectangle</span> <span class="keyword">implements</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Inside Rectangle::draw() method.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Square</span> <span class="keyword">implements</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Inside Square::draw() method.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Green</span> <span class="keyword">implements</span> <span class="title">Color</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fill</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Inside Green::fill() method.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Red</span> <span class="keyword">implements</span> <span class="title">Color</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fill</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Inside Red::fill() method.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="抽象工厂"><a class="header-anchor" href="#抽象工厂"></a>抽象工厂</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractFactory</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Color <span class="title">getColor</span><span class="params">(String color)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Shape <span class="title">getShape</span><span class="params">(String shape)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="实例工厂类"><a class="header-anchor" href="#实例工厂类"></a>实例工厂类</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ColorFactory</span> <span class="keyword">extends</span> <span class="title">AbstractFactory</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Shape <span class="title">getShape</span><span class="params">(String shapeType)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Color <span class="title">getColor</span><span class="params">(String color)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(color == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(color.equalsIgnoreCase(<span class="string">&quot;RED&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Red();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(color.equalsIgnoreCase(<span class="string">&quot;GREEN&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Green();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShapeFactory</span> <span class="keyword">extends</span> <span class="title">AbstractFactory</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Color <span class="title">getColor</span><span class="params">(String color)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Shape <span class="title">getShape</span><span class="params">(String shapeType)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(shapeType == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(shapeType.equalsIgnoreCase(<span class="string">&quot;RECTANGLE&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Rectangle();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(shapeType.equalsIgnoreCase(<span class="string">&quot;SQUARE&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Square();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="工厂创建类"><a class="header-anchor" href="#工厂创建类"></a>工厂创建类</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryProducer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> AbstractFactory <span class="title">getFactory</span><span class="params">(String choice)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(choice.equalsIgnoreCase(<span class="string">&quot;SHAPE&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ShapeFactory();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(choice.equalsIgnoreCase(<span class="string">&quot;COLOR&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ColorFactory();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="测试"><a class="header-anchor" href="#测试"></a>测试</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractFactoryTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">//获取形状工厂</span></span><br><span class="line">        AbstractFactory shapeFactory = FactoryProducer.getFactory(<span class="string">&quot;SHAPE&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取形状为 Rectangle 的对象</span></span><br><span class="line">        Shape shape2 = shapeFactory.getShape(<span class="string">&quot;RECTANGLE&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用 Rectangle 的 draw 方法</span></span><br><span class="line">        shape2.draw();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取形状为 Square 的对象</span></span><br><span class="line">        Shape shape3 = shapeFactory.getShape(<span class="string">&quot;SQUARE&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用 Square 的 draw 方法</span></span><br><span class="line">        shape3.draw();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取颜色工厂</span></span><br><span class="line">        AbstractFactory colorFactory = FactoryProducer.getFactory(<span class="string">&quot;COLOR&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取颜色为 Red 的对象</span></span><br><span class="line">        Color color1 = colorFactory.getColor(<span class="string">&quot;RED&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用 Red 的 fill 方法</span></span><br><span class="line">        color1.fill();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取颜色为 Green 的对象</span></span><br><span class="line">        Color color2 = colorFactory.getColor(<span class="string">&quot;Green&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用 Green 的 fill 方法</span></span><br><span class="line">        color2.fill();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Example"><a class="header-anchor" href="#Example"></a>Example</h2>
-<ul>
-<li><a href="http://docs.oracle.com/javase/8/docs/api/javax/xml/xpath/XPathFactory.html#newInstance--">javax.xml.xpath.XPathFactory</a></li>
-<li><a href="http://docs.oracle.com/javase/8/docs/api/javax/xml/parsers/DocumentBuilderFactory.html">javax.xml.parsers.DocumentBuilderFactory</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>理论</category>
-        <category>设计模式</category>
-      </categories>
-      <tags>
-        <tag>设计模式</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>建造者模式</title>
     <url>/posts/3898751754.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -2558,6 +2657,41 @@ $$</p>
 <li><a href="https://book.douban.com/subject/2334288/">&lt;大话设计模式&gt;</a></li>
 <li><a href="https://www.runoob.com/design-pattern/design-pattern-tutorial.html">设计模式 | 菜鸟教程</a></li>
 <li><a href="https://github.com/CyC2018/CS-Notes/blob/master/notes/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%20-%20%E7%9B%AE%E5%BD%95.md">Github | CyC2018</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>理论</category>
+        <category>设计模式</category>
+      </categories>
+      <tags>
+        <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>抽象工厂模式</title>
+    <url>/posts/2506759259.html</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+<p>抽象工厂模式（Abstract Factory Pattern）是围绕一个超级工厂创建其他工厂。该超级工厂又称为其他工厂的工厂。这种类型的设计模式属于创建型模式，它提供了一种创建对象的最佳方式。</p>
+
+</blockquote>
+<span id="more"></span>
+<h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
+<img src="/posts/2506759259/abstractFactory.png" class="">
+<h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
+<h3 id="接口及其实现类"><a class="header-anchor" href="#接口及其实现类"></a>接口及其实现类</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Color</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">fill</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Rectangle</span> <span class="keyword">implements</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Inside Rectangle::draw() method.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Square</span> <span class="keyword">implements</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Inside Square::draw() method.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Green</span> <span class="keyword">implements</span> <span class="title">Color</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fill</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Inside Green::fill() method.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Red</span> <span class="keyword">implements</span> <span class="title">Color</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fill</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Inside Red::fill() method.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="抽象工厂"><a class="header-anchor" href="#抽象工厂"></a>抽象工厂</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractFactory</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Color <span class="title">getColor</span><span class="params">(String color)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Shape <span class="title">getShape</span><span class="params">(String shape)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="实例工厂类"><a class="header-anchor" href="#实例工厂类"></a>实例工厂类</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ColorFactory</span> <span class="keyword">extends</span> <span class="title">AbstractFactory</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Shape <span class="title">getShape</span><span class="params">(String shapeType)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Color <span class="title">getColor</span><span class="params">(String color)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(color == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(color.equalsIgnoreCase(<span class="string">&quot;RED&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Red();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(color.equalsIgnoreCase(<span class="string">&quot;GREEN&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Green();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShapeFactory</span> <span class="keyword">extends</span> <span class="title">AbstractFactory</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Color <span class="title">getColor</span><span class="params">(String color)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Shape <span class="title">getShape</span><span class="params">(String shapeType)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(shapeType == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(shapeType.equalsIgnoreCase(<span class="string">&quot;RECTANGLE&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Rectangle();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(shapeType.equalsIgnoreCase(<span class="string">&quot;SQUARE&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Square();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="工厂创建类"><a class="header-anchor" href="#工厂创建类"></a>工厂创建类</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryProducer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> AbstractFactory <span class="title">getFactory</span><span class="params">(String choice)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(choice.equalsIgnoreCase(<span class="string">&quot;SHAPE&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ShapeFactory();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(choice.equalsIgnoreCase(<span class="string">&quot;COLOR&quot;</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ColorFactory();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="测试"><a class="header-anchor" href="#测试"></a>测试</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractFactoryTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">//获取形状工厂</span></span><br><span class="line">        AbstractFactory shapeFactory = FactoryProducer.getFactory(<span class="string">&quot;SHAPE&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取形状为 Rectangle 的对象</span></span><br><span class="line">        Shape shape2 = shapeFactory.getShape(<span class="string">&quot;RECTANGLE&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用 Rectangle 的 draw 方法</span></span><br><span class="line">        shape2.draw();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取形状为 Square 的对象</span></span><br><span class="line">        Shape shape3 = shapeFactory.getShape(<span class="string">&quot;SQUARE&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用 Square 的 draw 方法</span></span><br><span class="line">        shape3.draw();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取颜色工厂</span></span><br><span class="line">        AbstractFactory colorFactory = FactoryProducer.getFactory(<span class="string">&quot;COLOR&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取颜色为 Red 的对象</span></span><br><span class="line">        Color color1 = colorFactory.getColor(<span class="string">&quot;RED&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用 Red 的 fill 方法</span></span><br><span class="line">        color1.fill();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取颜色为 Green 的对象</span></span><br><span class="line">        Color color2 = colorFactory.getColor(<span class="string">&quot;Green&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用 Green 的 fill 方法</span></span><br><span class="line">        color2.fill();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Example"><a class="header-anchor" href="#Example"></a>Example</h2>
+<ul>
+<li><a href="http://docs.oracle.com/javase/8/docs/api/javax/xml/xpath/XPathFactory.html#newInstance--">javax.xml.xpath.XPathFactory</a></li>
+<li><a href="http://docs.oracle.com/javase/8/docs/api/javax/xml/parsers/DocumentBuilderFactory.html">javax.xml.parsers.DocumentBuilderFactory</a></li>
 </ul>
 ]]></content>
       <categories>
@@ -2653,41 +2787,6 @@ $$</p>
       </tags>
   </entry>
   <entry>
-    <title>状态模式</title>
-    <url>/posts/307019047.html</url>
-    <content><![CDATA[<blockquote class="blockquote-center">
-<p>状态模式(State):当一个对象的内在状态改变时允许改变其行为，这个对象看起来像是改变了一个类</p>
-
-</blockquote>
-<span id="more"></span>
-<h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<img src="/posts/307019047/%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F.png" class="">
-<h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
-<h3 id="状态接口"><a class="header-anchor" href="#状态接口"></a>状态接口</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">State</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> String desc;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">(Context context)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="具体状态"><a class="header-anchor" href="#具体状态"></a>具体状态</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteStateA</span> <span class="keyword">extends</span> <span class="title">State</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">        desc = <span class="string">&quot;休息中&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;当前状态&quot;</span> + desc);</span><br><span class="line">        System.out.println(<span class="string">&quot;状态处理，切换工作状态&quot;</span>);</span><br><span class="line">        context.setState(<span class="keyword">new</span> ConcreteStateB());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;状态:&quot;</span> + desc);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteStateB</span> <span class="keyword">extends</span> <span class="title">State</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">        desc = <span class="string">&quot;工作中&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;当前状态&quot;</span> + desc);</span><br><span class="line">        System.out.println(<span class="string">&quot;状态处理，切换工作状态&quot;</span>);</span><br><span class="line">        context.setState(<span class="keyword">new</span> ConcreteStateA());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;状态:&quot;</span> + desc);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="使用状态的实例"><a class="header-anchor" href="#使用状态的实例"></a>使用状态的实例</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Context</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> State state;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Context</span><span class="params">(State state)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.state = state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> State <span class="title">getState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(State state)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.state = state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">request</span><span class="params">()</span></span>&#123;</span><br><span class="line">        state.handle(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayState</span><span class="params">()</span></span>&#123;</span><br><span class="line">        state.display();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="测试类"><a class="header-anchor" href="#测试类"></a>测试类</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StateTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Context context = <span class="keyword">new</span> Context(<span class="keyword">new</span> ConcreteStateA());</span><br><span class="line">        context.displayState();</span><br><span class="line">        context.request();</span><br><span class="line">        context.displayState();</span><br><span class="line">        context.request();</span><br><span class="line">        context.displayState();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Example"><a class="header-anchor" href="#Example"></a>Example</h2>
-<h2 id="Reflence"><a class="header-anchor" href="#Reflence"></a>Reflence</h2>
-<ul>
-<li><a href="https://book.douban.com/subject/2334288/">&lt;大话设计模式&gt;</a></li>
-<li><a href="https://www.runoob.com/design-pattern/design-pattern-tutorial.html">设计模式 | 菜鸟教程</a></li>
-<li><a href="https://github.com/CyC2018/CS-Notes/blob/master/notes/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%20-%20%E7%9B%AE%E5%BD%95.md">Github | CyC2018</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>理论</category>
-        <category>设计模式</category>
-      </categories>
-      <tags>
-        <tag>设计模式</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>空对象模式</title>
     <url>/posts/3159547075.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -2707,6 +2806,41 @@ $$</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ObjectFactory</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> AbstractObject <span class="title">getObject</span><span class="params">(String type)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(type != <span class="keyword">null</span> &amp;&amp; !<span class="string">&quot;&quot;</span>.equals(type))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> RealObject();</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> NullObject();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="测试"><a class="header-anchor" href="#测试"></a>测试</h3>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NullObjectTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">        AbstractObject real = ObjectFactory.getObject(<span class="string">&quot;real&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (!real.isNil()) &#123;</span><br><span class="line">            real.request();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        AbstractObject nul = ObjectFactory.getObject(<span class="string">&quot;&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (!nul.isNil()) &#123;</span><br><span class="line">            nul.request();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Reflence"><a class="header-anchor" href="#Reflence"></a>Reflence</h2>
+<ul>
+<li><a href="https://book.douban.com/subject/2334288/">&lt;大话设计模式&gt;</a></li>
+<li><a href="https://www.runoob.com/design-pattern/design-pattern-tutorial.html">设计模式 | 菜鸟教程</a></li>
+<li><a href="https://github.com/CyC2018/CS-Notes/blob/master/notes/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%20-%20%E7%9B%AE%E5%BD%95.md">Github | CyC2018</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>理论</category>
+        <category>设计模式</category>
+      </categories>
+      <tags>
+        <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>状态模式</title>
+    <url>/posts/307019047.html</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+<p>状态模式(State):当一个对象的内在状态改变时允许改变其行为，这个对象看起来像是改变了一个类</p>
+
+</blockquote>
+<span id="more"></span>
+<h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
+<img src="/posts/307019047/%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F.png" class="">
+<h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
+<h3 id="状态接口"><a class="header-anchor" href="#状态接口"></a>状态接口</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">State</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> String desc;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">(Context context)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="具体状态"><a class="header-anchor" href="#具体状态"></a>具体状态</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteStateA</span> <span class="keyword">extends</span> <span class="title">State</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">        desc = <span class="string">&quot;休息中&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;当前状态&quot;</span> + desc);</span><br><span class="line">        System.out.println(<span class="string">&quot;状态处理，切换工作状态&quot;</span>);</span><br><span class="line">        context.setState(<span class="keyword">new</span> ConcreteStateB());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;状态:&quot;</span> + desc);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteStateB</span> <span class="keyword">extends</span> <span class="title">State</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">        desc = <span class="string">&quot;工作中&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;当前状态&quot;</span> + desc);</span><br><span class="line">        System.out.println(<span class="string">&quot;状态处理，切换工作状态&quot;</span>);</span><br><span class="line">        context.setState(<span class="keyword">new</span> ConcreteStateA());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;状态:&quot;</span> + desc);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="使用状态的实例"><a class="header-anchor" href="#使用状态的实例"></a>使用状态的实例</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Context</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> State state;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Context</span><span class="params">(State state)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.state = state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> State <span class="title">getState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(State state)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.state = state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">request</span><span class="params">()</span></span>&#123;</span><br><span class="line">        state.handle(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayState</span><span class="params">()</span></span>&#123;</span><br><span class="line">        state.display();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="测试类"><a class="header-anchor" href="#测试类"></a>测试类</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StateTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Context context = <span class="keyword">new</span> Context(<span class="keyword">new</span> ConcreteStateA());</span><br><span class="line">        context.displayState();</span><br><span class="line">        context.request();</span><br><span class="line">        context.displayState();</span><br><span class="line">        context.request();</span><br><span class="line">        context.displayState();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Example"><a class="header-anchor" href="#Example"></a>Example</h2>
 <h2 id="Reflence"><a class="header-anchor" href="#Reflence"></a>Reflence</h2>
 <ul>
 <li><a href="https://book.douban.com/subject/2334288/">&lt;大话设计模式&gt;</a></li>
@@ -2949,6 +3083,33 @@ $$</p>
       </tags>
   </entry>
   <entry>
+    <title>责任链模式</title>
+    <url>/posts/1644716670.html</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+<p>顾名思义，责任链模式(Chain of Responsibility Pattern) 为请求创建了一个接收者对象的链。这种模式给予请求的类型，对请求的发送者和接收者进行解耦。这种类型的设计模式属于行为型模式。</p>
+
+</blockquote>
+<span id="more"></span>
+<h1>责任链（Chain Of Responsibility）</h1>
+<h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
+<h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created with IntelliJ IDEA.</span></span><br><span class="line"><span class="comment"> * User: 长歌</span></span><br><span class="line"><span class="comment"> * Date: 2019/11/6</span></span><br><span class="line"><span class="comment"> * Description: 抽象日志组件</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractLogger</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> INFO = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> DEBUG = <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> ERROR = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> level;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//责任链中的下一个元素</span></span><br><span class="line">    <span class="keyword">protected</span> AbstractLogger nextLogger;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNextLogger</span><span class="params">(AbstractLogger nextLogger)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.nextLogger = nextLogger;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">logMessage</span><span class="params">(<span class="keyword">int</span> level, String message)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.level &lt;= level) &#123;</span><br><span class="line">            write(message);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (nextLogger != <span class="keyword">null</span>) &#123;</span><br><span class="line">            nextLogger.logMessage(level, message);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(String message)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsoleLogger</span> <span class="keyword">extends</span> <span class="title">AbstractLogger</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConsoleLogger</span><span class="params">(<span class="keyword">int</span> level)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.level = level;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(String message)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Standard Console::Logger: &quot;</span> + message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ErrorLogger</span> <span class="keyword">extends</span> <span class="title">AbstractLogger</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ErrorLogger</span><span class="params">(<span class="keyword">int</span> level)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.level = level;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(String message)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Error Console::Logger: &quot;</span> + message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileLogger</span> <span class="keyword">extends</span> <span class="title">AbstractLogger</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">FileLogger</span><span class="params">(<span class="keyword">int</span> level)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.level = level;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(String message)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;File::Logger: &quot;</span> + message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created with IntelliJ IDEA.</span></span><br><span class="line"><span class="comment"> * User: 长歌</span></span><br><span class="line"><span class="comment"> * Date: 2019/11/6</span></span><br><span class="line"><span class="comment"> * Description: 日志工厂类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoggerFactroy</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">LoggerFactroy</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> AbstractLogger <span class="title">getLogger</span><span class="params">()</span></span>&#123;</span><br><span class="line">        AbstractLogger logger = <span class="keyword">new</span> ErrorLogger(AbstractLogger.ERROR);</span><br><span class="line">        AbstractLogger fileLogger = <span class="keyword">new</span> FileLogger(AbstractLogger.DEBUG);</span><br><span class="line">        AbstractLogger consoleLogger = <span class="keyword">new</span> ConsoleLogger(AbstractLogger.INFO);</span><br><span class="line"></span><br><span class="line">        logger.setNextLogger(fileLogger);</span><br><span class="line">        fileLogger.setNextLogger(consoleLogger);</span><br><span class="line">        <span class="keyword">return</span> logger;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="测试类"><a class="header-anchor" href="#测试类"></a>测试类</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ChainOfResponsibilityPatternTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        AbstractLogger logger = LoggerFactroy.getLogger();</span><br><span class="line">        logger.logMessage(AbstractLogger.INFO, <span class="string">&quot;This is an information.&quot;</span>);</span><br><span class="line"></span><br><span class="line">        logger.logMessage(AbstractLogger.DEBUG,</span><br><span class="line">                <span class="string">&quot;This is a debug level information.&quot;</span>);</span><br><span class="line"></span><br><span class="line">        logger.logMessage(AbstractLogger.ERROR,</span><br><span class="line">                <span class="string">&quot;This is an error information.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Example"><a class="header-anchor" href="#Example"></a>Example</h2>
+<ul>
+<li>[javax.servlet.Filter#doFilter()</li>
+</ul>
+]]></content>
+      <categories>
+        <category>理论</category>
+        <category>设计模式</category>
+      </categories>
+      <tags>
+        <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>访问者模式</title>
     <url>/posts/2960930216.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -2981,33 +3142,6 @@ $$</p>
 <li><a href="https://book.douban.com/subject/2334288/">&lt;大话设计模式&gt;</a></li>
 <li><a href="https://www.runoob.com/design-pattern/design-pattern-tutorial.html">设计模式 | 菜鸟教程</a></li>
 <li><a href="https://github.com/CyC2018/CS-Notes/blob/master/notes/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%20-%20%E7%9B%AE%E5%BD%95.md">Github | CyC2018</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>理论</category>
-        <category>设计模式</category>
-      </categories>
-      <tags>
-        <tag>设计模式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>责任链模式</title>
-    <url>/posts/1644716670.html</url>
-    <content><![CDATA[<blockquote class="blockquote-center">
-<p>顾名思义，责任链模式(Chain of Responsibility Pattern) 为请求创建了一个接收者对象的链。这种模式给予请求的类型，对请求的发送者和接收者进行解耦。这种类型的设计模式属于行为型模式。</p>
-
-</blockquote>
-<span id="more"></span>
-<h1>责任链（Chain Of Responsibility）</h1>
-<h2 id="Class-Diagram"><a class="header-anchor" href="#Class-Diagram"></a>Class Diagram</h2>
-<h2 id="Implementation"><a class="header-anchor" href="#Implementation"></a>Implementation</h2>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created with IntelliJ IDEA.</span></span><br><span class="line"><span class="comment"> * User: 长歌</span></span><br><span class="line"><span class="comment"> * Date: 2019/11/6</span></span><br><span class="line"><span class="comment"> * Description: 抽象日志组件</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractLogger</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> INFO = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> DEBUG = <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> ERROR = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> level;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//责任链中的下一个元素</span></span><br><span class="line">    <span class="keyword">protected</span> AbstractLogger nextLogger;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNextLogger</span><span class="params">(AbstractLogger nextLogger)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.nextLogger = nextLogger;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">logMessage</span><span class="params">(<span class="keyword">int</span> level, String message)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.level &lt;= level) &#123;</span><br><span class="line">            write(message);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (nextLogger != <span class="keyword">null</span>) &#123;</span><br><span class="line">            nextLogger.logMessage(level, message);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(String message)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsoleLogger</span> <span class="keyword">extends</span> <span class="title">AbstractLogger</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConsoleLogger</span><span class="params">(<span class="keyword">int</span> level)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.level = level;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(String message)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Standard Console::Logger: &quot;</span> + message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ErrorLogger</span> <span class="keyword">extends</span> <span class="title">AbstractLogger</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ErrorLogger</span><span class="params">(<span class="keyword">int</span> level)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.level = level;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(String message)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Error Console::Logger: &quot;</span> + message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileLogger</span> <span class="keyword">extends</span> <span class="title">AbstractLogger</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">FileLogger</span><span class="params">(<span class="keyword">int</span> level)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.level = level;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(String message)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;File::Logger: &quot;</span> + message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created with IntelliJ IDEA.</span></span><br><span class="line"><span class="comment"> * User: 长歌</span></span><br><span class="line"><span class="comment"> * Date: 2019/11/6</span></span><br><span class="line"><span class="comment"> * Description: 日志工厂类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoggerFactroy</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">LoggerFactroy</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> AbstractLogger <span class="title">getLogger</span><span class="params">()</span></span>&#123;</span><br><span class="line">        AbstractLogger logger = <span class="keyword">new</span> ErrorLogger(AbstractLogger.ERROR);</span><br><span class="line">        AbstractLogger fileLogger = <span class="keyword">new</span> FileLogger(AbstractLogger.DEBUG);</span><br><span class="line">        AbstractLogger consoleLogger = <span class="keyword">new</span> ConsoleLogger(AbstractLogger.INFO);</span><br><span class="line"></span><br><span class="line">        logger.setNextLogger(fileLogger);</span><br><span class="line">        fileLogger.setNextLogger(consoleLogger);</span><br><span class="line">        <span class="keyword">return</span> logger;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="测试类"><a class="header-anchor" href="#测试类"></a>测试类</h3>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ChainOfResponsibilityPatternTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        AbstractLogger logger = LoggerFactroy.getLogger();</span><br><span class="line">        logger.logMessage(AbstractLogger.INFO, <span class="string">&quot;This is an information.&quot;</span>);</span><br><span class="line"></span><br><span class="line">        logger.logMessage(AbstractLogger.DEBUG,</span><br><span class="line">                <span class="string">&quot;This is a debug level information.&quot;</span>);</span><br><span class="line"></span><br><span class="line">        logger.logMessage(AbstractLogger.ERROR,</span><br><span class="line">                <span class="string">&quot;This is an error information.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Example"><a class="header-anchor" href="#Example"></a>Example</h2>
-<ul>
-<li>[javax.servlet.Filter#doFilter()</li>
 </ul>
 ]]></content>
       <categories>
@@ -3192,6 +3326,26 @@ $$</p>
       <tags>
         <tag>设计模式</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/posts/4a17b156.html</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<span id="more"></span>
+<h2 id="Quick-Start"><a class="header-anchor" href="#Quick-Start"></a>Quick Start</h2>
+<h3 id="Create-a-new-post"><a class="header-anchor" href="#Create-a-new-post"></a>Create a new post</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a class="header-anchor" href="#Run-server"></a>Run server</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a class="header-anchor" href="#Generate-static-files"></a>Generate static files</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a class="header-anchor" href="#Deploy-to-remote-sites"></a>Deploy to remote sites</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
   </entry>
   <entry>
     <title>Redis开发与运维笔记_API的理解和使用</title>

@@ -6,7 +6,7 @@
   <link href="https://leithda.github.io/atom.xml" rel="self"/>
   
   <link href="https://leithda.github.io/"/>
-  <updated>2021-05-27T09:20:59.023Z</updated>
+  <updated>2021-05-29T08:03:16.163Z</updated>
   <id>https://leithda.github.io/</id>
   
   <author>
@@ -15,6 +15,52 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Redis集群搭建</title>
+    <link href="https://leithda.github.io/posts/778231993.html"/>
+    <id>https://leithda.github.io/posts/778231993.html</id>
+    <published>2021-05-29T04:50:00.000Z</published>
+    <updated>2021-05-29T08:03:16.163Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;这里只是采用手工方式创建一个Redis集群，后续会补充集群的高级部分内容。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="瞎折腾" scheme="https://leithda.github.io/categories/%E7%9E%8E%E6%8A%98%E8%85%BE/"/>
+    
+    
+    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis开发与运维笔记-集群</title>
+    <link href="https://leithda.github.io/posts/ddc0d24d.html"/>
+    <id>https://leithda.github.io/posts/ddc0d24d.html</id>
+    <published>2021-05-28T14:20:00.000Z</published>
+    <updated>2021-05-29T08:57:51.833Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Redis Cluster是Redis的分布式解决方案，在3.0版本正式推出，有效地解决了Redis分布式方面的需求。当遇到单机内存、并发、流量等瓶颈时，可以采用Cluster架构方案达到负载均衡的目的。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
+    
+    
+    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
+    
+  </entry>
   
   <entry>
     <title>Markdown-数学公式</title>
@@ -264,15 +310,16 @@
   </entry>
   
   <entry>
-    <title>状态模式</title>
-    <link href="https://leithda.github.io/posts/307019047.html"/>
-    <id>https://leithda.github.io/posts/307019047.html</id>
+    <title>空对象模式</title>
+    <link href="https://leithda.github.io/posts/3159547075.html"/>
+    <id>https://leithda.github.io/posts/3159547075.html</id>
     <published>2021-05-27T04:50:00.000Z</published>
-    <updated>2021-05-27T08:15:24.777Z</updated>
+    <updated>2021-05-27T08:30:50.569Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;状态模式(State):当一个对象的内在状态改变时允许改变其行为，这个对象看起来像是改变了一个类&lt;/p&gt;
+&lt;p&gt;在空对象模式（Null Object Pattern）中，一个空对象取代 NULL 对象实例的检查。Null 对象不是检查空值，&lt;br&gt;
+而是反应一个不做任何动作的关系。这样的 Null 对象也可以在数据不可用的时候提供默认的行为。&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
@@ -288,16 +335,15 @@
   </entry>
   
   <entry>
-    <title>空对象模式</title>
-    <link href="https://leithda.github.io/posts/3159547075.html"/>
-    <id>https://leithda.github.io/posts/3159547075.html</id>
+    <title>状态模式</title>
+    <link href="https://leithda.github.io/posts/307019047.html"/>
+    <id>https://leithda.github.io/posts/307019047.html</id>
     <published>2021-05-27T04:50:00.000Z</published>
-    <updated>2021-05-27T08:30:50.569Z</updated>
+    <updated>2021-05-27T08:15:24.777Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;在空对象模式（Null Object Pattern）中，一个空对象取代 NULL 对象实例的检查。Null 对象不是检查空值，&lt;br&gt;
-而是反应一个不做任何动作的关系。这样的 Null 对象也可以在数据不可用的时候提供默认的行为。&lt;/p&gt;
+&lt;p&gt;状态模式(State):当一个对象的内在状态改变时允许改变其行为，这个对象看起来像是改变了一个类&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
@@ -444,54 +490,6 @@
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
 &lt;p&gt;Redis的主从复制模式下，一旦主节点由于故障不能提供服务，需要人 工将从节点晋升为主节点，同时还要通知应用方更新主节点地址，对于很多应用场景这种故障处理的方式是无法接受的。可喜的是Redis从2.8开始正式 提供了Redis Sentinel(哨兵)架构来解决这个问题。&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
-    
-    
-    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis开发与运维笔记-理解内存</title>
-    <link href="https://leithda.github.io/posts/1495994843.html"/>
-    <id>https://leithda.github.io/posts/1495994843.html</id>
-    <published>2021-05-26T15:05:00.000Z</published>
-    <updated>2021-05-27T06:29:28.024Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;Redis所有的数据都存在内存中，高效利用Redis内存首先需要理解Redis内存消耗在哪里，如何管理内存，最后才能考虑如何优化内存。&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
-    
-    
-    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis开发与运维笔记-Redis的噩梦-阻塞</title>
-    <link href="https://leithda.github.io/posts/3586754738.html"/>
-    <id>https://leithda.github.io/posts/3586754738.html</id>
-    <published>2021-05-26T14:50:00.000Z</published>
-    <updated>2021-05-27T06:29:40.933Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;Redis是典型的单线程架构，所有的读写操作都是在一条主线程中完成的。当Redis用于高并发场景时，这条线程就变成了它的生命线。如果出现阻塞，哪怕是很短时间，对于我们的应用来说都是噩梦&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
