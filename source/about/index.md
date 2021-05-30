@@ -6,8 +6,8 @@ comments: false
 
 
 {% blockquote%}
-非淡泊无以明志
-<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;非宁静无以致远
+马行千里
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;不洗尘沙
 {% endblockquote %}
   
 
