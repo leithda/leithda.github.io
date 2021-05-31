@@ -30,7 +30,7 @@
 <meta property="og:description" content="Redis Cluster是Redis的分布式解决方案，在3.0版本正式推出，有效地解决了Redis分布式方面的需求。当遇到单机内存、并发、流量等瓶颈时，可以采用Cluster架构方案达到负载均衡的目的。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-05-28T14:20:00.000Z">
-<meta property="article:modified_time" content="2021-05-29T08:57:51.833Z">
+<meta property="article:modified_time" content="2021-05-31T10:00:23.118Z">
 <meta property="article:author" content="Leithda">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
@@ -154,7 +154,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">集群</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E5%B8%83"><span class="nav-number">1.1.</span> <span class="nav-text">数据分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E6%95%B0%E6%8D%AE%E5%88%86%E5%B8%83"><span class="nav-number">1.1.1.</span> <span class="nav-text">Redis数据分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4%E5%8A%9F%E8%83%BD%E9%99%90%E5%88%B6"><span class="nav-number">1.1.2.</span> <span class="nav-text">Redis分布式集群功能限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E9%9B%86%E7%BE%A4"><span class="nav-number">1.2.</span> <span class="nav-text">搭建集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E9%80%9A%E4%BF%A1"><span class="nav-number">1.3.</span> <span class="nav-text">节点通信</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Gossip%E6%B6%88%E6%81%AF"><span class="nav-number">1.3.1.</span> <span class="nav-text">Gossip消息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E4%BC%B8%E7%BC%A9"><span class="nav-number">1.4.</span> <span class="nav-text">集群伸缩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E8%B7%AF%E7%94%B1"><span class="nav-number">1.5.</span> <span class="nav-text">请求路由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">1.6.</span> <span class="nav-text">故障转移</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E8%BF%90%E7%BB%B4"><span class="nav-number">1.7.</span> <span class="nav-text">集群运维</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E7%AB%A0%E9%87%8D%E7%82%B9%E5%9B%9E%E9%A1%BE"><span class="nav-number">1.8.</span> <span class="nav-text">本章重点回顾</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">集群</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E5%B8%83"><span class="nav-number">1.1.</span> <span class="nav-text">数据分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E6%95%B0%E6%8D%AE%E5%88%86%E5%B8%83"><span class="nav-number">1.1.1.</span> <span class="nav-text">Redis数据分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4%E5%8A%9F%E8%83%BD%E9%99%90%E5%88%B6"><span class="nav-number">1.1.2.</span> <span class="nav-text">Redis分布式集群功能限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E9%80%9A%E4%BF%A1"><span class="nav-number">1.2.</span> <span class="nav-text">节点通信</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Gossip%E6%B6%88%E6%81%AF"><span class="nav-number">1.2.1.</span> <span class="nav-text">Gossip消息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E9%9B%86%E7%BE%A4"><span class="nav-number">1.3.</span> <span class="nav-text">搭建集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E8%B7%AF%E7%94%B1"><span class="nav-number">1.4.</span> <span class="nav-text">请求路由</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-number">1.4.1.</span> <span class="nav-text">请求重定向</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">1.5.</span> <span class="nav-text">故障转移</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E8%BF%90%E7%BB%B4"><span class="nav-number">1.6.</span> <span class="nav-text">集群运维</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E7%AB%A0%E9%87%8D%E7%82%B9%E5%9B%9E%E9%A1%BE"><span class="nav-number">1.7.</span> <span class="nav-text">本章重点回顾</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -170,7 +170,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">41</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -278,7 +278,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-05-29 16:57:51" itemprop="dateModified" datetime="2021-05-29T16:57:51+08:00">2021-05-29</time>
+        <time title="修改时间：2021-05-31 18:00:23" itemprop="dateModified" datetime="2021-05-31T18:00:23+08:00">2021-05-31</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -302,7 +302,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1k</span>
+      <span>1.2k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -347,14 +347,6 @@
 <li>不支持多数据库空间。单机下的Redis可以支持16个数据库，集群模式下只能使用一个数据库空间，即db0。</li>
 <li>复制结构只支持一层，从节点只能复制主节点，不支持嵌套树状复制结构</li>
 </ol>
-<h2 id="搭建集群"><a class="header-anchor" href="#搭建集群"></a>搭建集群</h2>
-<p>搭建集群需要以下三个步骤：</p>
-<ol>
-<li>准备节点</li>
-<li>节点握手</li>
-<li>分配槽</li>
-</ol>
-<p>搭建集群部分可以参考 <a href="./778231993">搭建Redis集群</a></p>
 <h2 id="节点通信"><a class="header-anchor" href="#节点通信"></a>节点通信</h2>
 <p>​	Redis集群采用P2P的Gossip（流言）协议， Gossip协议工作原理就是节点彼此不断通信交换信息，一段时间后所有的节 点都会知道集群完整的信息，这种方式类似流言传播。</p>
 <h3 id="Gossip消息"><a class="header-anchor" href="#Gossip消息"></a>Gossip消息</h3>
@@ -365,8 +357,21 @@
 <li>pong消息：接收到meet、ping消息时作为返回数据，封装自身状态信息。也可以广播pong消息用于通知其他节点更新当前节点状态。</li>
 <li>fail消息：当节点判定其他节点下线时，会向集群内广播fail消息，其他节点收到消息后将标记节点设置为下线状态。</li>
 </ul>
-<h2 id="集群伸缩"><a class="header-anchor" href="#集群伸缩"></a>集群伸缩</h2>
+<h2 id="搭建集群"><a class="header-anchor" href="#搭建集群"></a>搭建集群</h2>
+<p>搭建集群需要以下三个步骤：</p>
+<ol>
+<li>准备节点</li>
+<li>节点握手</li>
+<li>分配槽</li>
+</ol>
+<p>搭建集群以及集群伸缩部分可以参考如下文章：</p>
+<ul>
+<li><a href="./778231993">Redis集群搭建(Redis3.0版)</a></li>
+<li><a href="./1044596185">Redis集群搭建(Redis5.0版)</a></li>
+</ul>
 <h2 id="请求路由"><a class="header-anchor" href="#请求路由"></a>请求路由</h2>
+<h3 id="请求重定向"><a class="header-anchor" href="#请求重定向"></a>请求重定向</h3>
+<p>在集群模式下，Redis接收任何键相关命令时首先计算键对应的槽，再根据槽找出所对应的节点，如果节点是自身，则处理键命令；否则回复 MOVED重定向错误，通知客户端请求正确的节点。这个过程称为MOVED重定向。</p>
 <h2 id="故障转移"><a class="header-anchor" href="#故障转移"></a>故障转移</h2>
 <h2 id="集群运维"><a class="header-anchor" href="#集群运维"></a>集群运维</h2>
 <h2 id="本章重点回顾"><a class="header-anchor" href="#本章重点回顾"></a>本章重点回顾</h2>
@@ -418,8 +423,8 @@
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/posts/778231993.html" rel="next" title="Redis集群搭建">
-                  Redis集群搭建 <i class="fa fa-chevron-right"></i>
+                <a href="/posts/778231993.html" rel="next" title="Redis集群搭建(Redis3.0版)">
+                  Redis集群搭建(Redis3.0版) <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -453,13 +458,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">123k</span>
+    <span title="站点总字数">141k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:52</span>
+    <span title="站点阅读时长">2:08</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动

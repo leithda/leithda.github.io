@@ -6,7 +6,7 @@
   <link href="https://leithda.github.io/atom.xml" rel="self"/>
   
   <link href="https://leithda.github.io/"/>
-  <updated>2021-05-29T08:03:16.163Z</updated>
+  <updated>2021-05-31T10:05:38.651Z</updated>
   <id>https://leithda.github.io/</id>
   
   <author>
@@ -17,15 +17,39 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Redis集群搭建</title>
-    <link href="https://leithda.github.io/posts/778231993.html"/>
-    <id>https://leithda.github.io/posts/778231993.html</id>
-    <published>2021-05-29T04:50:00.000Z</published>
-    <updated>2021-05-29T08:03:16.163Z</updated>
+    <title>Redis集群搭建(Redis5.0版)</title>
+    <link href="https://leithda.github.io/posts/1044596185.html"/>
+    <id>https://leithda.github.io/posts/1044596185.html</id>
+    <published>2021-05-30T04:30:00.000Z</published>
+    <updated>2021-05-31T10:05:38.651Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;这里只是采用手工方式创建一个Redis集群，后续会补充集群的高级部分内容。&lt;/p&gt;
+&lt;p&gt;在Redis5中redis-trib.rb的功能被集成到了redis-cli中，大大简化了redis的集群部署，加快了进群部署的速度，也方便后期维护与扩容。此篇文章参考&lt;a href=&quot;https://redis.io/topics/cluster-tutorial&quot;&gt;官方文档&lt;/a&gt;搭建Redis集群。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注：Redis版本应在5.0及以上。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="瞎折腾" scheme="https://leithda.github.io/categories/%E7%9E%8E%E6%8A%98%E8%85%BE/"/>
+    
+    
+    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis集群搭建(Redis3.0版)</title>
+    <link href="https://leithda.github.io/posts/778231993.html"/>
+    <id>https://leithda.github.io/posts/778231993.html</id>
+    <published>2021-05-29T04:50:00.000Z</published>
+    <updated>2021-05-31T09:57:12.144Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Redis Cluster是Redis的分布式解决方案，在3.0版本正式推出，有效地解决了Redis分布式方面的需求。在Redis5.0中redis-trib.rb的功能被集成到了redis-cli中。在此之前，需要使用redis-cli客户端或者redis-trib.rb进行redis集群的搭建.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注：使用redis-trib.rb方式需要有Ruby运行环境&lt;/strong&gt;&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
@@ -43,7 +67,7 @@
     <link href="https://leithda.github.io/posts/ddc0d24d.html"/>
     <id>https://leithda.github.io/posts/ddc0d24d.html</id>
     <published>2021-05-28T14:20:00.000Z</published>
-    <updated>2021-05-29T08:57:51.833Z</updated>
+    <updated>2021-05-31T10:00:23.118Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
@@ -310,16 +334,15 @@
   </entry>
   
   <entry>
-    <title>空对象模式</title>
-    <link href="https://leithda.github.io/posts/3159547075.html"/>
-    <id>https://leithda.github.io/posts/3159547075.html</id>
+    <title>状态模式</title>
+    <link href="https://leithda.github.io/posts/307019047.html"/>
+    <id>https://leithda.github.io/posts/307019047.html</id>
     <published>2021-05-27T04:50:00.000Z</published>
-    <updated>2021-05-27T08:30:50.569Z</updated>
+    <updated>2021-05-27T08:15:24.777Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;在空对象模式（Null Object Pattern）中，一个空对象取代 NULL 对象实例的检查。Null 对象不是检查空值，&lt;br&gt;
-而是反应一个不做任何动作的关系。这样的 Null 对象也可以在数据不可用的时候提供默认的行为。&lt;/p&gt;
+&lt;p&gt;状态模式(State):当一个对象的内在状态改变时允许改变其行为，这个对象看起来像是改变了一个类&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
@@ -335,15 +358,16 @@
   </entry>
   
   <entry>
-    <title>状态模式</title>
-    <link href="https://leithda.github.io/posts/307019047.html"/>
-    <id>https://leithda.github.io/posts/307019047.html</id>
+    <title>空对象模式</title>
+    <link href="https://leithda.github.io/posts/3159547075.html"/>
+    <id>https://leithda.github.io/posts/3159547075.html</id>
     <published>2021-05-27T04:50:00.000Z</published>
-    <updated>2021-05-27T08:15:24.777Z</updated>
+    <updated>2021-05-27T08:30:50.569Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;状态模式(State):当一个对象的内在状态改变时允许改变其行为，这个对象看起来像是改变了一个类&lt;/p&gt;
+&lt;p&gt;在空对象模式（Null Object Pattern）中，一个空对象取代 NULL 对象实例的检查。Null 对象不是检查空值，&lt;br&gt;
+而是反应一个不做任何动作的关系。这样的 Null 对象也可以在数据不可用的时候提供默认的行为。&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
@@ -477,30 +501,6 @@
     
     
     <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis开发与运维笔记-哨兵</title>
-    <link href="https://leithda.github.io/posts/2400819807.html"/>
-    <id>https://leithda.github.io/posts/2400819807.html</id>
-    <published>2021-05-26T15:15:00.000Z</published>
-    <updated>2021-05-27T06:29:31.394Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;Redis的主从复制模式下，一旦主节点由于故障不能提供服务，需要人 工将从节点晋升为主节点，同时还要通知应用方更新主节点地址，对于很多应用场景这种故障处理的方式是无法接受的。可喜的是Redis从2.8开始正式 提供了Redis Sentinel(哨兵)架构来解决这个问题。&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
-    
-    
-    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
     
   </entry>
   
