@@ -1,5 +1,5 @@
 ---
-title: Redis集群搭建
+title: Redis集群搭建(Redis3.0版)
 abbrlink: 778231993
 category: 瞎折腾
 tag: Redis
@@ -8,7 +8,9 @@ date: 2021-05-29 12:50:00
 
 {% cq %}
 
-这里只是采用手工方式创建一个Redis集群，后续会补充集群的高级部分内容。
+Redis Cluster是Redis的分布式解决方案，在3.0版本正式推出，有效地解决了Redis分布式方面的需求。在Redis5.0中redis-trib.rb的功能被集成到了redis-cli中。在此之前，需要使用redis-cli客户端或者redis-trib.rb进行redis集群的搭建.
+
+**注：使用redis-trib.rb方式需要有Ruby运行环境**
 
 {% endcq %}
 
@@ -16,39 +18,7 @@ date: 2021-05-29 12:50:00
 
 
 
-# 搭建Redis集群
-
-
-
-## 安装Redis
-
-> 此处以Linux(CentOS)为例。其他方式大同小异
-
-### 下载
-
-进入[官网](https://redis.io/)下载，或者在服务器上执行一下命令下载Redis，注意版本。
-
-```bash
-$ wget https://download.redis.io/releases/redis-6.2.3.tar.gz
-$ tar xzf redis-6.2.3.tar.gz
-```
-
-
-
-### 安装
-
-```bash
-$ cd redis-6.2.3
-$ make
-```
-
-- 其中，如果报错`/bin/sh: cc: command not found`时，执行`sudo yum -y install gcc gcc-c++ libstdc++-devel` 安装gcc。执行`make distclean  && make`继续安装。
-
-- make完成会在src目录下生成`redis-server`等redis相关可执行文件。
-
-- 执行`make install`命令将redis相关命令加入到`/usr/local/bin`目录下
-
-
+# Redis集群搭建(Redis3.0版)
 
 ## 准备节点
 
@@ -141,7 +111,9 @@ redis-server redis-6384.conf &
 
 
 
-## 节点握手
+## 搭建集群
+
+### 节点握手
 
 使用`cluster meet {host} {port}`加入6380、6381后的集群状态。
 
@@ -175,11 +147,7 @@ cluster_stats_messages_received:64
 bce5759afdbbee47ad417b683ea43a5f5bbfade7 127.0.0.1:6381@16381 master - 0 1622272871601 0 connected
 ```
 
-
-
-
-
-## 分配槽
+### 分配槽
 
 ```bash
 redis-cli -h 127.0.0.1 -p 6379 cluster addslots {0..5461}
@@ -243,4 +211,106 @@ redis-cli -h 127.0.0.1 -p 6381 cluster addslots {10923..16383}
 
 
 
-> 至此，一个简单的集群搭建完成，关于集群动态伸缩，请求路由，故障转移部分的内容，后会无期~
+
+
+### 使用redis-trib.rb方式
+
+```bash
+redis-trib.rb create --replicas 1 127.0.0.1:6481 127.0.0.1:6482 127.0.0.1:6483 127.0.0.1:6484 127.0.0.1:6485 127.0.0.1:6486
+```
+
+- 使用redis-trib.rb只需要一个命令即可完成上述握手及分配槽的操作。
+
+## 扩容集群
+### 准备新节点
+
+```bash
+redis-server redis-6385.conf &
+redis-server redis-6386.conf &
+```
+
+
+
+### 加入集群
+
+使用任意客户端将新节点加入集群:
+
+```bash
+127.0.0.1:6379> cluster meet 127.0.0.1 6385
+OK
+127.0.0.1:6379> cluster meet 127.0.0.1 6386
+OK
+
+## 查看集群状态
+127.0.0.1:6379> cluster nodes
+eff74c1f59ae4b4fdd95fddedf7b01f0653eb4e6 127.0.0.1:6385@16385 master - 0 1622441835000 0 connected
+2b52cbf5867de9a88b97510d7cc584f7aa37bc88 127.0.0.1:6384@16384 slave bce5759afdbbee47ad417b683ea43a5f5bbfade7 0 1622441835000 3 connected
+02d683a46c67b7822e5d4a122aae91d3a2a505d4 127.0.0.1:6386@16386 master - 0 1622441837504 6 connected
+bce5759afdbbee47ad417b683ea43a5f5bbfade7 127.0.0.1:6381@16381 master - 0 1622441832000 3 connected 10923-16383
+fd341da7a76df6dcab2b1e75e58eb8a74799703c 127.0.0.1:6382@16382 slave 7366db1f582ad74dadda9691368959285f9e4255 0 1622441833473 2 connected
+118cc85c73c3f9bee9653d2cbca7881dbbd7957f 127.0.0.1:6380@16380 master - 0 1622441836496 1 connected 5462-10922
+7366db1f582ad74dadda9691368959285f9e4255 127.0.0.1:6379@16379 myself,master - 0 1622441836000 2 connected 0-5461
+a7d978b2609a41e108cbc12f115ee66bb1dfa14e 127.0.0.1:6383@16383 slave 118cc85c73c3f9bee9653d2cbca7881dbbd7957f 0 1622441835490 1 connected
+```
+
+
+
+### 分配槽
+
+#### 流程说明
+
+1. 对目标节点发送`cluster setslot{slot} importing {sourceNodeId}`，让目标节点准备导入槽的数据
+2. 对源节点发送`cluster setslot {slot} migrating {targetNodeId}`，让源节点准备好导出的数据
+3. 源节点循环执行`cluster get keys inslot {slot} {count}`命令，获取count个属于{slot}槽的键
+4. 在源节点上执行`migrate {targetIp} {targetPort} "" 0 {timeout} keys {keys...}`把获取的键通过pipeline流水线发送到目标节点
+5. 重复3-4步骤，直到槽上的所有键值迁移到目标节点
+6. 向集群内的所有主节点发送`cluster setslot {slot} node {targetNodeId}`命令通知槽分配给目标节点
+
+> 这里步骤过于复杂，不进行直接演示，也不建议使用此种方式进行处理
+
+### 添加从节点
+
+与之前搭建时方式一致，使用客户端连接到127.0.0.1:6386客户端，执行`cluster replicate <master-node-id>`命令即可
+
+
+
+### 使用Redis-trib.rb方式
+
+- 准备新节点同上述步骤一致
+
+- 加入集群
+
+  ```bash
+  redis-trib.rb add-node new_host:new_port existing_host:existing_port
+  ```
+
+  
+
+- 分配槽，redis-trib提供了槽重分片功能
+
+  ```bash
+  redis-trib.rb reshard host:port --from <arg> --to <arg> --slots <arg> --yes --timeout <arg> --pipeline <arg>
+  ```
+
+  
+
+- 添加从节点
+
+  ```bash
+  redis-trib.rb add-node new_host:new_port existing_host:existing_port --slave --master-id <arg>
+  ```
+
+
+
+## 集群收缩
+
+> 原生方式还是别用了，我照着书抄都觉得麻烦。
+
+
+
+1. 使用`redis-trie.rb del-node <host>:<port> <node-id>`下线从节点。
+2. 使用`redis-trib.rb reshard `将主节点的槽分配到其他主节点上
+3. 使用`redis-trie.rb del-node <host>:<port> <node-id>`命令下线主节点
+
+
+
