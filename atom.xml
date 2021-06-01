@@ -67,7 +67,7 @@
     <link href="https://leithda.github.io/posts/ddc0d24d.html"/>
     <id>https://leithda.github.io/posts/ddc0d24d.html</id>
     <published>2021-05-28T14:20:00.000Z</published>
-    <updated>2021-05-31T10:00:23.118Z</updated>
+    <updated>2021-06-01T10:26:48.257Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
@@ -285,31 +285,6 @@
   </entry>
   
   <entry>
-    <title>桥接模式</title>
-    <link href="https://leithda.github.io/posts/3468020877.html"/>
-    <id>https://leithda.github.io/posts/3468020877.html</id>
-    <published>2021-05-27T04:50:00.000Z</published>
-    <updated>2021-05-27T08:40:59.404Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;桥接模式(Bridge),将抽象部分与它的实线部分分离，使他们都可以独立地变化。&lt;/p&gt;
-&lt;p&gt;对于两个独立变化的维度，使用桥接模式可以避免通过继承导致的类爆炸&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
-    
-    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
     <title>模板模式</title>
     <link href="https://leithda.github.io/posts/2374608698.html"/>
     <id>https://leithda.github.io/posts/2374608698.html</id>
@@ -334,15 +309,16 @@
   </entry>
   
   <entry>
-    <title>状态模式</title>
-    <link href="https://leithda.github.io/posts/307019047.html"/>
-    <id>https://leithda.github.io/posts/307019047.html</id>
+    <title>桥接模式</title>
+    <link href="https://leithda.github.io/posts/3468020877.html"/>
+    <id>https://leithda.github.io/posts/3468020877.html</id>
     <published>2021-05-27T04:50:00.000Z</published>
-    <updated>2021-05-27T08:15:24.777Z</updated>
+    <updated>2021-05-27T08:40:59.404Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;状态模式(State):当一个对象的内在状态改变时允许改变其行为，这个对象看起来像是改变了一个类&lt;/p&gt;
+&lt;p&gt;桥接模式(Bridge),将抽象部分与它的实线部分分离，使他们都可以独立地变化。&lt;/p&gt;
+&lt;p&gt;对于两个独立变化的维度，使用桥接模式可以避免通过继承导致的类爆炸&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
@@ -383,6 +359,30 @@
   </entry>
   
   <entry>
+    <title>状态模式</title>
+    <link href="https://leithda.github.io/posts/307019047.html"/>
+    <id>https://leithda.github.io/posts/307019047.html</id>
+    <published>2021-05-27T04:50:00.000Z</published>
+    <updated>2021-05-27T08:15:24.777Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;状态模式(State):当一个对象的内在状态改变时允许改变其行为，这个对象看起来像是改变了一个类&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
+    
+    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
     <title>组合模式</title>
     <link href="https://leithda.github.io/posts/1191195587.html"/>
     <id>https://leithda.github.io/posts/1191195587.html</id>
@@ -392,6 +392,30 @@
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
 &lt;p&gt;组合模式(Composite),将对象组合成树形结构以表示’部分-整体’的层次结构。组合模式使得用户对单个对象和组合对象的使用具有一致性&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
+    
+    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>责任链模式</title>
+    <link href="https://leithda.github.io/posts/1644716670.html"/>
+    <id>https://leithda.github.io/posts/1644716670.html</id>
+    <published>2021-05-27T04:50:00.000Z</published>
+    <updated>2021-05-27T08:54:52.737Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;顾名思义，责任链模式(Chain of Responsibility Pattern) 为请求创建了一个接收者对象的链。这种模式给予请求的类型，对请求的发送者和接收者进行解耦。这种类型的设计模式属于行为型模式。&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
@@ -417,30 +441,6 @@
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
 &lt;p&gt;装饰器模式（Decorator Pattern）允许向一个现有的对象添加新的功能，同时又不改变其结构&lt;br&gt;
 这种模式创建了一个装饰类，用来包装原有的类，并在保持类方法签名完整性的前提下，提供了额外的功能。&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
-    
-    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>责任链模式</title>
-    <link href="https://leithda.github.io/posts/1644716670.html"/>
-    <id>https://leithda.github.io/posts/1644716670.html</id>
-    <published>2021-05-27T04:50:00.000Z</published>
-    <updated>2021-05-27T08:54:52.737Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;顾名思义，责任链模式(Chain of Responsibility Pattern) 为请求创建了一个接收者对象的链。这种模式给予请求的类型，对请求的发送者和接收者进行解耦。这种类型的设计模式属于行为型模式。&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     

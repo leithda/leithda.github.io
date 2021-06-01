@@ -31,7 +31,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://leithda.github.io/posts/3460365957/%E5%85%A8%E9%87%8F%E5%A4%8D%E5%88%B6.png">
 <meta property="article:published_time" content="2021-05-26T14:40:00.000Z">
-<meta property="article:modified_time" content="2021-05-27T06:29:06.321Z">
+<meta property="article:modified_time" content="2021-06-01T08:21:27.042Z">
 <meta property="article:author" content="Leithda">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
@@ -280,7 +280,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-05-27 14:29:06" itemprop="dateModified" datetime="2021-05-27T14:29:06+08:00">2021-05-27</time>
+        <time title="修改时间：2021-06-01 16:21:27" itemprop="dateModified" datetime="2021-06-01T16:21:27+08:00">2021-06-01</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -445,7 +445,7 @@
 <p>主节点执行<code>bgsave</code>保存RDB文件到本地</p>
 </li>
 <li>
-<p>主节点发送RDB文件给丛及诶单，从节点接收RDB文件保存到本地并直接作为从节点的数据文件</p>
+<p>主节点发送RDB文件给从节点，从节点接收RDB文件保存到本地并直接作为从节点的数据文件</p>
 <p>为了降低主机点的磁盘开销，可以使用<code>repl-diskless-sync</code>参数开启无盘复制，默认关闭。开启时主节点不会再本地生成RDB，而是直接通过网络发送到从节点。适用于磁盘性能差、网络带宽足的场景。</p>
 </li>
 <li>
@@ -518,7 +518,7 @@
 <li>Reids通过复制功能实现主节点的多个副本，从节点可灵活地通过<code>slaveof</code>命令建立或断开复制流程</li>
 <li>复制支持树状结构。复制分为全量复制和部分复制，设置合理的积压缓冲区大小可以规避不必要的全量复制</li>
 <li>主从节点通过心跳和偏移量检查机制，保证主从节点通信正常和数据一致</li>
-<li>Redis为了保证高性能，复制过程时异步的，写命令处理后直接返回给客户端，不等待从节点复制完成。因此从节点数据集会有延迟情况。</li>
+<li>Redis为了保证高性能，复制过程是异步的，写命令处理后直接返回给客户端，不等待从节点复制完成。因此从节点数据集会有延迟情况。</li>
 <li>当使用从节点用于读写分离时会存在数据延迟、过期数据、从节点可用性等问题，需要根据自身业务提前做出规避</li>
 <li>运维过程中，主节点存在多个从节点或者一台机器上部署大量主节点的情况下，会有复制风暴的风险。</li>
 </ol>
@@ -612,13 +612,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">141k</span>
+    <span title="站点总字数">142k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:08</span>
+    <span title="站点阅读时长">2:09</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动

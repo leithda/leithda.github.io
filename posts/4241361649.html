@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://leithda.github.io/posts/4241361649/redis%E7%9A%84%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png">
 <meta property="og:image" content="https://leithda.github.io/posts/4241361649/Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E5%86%85%E9%83%A8%E7%BC%96%E7%A0%81.png">
 <meta property="article:published_time" content="2021-05-25T14:25:00.000Z">
-<meta property="article:modified_time" content="2021-05-27T06:29:37.332Z">
+<meta property="article:modified_time" content="2021-06-01T03:35:11.322Z">
 <meta property="article:author" content="Leithda">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
@@ -281,7 +281,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-05-27 14:29:37" itemprop="dateModified" datetime="2021-05-27T14:29:37+08:00">2021-05-27</time>
+        <time title="修改时间：2021-06-01 11:35:11" itemprop="dateModified" datetime="2021-06-01T11:35:11+08:00">2021-06-01</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -342,7 +342,7 @@
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dbsize</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p><code>dbsize</code>命令直接获取Redis内置的键总数，复杂度是<strong>O(1)</strong>。<code>keys</code>会获取所有键，复杂度是<strong>O(n)</strong>,当Redis中保存大量键时，线上环境禁止使用。</p>
+<p><code>dbsize</code>命令直接获取Redis内置的键总数，复杂度是<strong>O(1)</strong>。<code>keys</code>会获取所有键，复杂度是<strong>O(n)</strong>,当Redis中保存大量键时，线上环境应禁止使用。</p>
 </blockquote>
 <ol start="3">
 <li>检查键是否存在</li>
@@ -371,8 +371,8 @@
 <h3 id="数据结构和内部编码"><a class="header-anchor" href="#数据结构和内部编码"></a>数据结构和内部编码</h3>
 <blockquote>
 <p>type命令返回的是当前键的数据结构，它们分别是：<code>string、hash、list、set、zset</code><br>
-实际上，每种数据结构都有自己底层的内部编码实现<br>
-可以使用<code>object encoding key</code>命令获取当前键使用的内部编码</p>
+实际上，每种数据结构都有自己底层的内部编码实现。<br>
+可以使用<code>object encoding key</code>命令获取当前键使用的内部编码。</p>
 </blockquote>
 <img src="/posts/4241361649/redis%E7%9A%84%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png" class="" title="redis的五种数据结构">
 <img src="/posts/4241361649/Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E5%86%85%E9%83%A8%E7%BC%96%E7%A0%81.png" class="" title="Redis数据结构和内部编码">
@@ -570,7 +570,7 @@
 <h3 id="内部编码-2"><a class="header-anchor" href="#内部编码-2"></a>内部编码</h3>
 <p>列表类型的内部编码有两种：</p>
 <ul>
-<li><code>ziplist(压缩列表)</code>：元素个数小于<code>list-max-ziplist-entries(512)</code>,同时列表中每个元素的值都小于<code>list-max-ziplist-value(64字节)</code>,Redis会使用<code>ziplist</code>作为<code>list</code>的内部编码来减少内存的使用。</li>
+<li><code>ziplist(压缩列表)</code>：元素个数小于<code>list-max-ziplist-entries(512)</code>,同时列表中每个元素的值都小于<code>list-max-ziplist-value(64字节)</code>，Redis会使用<code>ziplist</code>作为<code>list</code>的内部编码来减少内存的使用。</li>
 <li><code>linkedlist(链表)</code>: 不满足ziplist的条件时，使用<code>linkedlist</code>作为<code>list</code>的内部编码实现</li>
 </ul>
 <blockquote>
@@ -789,7 +789,7 @@
 </ol>
 <ul>
 <li>键的新名称存在时，值会被覆盖，可以使用<code>renamenx key newkey</code>命令避免</li>
-<li>重命名期间会执行<code>del</code>命令删除旧的键，当键对应的值比较大时存在阻塞风险。</li>
+<li>重命名期间会执行<code>del</code>命令删除旧的键，当键对应的值比较大时存在阻塞风险</li>
 </ul>
 <ol start="2">
 <li>随机返回一个键 <code>randomkey</code></li>
@@ -809,7 +809,7 @@
 <li>persist命令可以将键的过期时间清除</li>
 <li>对于字符串类型键，执行set命令会去掉过期时间，这个问题很容易在开发中被忽视</li>
 <li>Redis不支持二级数据结构(例如哈希、列表)内部元素的过期功能</li>
-<li>setex命令作为set+expire的组合，不但是原子执行，同时减少了一次 网络通讯的时间</li>
+<li>setex命令作为set+expire的组合，不但是原子执行，同时减少了一次网络通讯的时间</li>
 </ul>
 </li>
 </ul>
@@ -894,7 +894,7 @@ pattern支持glob风格的通配符</p>
 </blockquote>
 <blockquote>
 <p>除了<code>scan</code>外，Redis还提供了面向哈希类型、集合类型、有序集合的扫 描遍历命令，<code>hscan、sscan、zscan</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">String key = <span class="string">&quot;myset&quot;</span>;</span><br><span class="line"><span class="comment">// 定义 pattern</span></span><br><span class="line">String pattern = <span class="string">&quot;old:user*&quot;</span>;</span><br><span class="line"><span class="comment">// 游标每次从0开始</span></span><br><span class="line">String cursor = <span class="string">&quot;0&quot;</span></span><br><span class="line"><span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">  ScanResult scanResult = redis.sscan(key,cursor,pattern);</span><br><span class="line">  List elements = scanResult.getResult();</span><br><span class="line">  <span class="keyword">if</span>(elements != <span class="keyword">null</span> &amp;&amp; element.size() &gt;<span class="number">0</span> )&#123;</span><br><span class="line">    <span class="comment">// 批量删除</span></span><br><span class="line">    redis.srem(key,elements)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 获取新的游标</span></span><br><span class="line">  cursor = scanResult.getStringCursor();</span><br><span class="line">  <span class="comment">// 如果游标为0表示遍历结束</span></span><br><span class="line">  <span class="keyword">if</span>(<span class="string">&quot;0&quot;</span>.equals(cursor))&#123;</span><br><span class="line">  <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">String key = <span class="string">&quot;myset&quot;</span>;</span><br><span class="line"><span class="comment">// 定义 pattern</span></span><br><span class="line">String pattern = <span class="string">&quot;old:user*&quot;</span>;</span><br><span class="line"><span class="comment">// 游标每次从0开始</span></span><br><span class="line">String cursor = <span class="string">&quot;0&quot;</span></span><br><span class="line"><span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">      ScanResult scanResult = redis.sscan(key,cursor,pattern);</span><br><span class="line">      List elements = scanResult.getResult();</span><br><span class="line">      <span class="keyword">if</span>(elements != <span class="keyword">null</span> &amp;&amp; element.size() &gt; <span class="number">0</span> )&#123;</span><br><span class="line">            <span class="comment">// 批量删除</span></span><br><span class="line">            redis.srem(key,elements)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 获取新的游标</span></span><br><span class="line">      cursor = scanResult.getStringCursor();</span><br><span class="line">      <span class="comment">// 如果游标为0表示遍历结束</span></span><br><span class="line">      <span class="keyword">if</span>(<span class="string">&quot;0&quot;</span>.equals(cursor))&#123;</span><br><span class="line">      	<span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>当scan过程中，如果发生键值的修改、删除、增加等，可能会发生问题。</li>
 </ul>
@@ -906,8 +906,8 @@ pattern支持glob风格的通配符</p>
 </ol>
 <h2 id="本节内容回顾"><a class="header-anchor" href="#本节内容回顾"></a>本节内容回顾</h2>
 <ol>
-<li>Redis提供了5种数据结构，每种数据结构都有多种内部编码实现。</li>
-<li>纯内存存储、IO多路复用技术、单线程架构是造就Redis高性能的三个因素。</li>
+<li>Redis提供了5种数据结构，每种数据结构都有多种内部编码实现</li>
+<li>纯内存存储、IO多路复用技术、单线程架构是造就Redis高性能的三个因素</li>
 <li>由于Redis的单线程架构，所以需要每个命令能被快速执行完，否则会存在阻塞Redis的可能，理解Redis单线程命令处理机制是开发和运维Redis的核心之一</li>
 <li>批量操作(例如mget、mset、hmset等)能够有效提高命令执行的效率，但要注意每次批量操作的个数和字节数</li>
 <li>了解每个命令的时间复杂度在开发中至关重要，例如在使用keys、hgetall、smembers、zrange等时间复杂度较高的命令时，需要考虑数据规模对于Redis的影响</li>
@@ -1009,13 +1009,13 @@ pattern支持glob风格的通配符</p>
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">141k</span>
+    <span title="站点总字数">142k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:08</span>
+    <span title="站点阅读时长">2:09</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
