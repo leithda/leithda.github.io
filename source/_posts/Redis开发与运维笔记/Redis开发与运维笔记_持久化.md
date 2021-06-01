@@ -93,7 +93,7 @@ AOF通过`appendonl yes`开启，默认不开启，AOF文件名通过`appendfile
 
 ### 命令写入
 
-AOF命令写入的内容直接时文本协议格式。例如`set hello world`这条命令，在AOF缓冲区会追加以下文本`*3\r\n$3\r\nset\r\n$5\r\nhello\r\n$5\r\nworld\r\n`
+AOF命令写入的内容直接是文本协议格式。例如`set hello world`这条命令，在AOF缓冲区会追加以下文本`*3\r\n$3\r\nset\r\n$5\r\nhello\r\n$5\r\nworld\r\n`
 
 - 为什么直接采用文本协议格式
   - 文本协议具有很好的兼容性
@@ -112,7 +112,7 @@ Redis提供了多种AOF缓冲区同步文件策略，由参数`appendfsync`控�
 | no       | 命令写入aof_buf后调用系统`write`操作，不对AOF文件做`fsync`同步，同步硬盘操作由操作系统负责，通常同步周期最长30秒 |
 
 - `write`操作会触发延迟写(delayed write)机制。Linux在内核提供页缓冲区来提高IO性能。write操作写入系统缓冲区后直接返回。同步硬盘操作依赖系统调度机制(固定周期或缓冲区页满)。同步文件之前，若此时系统故障宕机，缓冲区内数据将丢失。
-- `fsync`针对单个文件操作(AOF文件)。强制硬盘听不，`fsync`将阻塞知道写入硬盘，保证了数据的持久化
+- `fsync`针对单个文件操作(AOF文件)。强制硬盘同步，`fsync`将阻塞直到写入硬盘，保证了数据的持久化
 - 建议配置为`everysec`，兼顾性能和数据安全性。
 
 ### 重写机制
@@ -141,7 +141,7 @@ AOF重写流程：
    `ERR Background append only file rewriting already in progress`。如果当前进程正在执行`bgsave`操作，重写命令延迟到`bgsave`完成之后在执行，返回如下响应:`Background append only file rewriting scheduled`
 
 2. 父进程执行fork创建子进程，开销等同于`bgsave`过程
-3. 3.1）主进程fork完成后，继续响应其他命令，所有修改命令依然写入AOF缓冲区并根据`appendfsync`策略同步到硬盘，保证旧AOF机制正确性；fork运用写时复制技术，资金恒智能共享fork操作时的内存数据，3.2）此时父进程依然响应命令，Redis使用"AOF重写缓冲区“保存这部分新数据。防止新AOF文件生成期间丢失者部分数据
+3. 3.1）主进程fork完成后，继续响应其他命令，所有修改命令依然写入AOF缓冲区并根据`appendfsync`策略同步到硬盘，保证旧AOF机制正确性；fork运用写时复制技术，子进程只能共享fork操作时的内存数据，3.2）此时父进程依然响应命令，Redis使用"AOF重写缓冲区“保存这部分新数据。防止新AOF文件生成期间丢失这部分数据
 4. 子进程根据内存快照，按照命令合并规则写入到新的AOF文件。每次批量写入硬盘数据量由配置`aof-rewirte-incremental-fsync`控制。默认为32MB，防止单次刷盘数据过多造成硬盘阻塞。
 5. 5.1）新AOF文件写入完成后，子进程发信号给父进程。父进程更新统计信息，具体见`info persistence`下的aof_*相关统计。5.2）父进程把AOF重写缓冲拿过去的数据写入到AOF文件。5.3）使用新AOF文件替换老文件，完成AOF重写。
 
@@ -227,7 +227,7 @@ fork操作耗时，通过`info stats`统计中查看`lasted_fork_usec`获取最�
 - 硬盘开销优化
   - 避免和其他高硬盘负载服务部署在一起。如：存储服务、消息队列服务
   - AOF重写时会消耗大量硬盘IO，可以开启配置`no-appendfsync-on-rewrite`，默认关闭。表示在AOF期间不做fsync操作
-  - 当开启AOF孤男寡女的Redis用于高流量写入场景时，普通机械磁盘，写入吞吐量在100MB/s左右，此时Redis实例的瓶颈主要在AOF同步硬盘上
+  - 当开启AOF功能的Redis用于高流量写入场景时，普通机械磁盘，写入吞吐量在100MB/s左右，此时Redis实例的瓶颈主要在AOF同步硬盘上
   - 对于单机配置多个Redis实例的情况，可以配置不同实例分盘存储AOF文件，分摊硬盘写入压力。
 
 > 配置`no-appendfsync-on-write=yes`时，极端情况下可能丢失整个AOF重写期间的数据，需要根据数据安全性决定是否配置。
@@ -273,11 +273,11 @@ Redis单线程架构无法充分利用COU多核特性，通常做法是在一台
 
 ## 本章重点回顾
 
-1. Redis提供了两种持久化方式：RDB和AOF。
-2. RDB使用一次性生成内存快照的方式，产生的文件紧凑压缩比更高，因此读取RDB恢复速度更快。由于每次生成RDB开销较大，无法做到实时持久化，一般用于数据冷备和复制传输。
-3. save命令会阻塞主线程，不建议使用。`bgsave`命令通过fork操作创建子进程生成RDB避免阻塞。
-4. AOF通过追加写命令到文件实现持久化，通过`appendfsync`参数可以控制实时/秒级持久化。
-5. AOF可以通过`auto-aof-rewrite-min-size`和`auto-aof-rewrite-percentage`参数控制自动触发，也可以使用`bgwriteaof`命令手动触发‘
-6. 子进程执行期间使用`copy-on-write`机制与父进程共享内存，避免内存消耗翻倍。AOF重写期间还需要维护重写缓冲区，保存新的写入命令避免数据丢失。
-7. 持久化阻塞主线程场景有:fork阻塞和AOF追加阻塞。fork阻塞时间跟内存量和系统有关，AOF追加阻塞说明硬盘资源紧张。
-8. 单机下部署多个实例时，为了防止出现多个子进程执行重写操作，建议做隔离控制，避免CPU和I/O资源竞争。
+1. Redis提供了两种持久化方式：RDB和AOF
+2. RDB使用一次性生成内存快照的方式，产生的文件紧凑压缩比更高，因此读取RDB恢复速度更快。由于每次生成RDB开销较大，无法做到实时持久化，一般用于数据冷备和复制传输
+3. save命令会阻塞主线程，不建议使用。`bgsave`命令通过fork操作创建子进程生成RDB避免阻塞
+4. AOF通过追加写命令到文件实现持久化，通过`appendfsync`参数可以控制实时/秒级持久化
+5. AOF可以通过`auto-aof-rewrite-min-size`和`auto-aof-rewrite-percentage`参数控制自动触发，也可以使用`bgwriteaof`命令手动触发
+6. 子进程执行期间使用`copy-on-write`机制与父进程共享内存，避免内存消耗翻倍。AOF重写期间还需要维护重写缓冲区，保存新的写入命令避免数据丢失
+7. 持久化阻塞主线程场景有:fork阻塞和AOF追加阻塞。fork阻塞时间跟内存量和系统有关，AOF追加阻塞说明硬盘资源紧张
+8. 单机下部署多个实例时，为了防止出现多个子进程执行重写操作，建议做隔离控制，避免CPU和I/O资源竞争

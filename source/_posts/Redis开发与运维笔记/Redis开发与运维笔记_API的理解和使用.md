@@ -34,7 +34,7 @@ keys *
 ```bash
 dbsize
 ```
-> `dbsize`命令直接获取Redis内置的键总数，复杂度是**O(1)**。`keys`会获取所有键，复杂度是**O(n)**,当Redis中保存大量键时，线上环境禁止使用。
+> `dbsize`命令直接获取Redis内置的键总数，复杂度是**O(1)**。`keys`会获取所有键，复杂度是**O(n)**,当Redis中保存大量键时，线上环境应禁止使用。
 
 3. 检查键是否存在
 
@@ -68,8 +68,8 @@ type key
 
 ### 数据结构和内部编码
 > type命令返回的是当前键的数据结构，它们分别是：`string、hash、list、set、zset`
-> 实际上，每种数据结构都有自己底层的内部编码实现
-> 可以使用`object encoding key`命令获取当前键使用的内部编码
+> 实际上，每种数据结构都有自己底层的内部编码实现。
+> 可以使用`object encoding key`命令获取当前键使用的内部编码。
 
 ![redis的五种数据结构](Redis开发与运维笔记_API的理解和使用/redis的五种数据结构.png)
 
@@ -284,7 +284,7 @@ long incrVideoCount(long id){
 ### 内部编码
 
 列表类型的内部编码有两种：
-- `ziplist(压缩列表)`：元素个数小于`list-max-ziplist-entries(512)`,同时列表中每个元素的值都小于`list-max-ziplist-value(64字节)`,Redis会使用`ziplist`作为`list`的内部编码来减少内存的使用。
+- `ziplist(压缩列表)`：元素个数小于`list-max-ziplist-entries(512)`,同时列表中每个元素的值都小于`list-max-ziplist-value(64字节)`，Redis会使用`ziplist`作为`list`的内部编码来减少内存的使用。
 - `linkedlist(链表)`: 不满足ziplist的条件时，使用`linkedlist`作为`list`的内部编码实现
 
 > Redis3.2版本提供了quicklist内部编码，简单地说它是以一个ziplist为节点的linkedlist，它结合了ziplist和linkedlist两者的优势，为列表类型提供了一 种更为优秀的内部编码实现，它的设计原理可以参考Redis的另一个作者 **Matt Stancliff的博客**[^3]
@@ -499,7 +499,7 @@ zrank user:ranking:2016_03_15 tom
 
 1. 键重命名 `rename key newkey`
 - 键的新名称存在时，值会被覆盖，可以使用`renamenx key newkey`命令避免
-- 重命名期间会执行`del`命令删除旧的键，当键对应的值比较大时存在阻塞风险。
+- 重命名期间会执行`del`命令删除旧的键，当键对应的值比较大时存在阻塞风险
 
 2. 随机返回一个键 `randomkey`
 3. 键过期 
@@ -515,7 +515,7 @@ zrank user:ranking:2016_03_15 tom
   - persist命令可以将键的过期时间清除
   - 对于字符串类型键，执行set命令会去掉过期时间，这个问题很容易在开发中被忽视
   - Redis不支持二级数据结构(例如哈希、列表)内部元素的过期功能
-  - setex命令作为set+expire的组合，不但是原子执行，同时减少了一次 网络通讯的时间
+  - setex命令作为set+expire的组合，不但是原子执行，同时减少了一次网络通讯的时间
 
 4. 迁移键
 
@@ -566,18 +566,18 @@ zrank user:ranking:2016_03_15 tom
 > // 游标每次从0开始
 > String cursor = "0"
 > while(true){
->   ScanResult scanResult = redis.sscan(key,cursor,pattern);
->   List elements = scanResult.getResult();
->   if(elements != null && element.size() >0 ){
->     // 批量删除
->     redis.srem(key,elements)
->   }
->   // 获取新的游标
->   cursor = scanResult.getStringCursor();
->   // 如果游标为0表示遍历结束
->   if("0".equals(cursor)){
->   break;
->   }
+>       ScanResult scanResult = redis.sscan(key,cursor,pattern);
+>       List elements = scanResult.getResult();
+>       if(elements != null && element.size() > 0 ){
+>             // 批量删除
+>             redis.srem(key,elements)
+>       }
+>       // 获取新的游标
+>       cursor = scanResult.getStringCursor();
+>       // 如果游标为0表示遍历结束
+>       if("0".equals(cursor)){
+>       	break;
+>       }
 > }
 > ```
 > - 当scan过程中，如果发生键值的修改、删除、增加等，可能会发生问题。
@@ -588,8 +588,8 @@ zrank user:ranking:2016_03_15 tom
 2. 清除数据库 `flushdb/flushall`
 
 ## 本节内容回顾
-1. Redis提供了5种数据结构，每种数据结构都有多种内部编码实现。
-2. 纯内存存储、IO多路复用技术、单线程架构是造就Redis高性能的三个因素。
+1. Redis提供了5种数据结构，每种数据结构都有多种内部编码实现
+2. 纯内存存储、IO多路复用技术、单线程架构是造就Redis高性能的三个因素
 3. 由于Redis的单线程架构，所以需要每个命令能被快速执行完，否则会存在阻塞Redis的可能，理解Redis单线程命令处理机制是开发和运维Redis的核心之一
 4. 批量操作(例如mget、mset、hmset等)能够有效提高命令执行的效率，但要注意每次批量操作的个数和字节数
 5. 了解每个命令的时间复杂度在开发中至关重要，例如在使用keys、hgetall、smembers、zrange等时间复杂度较高的命令时，需要考虑数据规模对于Redis的影响

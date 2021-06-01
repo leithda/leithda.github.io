@@ -299,7 +299,7 @@ sentinel failover-timeout
 
 > `sentinel failover-timeout <master-name> <times>`
 
-​		通常被解释成故障转移超时时间，实际上它作用与故障转移的各个阶段：
+​		通常被解释成故障转移超时时间，实际上它作用于故障转移的各个阶段：
 
 - 如果Redis Sentinel对一个主节点故障转移失败，那么下次再对该主 节点做故障转移的起始时间是failover-timeout的2倍
 - 选举出来晋升的从节点执行`slaveof no one`失败，超过此超时时间则故障转移失败
