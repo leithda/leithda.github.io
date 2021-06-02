@@ -30,8 +30,8 @@
 <meta property="og:description" content="Redis Cluster是Redis的分布式解决方案，在3.0版本正式推出，有效地解决了Redis分布式方面的需求。当遇到单机内存、并发、流量等瓶颈时，可以采用Cluster架构方案达到负载均衡的目的。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://leithda.github.io/posts/ddc0d24d/Smart%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%93%8D%E4%BD%9C%E6%B5%81%E7%A8%8B.png">
-<meta property="article:published_time" content="2021-05-28T14:20:00.000Z">
-<meta property="article:modified_time" content="2021-06-01T10:26:48.257Z">
+<meta property="article:published_time" content="2021-06-02T13:15:00.000Z">
+<meta property="article:modified_time" content="2021-06-02T08:53:12.246Z">
 <meta property="article:author" content="Leithda">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
@@ -156,7 +156,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">集群</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E5%B8%83"><span class="nav-number">1.1.</span> <span class="nav-text">数据分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E6%95%B0%E6%8D%AE%E5%88%86%E5%B8%83"><span class="nav-number">1.1.1.</span> <span class="nav-text">Redis数据分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4%E5%8A%9F%E8%83%BD%E9%99%90%E5%88%B6"><span class="nav-number">1.1.2.</span> <span class="nav-text">Redis分布式集群功能限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E9%80%9A%E4%BF%A1"><span class="nav-number">1.2.</span> <span class="nav-text">节点通信</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Gossip%E6%B6%88%E6%81%AF"><span class="nav-number">1.2.1.</span> <span class="nav-text">Gossip消息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E9%9B%86%E7%BE%A4"><span class="nav-number">1.3.</span> <span class="nav-text">搭建集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E8%B7%AF%E7%94%B1"><span class="nav-number">1.4.</span> <span class="nav-text">请求路由</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-number">1.4.1.</span> <span class="nav-text">请求重定向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hash-tag"><span class="nav-number">1.4.2.</span> <span class="nav-text">hash_tag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Smart%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">1.4.3.</span> <span class="nav-text">Smart客户端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASK%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-number">1.4.4.</span> <span class="nav-text">ASK重定向</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">1.5.</span> <span class="nav-text">故障转移</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E8%BF%90%E7%BB%B4"><span class="nav-number">1.6.</span> <span class="nav-text">集群运维</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E7%AB%A0%E9%87%8D%E7%82%B9%E5%9B%9E%E9%A1%BE"><span class="nav-number">1.7.</span> <span class="nav-text">本章重点回顾</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">集群</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E5%B8%83"><span class="nav-number">1.1.</span> <span class="nav-text">数据分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E6%95%B0%E6%8D%AE%E5%88%86%E5%B8%83"><span class="nav-number">1.1.1.</span> <span class="nav-text">Redis数据分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4%E5%8A%9F%E8%83%BD%E9%99%90%E5%88%B6"><span class="nav-number">1.1.2.</span> <span class="nav-text">Redis分布式集群功能限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E9%80%9A%E4%BF%A1"><span class="nav-number">1.2.</span> <span class="nav-text">节点通信</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Gossip%E6%B6%88%E6%81%AF"><span class="nav-number">1.2.1.</span> <span class="nav-text">Gossip消息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E9%9B%86%E7%BE%A4"><span class="nav-number">1.3.</span> <span class="nav-text">搭建集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E8%B7%AF%E7%94%B1"><span class="nav-number">1.4.</span> <span class="nav-text">请求路由</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-number">1.4.1.</span> <span class="nav-text">请求重定向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hash-tag"><span class="nav-number">1.4.2.</span> <span class="nav-text">hash_tag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Smart%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">1.4.3.</span> <span class="nav-text">Smart客户端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASK%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-number">1.4.4.</span> <span class="nav-text">ASK重定向</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">1.5.</span> <span class="nav-text">故障转移</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E5%8F%91%E7%8E%B0"><span class="nav-number">1.5.1.</span> <span class="nav-text">故障发现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BB%E8%A7%82%E4%B8%8B%E7%BA%BF"><span class="nav-number">1.5.1.1.</span> <span class="nav-text">主观下线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%A2%E8%A7%82%E4%B8%8B%E7%BA%BF"><span class="nav-number">1.5.1.2.</span> <span class="nav-text">客观下线</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D"><span class="nav-number">1.5.2.</span> <span class="nav-text">故障恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B5%84%E6%A0%BC%E6%A3%80%E6%9F%A5"><span class="nav-number">1.5.2.1.</span> <span class="nav-text">资格检查</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E9%80%89%E4%B8%BE%E6%97%B6%E9%97%B4"><span class="nav-number">1.5.2.2.</span> <span class="nav-text">准备选举时间</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%91%E8%B5%B7%E9%80%89%E4%B8%BE"><span class="nav-number">1.5.2.3.</span> <span class="nav-text">发起选举</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E4%B8%BE%E6%8A%95%E7%A5%A8"><span class="nav-number">1.5.2.4.</span> <span class="nav-text">选举投票</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2%E4%B8%BB%E8%8A%82%E7%82%B9"><span class="nav-number">1.5.2.5.</span> <span class="nav-text">替换主节点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB%E6%97%B6%E9%97%B4"><span class="nav-number">1.5.3.</span> <span class="nav-text">故障转移时间</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E8%BF%90%E7%BB%B4"><span class="nav-number">1.6.</span> <span class="nav-text">集群运维</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E5%AE%8C%E6%95%B4%E6%80%A7"><span class="nav-number">1.6.1.</span> <span class="nav-text">集群完整性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%A6%E5%AE%BD%E6%B6%88%E8%80%97"><span class="nav-number">1.6.2.</span> <span class="nav-text">带宽消耗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pub-Sub%E5%B9%BF%E6%92%AD%E9%97%AE%E9%A2%98"><span class="nav-number">1.6.3.</span> <span class="nav-text">Pub&#x2F;Sub广播问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E5%80%BE%E6%96%9C"><span class="nav-number">1.6.4.</span> <span class="nav-text">集群倾斜</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%80%BE%E6%96%9C"><span class="nav-number">1.6.4.1.</span> <span class="nav-text">数据倾斜</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E5%80%BE%E6%96%9C"><span class="nav-number">1.6.4.2.</span> <span class="nav-text">请求倾斜</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">1.6.5.</span> <span class="nav-text">手动故障转移</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB"><span class="nav-number">1.6.6.</span> <span class="nav-text">数据迁移</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E7%AB%A0%E9%87%8D%E7%82%B9%E5%9B%9E%E9%A1%BE"><span class="nav-number">1.7.</span> <span class="nav-text">本章重点回顾</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -172,7 +172,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-count">42</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -272,16 +272,10 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2021-05-28 22:20:00" itemprop="dateCreated datePublished" datetime="2021-05-28T22:20:00+08:00">2021-05-28</time>
+      <time title="创建时间：2021-06-02 21:15:00 / 修改时间：16:53:12" itemprop="dateCreated datePublished" datetime="2021-06-02T21:15:00+08:00">2021-06-02</time>
     </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-06-01 18:26:48" itemprop="dateModified" datetime="2021-06-01T18:26:48+08:00">2021-06-01</time>
-      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -304,14 +298,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.9k</span>
+      <span>6.4k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
+      <span>6 分钟</span>
     </span>
 </div>
 
@@ -393,14 +387,138 @@
 <li>客户端提取目标节点信息，发送<code>asking</code>命令打开客户端连接标识，再执行键命令，如果存在则执行，不存在则返回不存在信息。</li>
 </ol>
 <ul>
-<li>ASK和MOVE虽然都返回目标节点，但是意义不同，ASK返回表示当前正在迁移键，不确定何时能完成，客户端此时不需要更新本地缓存。</li>
+<li>ASK和MOVE虽然都返回目标节点，但是意义不同，ASK返回表示当前正在迁移键，不确定何时能完成，客户端此时不需要更新本地缓存。而MOVE重定向表示当前键已经在其他节点，需要更新本地缓存。</li>
 </ul>
 <blockquote>
 <p>集群环境下对于使用批量操作的场景，建议优先使用Pipeline方式，在客户端实现对ASK重定向的正确处理，这样既可以受益于批量操作的IO优化，又可以兼容slot迁移场景。</p>
 </blockquote>
 <h2 id="故障转移"><a class="header-anchor" href="#故障转移"></a>故障转移</h2>
+<h3 id="故障发现"><a class="header-anchor" href="#故障发现"></a>故障发现</h3>
+<p>集群内通过ping/pong来进行节点通信，消息可以传播槽信息、主从状态、节点故障等。</p>
+<h4 id="主观下线"><a class="header-anchor" href="#主观下线"></a>主观下线</h4>
+<p>如果其他节点在<code>cluster-node-timeout</code>时间内没有回复自己发出的ping请求，会将此节点标记为<code>pfail</code>状态。</p>
+<h4 id="客观下线"><a class="header-anchor" href="#客观下线"></a>客观下线</h4>
+<p>当节点被客观下线后，其状态会随消息在进群内散播。当<code>cluster-node-timeout*2</code>时间内有超过半数的节点认为该节点下线，集群会删除该节点。</p>
+<blockquote>
+<p>下线的有效期为<code>cluster-node-timeout*2</code>，如果到达时间时没有超过半数节点认为该节点下线，那么故障节点将不会下线导致故障转移失败。应根据实际情况适当调大<code>cluster-node-timeout</code>配置。</p>
+</blockquote>
+<h3 id="故障恢复"><a class="header-anchor" href="#故障恢复"></a>故障恢复</h3>
+<p>下线主节点的从节点发现自身复制的主节点下线时，进行故障恢复工作。</p>
+<h4 id="资格检查"><a class="header-anchor" href="#资格检查"></a>资格检查</h4>
+<p>从节点与主节点断线时间超过<code>cluster-node-time*cluster-slavevalidity-factor</code>时，该从节点不具备故障转移资格。</p>
+<h4 id="准备选举时间"><a class="header-anchor" href="#准备选举时间"></a>准备选举时间</h4>
+<p>各个从节点根据自身偏移量设置不同的延时选举时间，偏移量大的节点优先发起选举。</p>
+<h4 id="发起选举"><a class="header-anchor" href="#发起选举"></a>发起选举</h4>
+<p>当从节点定时任务发现到达故障选举时间<code>failover_auth_time</code>到达后，发起选举，流程如下：</p>
+<ol>
+<li>更新配置纪元</li>
+<li>广播选举消息</li>
+</ol>
+<h4 id="选举投票"><a class="header-anchor" href="#选举投票"></a>选举投票</h4>
+<p>持有槽的主节点会处理故障选举消息，当一个从节点在<code>cluster-node-timeout*2</code>时间内获取N/2+1个投票时，该从节点会晋升为主节点。</p>
+<h4 id="替换主节点"><a class="header-anchor" href="#替换主节点"></a>替换主节点</h4>
+<p>当从节点收集到足够的选票之后，触发替换主节点操作：</p>
+<ol>
+<li>当前从节点取消复制变为主节点</li>
+<li>执行cluster DelSlot操作撤销故障主节点负责的槽，并执行cluster AddSlot把这些槽委派给自己。</li>
+<li>向集群广播自己的pong消息，通知集群内所有节点当前从节点变为主节点并接管故障主节点的槽信息。</li>
+</ol>
+<h3 id="故障转移时间"><a class="header-anchor" href="#故障转移时间"></a>故障转移时间</h3>
+<p>估算故障转移时间</p>
+<ol>
+<li>主观下线(pfail)识别时间 =<code> cluster-node-timeout</code></li>
+<li>主观下线状态消息传播时间&lt;=cluster-node-timeout/2。消息通信机制对超过<code>cluster-node-timeout/2</code>未通信节点会发起ping消息，消息体在选择包含 哪些节点时会优先选取下线状态节点，所以通常这段时间内能够收集到半数 以上主节点的pfail报告从而完成故障发现</li>
+<li>从节点转移时间&lt;=1000毫秒。由于存在延迟发起选举机制，偏移量最大的从节点会最多延迟1秒发起选举。通常第一次选举就会成功，所以从 节点执行转移时间在1秒以内</li>
+</ol>
+<blockquote>
+<p>根据以上分析可以预估出故障转移时间，如下：</p>
+<p><code>failover-time(毫秒) ≤ cluster-node-timeout + cluster-node-timeout/2 + 1000</code></p>
+<p>因此，故障转移时间和<code>cluster-node-timeout</code>参数息息相关，默认15s</p>
+</blockquote>
 <h2 id="集群运维"><a class="header-anchor" href="#集群运维"></a>集群运维</h2>
+<h3 id="集群完整性"><a class="header-anchor" href="#集群完整性"></a>集群完整性</h3>
+<p>参数<code>cluster-require-full-coverage</code>控制集群槽未完成分配时，集群是否可用，默认为<code>false</code>。大多数业务应设置为<code>ture</code></p>
+<h3 id="带宽消耗"><a class="header-anchor" href="#带宽消耗"></a>带宽消耗</h3>
+<p>集群内Gossip消息通信会消耗带宽，官方建议集群最大规模在1000以内。</p>
+<p>建议：</p>
+<ol>
+<li>在满足业务要求的前提下避免大集群。可以根据业务场景拆分为多个小集群</li>
+<li>适度提高<code>cluster-node-timeout</code>降低消息发送频率，但是同时会导致故障转移速度变慢，应根据业务场景平衡二者。</li>
+<li>条件允许部署在多个机器上。</li>
+</ol>
+<h3 id="Pub-Sub广播问题"><a class="header-anchor" href="#Pub-Sub广播问题"></a>Pub/Sub广播问题</h3>
+<p>集群模式下，频繁应用Pub/Sub功能时，会严重消耗集群带宽。针对这种情况建议使用Sentinel结构专门用于Pub/Sub功能，从而规避这一问题。</p>
+<h3 id="集群倾斜"><a class="header-anchor" href="#集群倾斜"></a>集群倾斜</h3>
+<h4 id="数据倾斜"><a class="header-anchor" href="#数据倾斜"></a>数据倾斜</h4>
+<ul>
+<li>节点和槽分配严重不均，使用如下命令查看并处理</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[blog@localhost ~]$ redis-cli --cluster info 127.0.0.1:6379 <span class="comment"># 查看集群槽分配情况</span></span><br><span class="line">127.0.0.1:6379 (e8e05250...) -&gt; 0 keys | 5461 slots | 1 slaves.</span><br><span class="line">127.0.0.1:6381 (fcceb74f...) -&gt; 0 keys | 5461 slots | 1 slaves.</span><br><span class="line">127.0.0.1:6380 (e34482fb...) -&gt; 0 keys | 5462 slots | 1 slaves.</span><br><span class="line">[OK] 0 keys <span class="keyword">in</span> 3 masters.</span><br><span class="line">0.00 keys per slot on average.</span><br><span class="line">[blog@localhost ~]$ redis-cli --cluster rebalance 127.0.0.1:6379 <span class="comment"># 重新平衡槽</span></span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:6379)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check <span class="keyword">for</span> open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line">*** No rebalancing needed! All nodes are within the 2.00% threshold.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>不同槽对应键数量差异过大</p>
+<p>过度使用<code>&#123;hash_tag&#125;</code>时，会导致槽对应的键数量分布不均匀。通过<code>cluster countkeysinslot &#123;slot&#125;</code>可以查看槽内对应的键数量，再使用<code>cluster countkeysinslot &#123;slot&#125; &#123;count&#125;</code>循环迭代出槽下所有的键，进而发现过度使用{hash_tag}的键。</p>
+</li>
+<li>
+<p>集合对象包含大量元素</p>
+<p>大对象可以使用<code>redis-cli --bigkeys</code>命令查找，找到后应根据业务进行拆分，另外，集群槽数据迁移通过对键执行<code>migrate</code>操作完成，键过大可能导致<code>migrate</code>超时导致数据迁移失败。</p>
+</li>
+<li>
+<p>内存相关配置不一致</p>
+<p>主要指<code>hash-max-ziplist-value</code>、<code>set-max-inset-entries</code>等压缩数据结构配置。当集群大量使用hash、set等数据结构，配置不同可能导致集群内节点占用内存不同，导致内存量倾斜。</p>
+</li>
+</ul>
+<h4 id="请求倾斜"><a class="header-anchor" href="#请求倾斜"></a>请求倾斜</h4>
+<p>集群内请求量过大并且集中在少部分节点时将导致集群负载不均。常出现在热点键场景，当键命令消耗较低时影响有限，当使用复杂命令如<code>hgetall</code>、<code>smembers</code>时影响很大。避免方式如下：</p>
+<ol>
+<li>合理设计键，热点大集合拆分或使用<code>hmget</code>代替<code>hgetall</code>避免整体读取</li>
+<li>不要使用热点key作为hash_tag，避免热点key映射到同一个节点</li>
+<li>对于一致性要求不高的场景，客户端使用本地缓存代替热键调用</li>
+</ol>
+<h3 id="手动故障转移"><a class="header-anchor" href="#手动故障转移"></a>手动故障转移</h3>
+<p>在从节点上执行<code>cluster failover</code>会发起手动故障转移流程，如下：</p>
+<ol>
+<li>从节点通知主节点停止处理所有客户端请求</li>
+<li>主节点发送对应从节点延迟复制的数据</li>
+<li>从节点处理延迟复制的数据，直到与主节点偏移量一致</li>
+<li>从节点立刻发起选举投票，选举成功后断开复制成为主节点，之后向集群内广播pong消息，</li>
+<li>旧主节点接收消息后更新自身配置变为从节点，解除客户端请求阻塞，重定向到新主节点上执行请求。</li>
+<li>旧主节点变为从节点后，向新的主节点发起全量复制流程</li>
+</ol>
+<ul>
+<li><code>cluster failover force</code>: 从节点直接进行选举，不需要确认和主节点偏移量，用于主节点宕机的场景。</li>
+<li><code>cluster failover takeover</code>: 从节点直接更新配置纪元并替换主节点，用于无法完成选举的情况：超过半数节点故障，网络不通畅导致规定时间内无法完成选举，导致当前节点失去选举资格(断线时间超过<code>cluster-node-time*cluster-slavevalidity-factor</code>)</li>
+</ul>
+<blockquote>
+<p>手动故障转移时，在满足当前需求的情况下建议优先级：cluster failver&gt;cluster failover force&gt;cluster failover takeover</p>
+</blockquote>
+<h3 id="数据迁移"><a class="header-anchor" href="#数据迁移"></a>数据迁移</h3>
+<p>redis提供了迁移数据的命令，<code>redis-cli --cluster import host:port --from &lt;arg&gt; --copy --replace</code>，命令内部采用批量scan和migrate的方式迁移数据。其缺点如下：</p>
+<ol>
+<li>迁移只能从单机节点向集群环境导入数据</li>
+<li>不支持在线迁移数据，迁移数据时应用方必须停写，无法平滑迁移数据</li>
+<li>迁移过程中途如果出现超时等错误，不支持断点续传只能重新全量导入</li>
+<li>使用单线程进行数据迁移，大数据量迁移速度过慢</li>
+</ol>
+<blockquote>
+<p>这里推荐使用唯品会开发的<code>redis-migrate-tool</code>，该工具可满足大多数Redis迁移需求，特点如下：</p>
+<ul>
+<li>支持单机、Twemproxy、Redis Cluster、RDB/AOF等多种类型的数据迁移</li>
+<li>工具模拟成从节点基于复制流迁移数据，从而支持在线迁移数据，业务方不需要停写</li>
+<li>采用多线程加速数据迁移过程且提供数据校验和查看迁移状态等功能</li>
+</ul>
+<p>更多细节见GitHub：<a target="_blank" rel="noopener" href="https://github.com/vipshop/redis-migrate-tool%E3%80%82">https://github.com/vipshop/redis-migrate-tool。</a></p>
+</blockquote>
 <h2 id="本章重点回顾"><a class="header-anchor" href="#本章重点回顾"></a>本章重点回顾</h2>
+<ol>
+<li>Redis集群数据分区规则采用虚拟槽方式，所有的键映射到16384个槽中，每个节点负责一部分槽和相关数据，实现数据和请求的负载均衡</li>
+<li>搭建集群划分三个步骤：准备节点，节点握手，分配槽。可以使用<code>redis-trib.rb create</code>或者<code>redis-cli --cluster</code>命令快速搭建集群</li>
+<li>集群内部节点通信采用Gossip协议彼此发送消息，消息类型分为：ping消息、pong消息、meet消息、fail消息等。节点定期不断发送和接受 ping/pong消息来维护更新集群的状态。消息内容包括节点自身数据和部分其他节点的状态数据</li>
+<li>集群伸缩通过在节点之间移动槽和相关数据实现。扩容时根据槽迁移计划把槽从源节点迁移到目标节点，源节点负责的槽相比之前变少从而达 到集群扩容的目的，收缩时如果下线的节点有负责的槽需要迁移到其他节 点，再通过cluster forget命令让集群内其他节点忘记被下线节点</li>
+<li>使用Smart客户端操作集群达到通信效率最大化，客户端内部负责计算维护键→槽→节点的映射，用于快速定位键命令到目标节点。集群协议通 过Smart客户端全面高效的支持需要一个过程，用户在选择Smart客户端时建 议review下集群交互代码如：异常判定和重试逻辑，更新槽的并发控制等。 节点接收到键命令时会判断相关的槽是否由自身节点负责，如果不是则返回 重定向信息。重定向分为MOVED和ASK，ASK说明集群正在进行槽数据迁 移，客户端只在本次请求中做临时重定向，不会更新本地槽缓存。MOVED 重定向说明槽已经明确分派到另一个节点，客户端需要更新槽节点缓存</li>
+<li>集群自动故障转移过程分为故障发现和故障恢复。节点下线分为主观下线和客观下线，当超过半数主节点认为故障节点为主观下线时标记它为 客观下线状态。从节点负责对客观下线的主节点触发故障恢复流程，保证集群的可用性</li>
+<li>开发和运维集群过程中常见问题包括：超大规模集群带宽消耗， pub/sub广播问题，集群节点倾斜问题，手动故障转移，在线迁移数据等</li>
+</ol>
 
     </div>
 
@@ -444,13 +562,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/posts/2665394633.html" rel="prev" title="Markdown-数学公式">
-                  <i class="fa fa-chevron-left"></i> Markdown-数学公式
+                <a href="/posts/1044596185.html" rel="prev" title="Redis集群搭建(Redis5.0版)">
+                  <i class="fa fa-chevron-left"></i> Redis集群搭建(Redis5.0版)
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/posts/778231993.html" rel="next" title="Redis集群搭建(Redis3.0版)">
-                  Redis集群搭建(Redis3.0版) <i class="fa fa-chevron-right"></i>
+                <a href="/posts/3358854259.html" rel="next" title="Redis开发与运维笔记-缓存设计">
+                  Redis开发与运维笔记-缓存设计 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -484,13 +602,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">142k</span>
+    <span title="站点总字数">150k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:09</span>
+    <span title="站点阅读时长">2:17</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动

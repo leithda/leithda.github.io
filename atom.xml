@@ -6,7 +6,7 @@
   <link href="https://leithda.github.io/atom.xml" rel="self"/>
   
   <link href="https://leithda.github.io/"/>
-  <updated>2021-05-31T10:05:38.651Z</updated>
+  <updated>2021-06-02T10:22:13.378Z</updated>
   <id>https://leithda.github.io/</id>
   
   <author>
@@ -17,11 +17,59 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Redis开发与运维笔记-缓存设计</title>
+    <link href="https://leithda.github.io/posts/3358854259.html"/>
+    <id>https://leithda.github.io/posts/3358854259.html</id>
+    <published>2021-06-02T13:15:00.000Z</published>
+    <updated>2021-06-02T10:22:13.378Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;缓存能够有效地加速应用的读写速度，同时也可以降低后端负载，对日常应用的开发至关重要。但是将缓存加入应用架构后也会带来一些问题，本 章将针对这些问题介绍缓存使用技巧和设计方案&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
+    
+    
+    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis开发与运维笔记-集群</title>
+    <link href="https://leithda.github.io/posts/ddc0d24d.html"/>
+    <id>https://leithda.github.io/posts/ddc0d24d.html</id>
+    <published>2021-06-02T13:15:00.000Z</published>
+    <updated>2021-06-02T08:53:12.246Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Redis Cluster是Redis的分布式解决方案，在3.0版本正式推出，有效地解决了Redis分布式方面的需求。当遇到单机内存、并发、流量等瓶颈时，可以采用Cluster架构方案达到负载均衡的目的。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
+    
+    
+    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Redis集群搭建(Redis5.0版)</title>
     <link href="https://leithda.github.io/posts/1044596185.html"/>
     <id>https://leithda.github.io/posts/1044596185.html</id>
     <published>2021-05-30T04:30:00.000Z</published>
-    <updated>2021-05-31T10:05:38.651Z</updated>
+    <updated>2021-06-02T08:51:53.412Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
@@ -56,30 +104,6 @@
     
     
     <category term="瞎折腾" scheme="https://leithda.github.io/categories/%E7%9E%8E%E6%8A%98%E8%85%BE/"/>
-    
-    
-    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis开发与运维笔记-集群</title>
-    <link href="https://leithda.github.io/posts/ddc0d24d.html"/>
-    <id>https://leithda.github.io/posts/ddc0d24d.html</id>
-    <published>2021-05-28T14:20:00.000Z</published>
-    <updated>2021-06-01T10:26:48.257Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;Redis Cluster是Redis的分布式解决方案，在3.0版本正式推出，有效地解决了Redis分布式方面的需求。当遇到单机内存、并发、流量等瓶颈时，可以采用Cluster架构方案达到负载均衡的目的。&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
     
     
     <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
@@ -285,6 +309,31 @@
   </entry>
   
   <entry>
+    <title>桥接模式</title>
+    <link href="https://leithda.github.io/posts/3468020877.html"/>
+    <id>https://leithda.github.io/posts/3468020877.html</id>
+    <published>2021-05-27T04:50:00.000Z</published>
+    <updated>2021-05-27T08:40:59.404Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;桥接模式(Bridge),将抽象部分与它的实线部分分离，使他们都可以独立地变化。&lt;/p&gt;
+&lt;p&gt;对于两个独立变化的维度，使用桥接模式可以避免通过继承导致的类爆炸&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
+    
+    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
     <title>模板模式</title>
     <link href="https://leithda.github.io/posts/2374608698.html"/>
     <id>https://leithda.github.io/posts/2374608698.html</id>
@@ -309,16 +358,15 @@
   </entry>
   
   <entry>
-    <title>桥接模式</title>
-    <link href="https://leithda.github.io/posts/3468020877.html"/>
-    <id>https://leithda.github.io/posts/3468020877.html</id>
+    <title>状态模式</title>
+    <link href="https://leithda.github.io/posts/307019047.html"/>
+    <id>https://leithda.github.io/posts/307019047.html</id>
     <published>2021-05-27T04:50:00.000Z</published>
-    <updated>2021-05-27T08:40:59.404Z</updated>
+    <updated>2021-05-27T08:15:24.777Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;桥接模式(Bridge),将抽象部分与它的实线部分分离，使他们都可以独立地变化。&lt;/p&gt;
-&lt;p&gt;对于两个独立变化的维度，使用桥接模式可以避免通过继承导致的类爆炸&lt;/p&gt;
+&lt;p&gt;状态模式(State):当一个对象的内在状态改变时允许改变其行为，这个对象看起来像是改变了一个类&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
@@ -359,30 +407,6 @@
   </entry>
   
   <entry>
-    <title>状态模式</title>
-    <link href="https://leithda.github.io/posts/307019047.html"/>
-    <id>https://leithda.github.io/posts/307019047.html</id>
-    <published>2021-05-27T04:50:00.000Z</published>
-    <updated>2021-05-27T08:15:24.777Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;状态模式(State):当一个对象的内在状态改变时允许改变其行为，这个对象看起来像是改变了一个类&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
-    
-    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
     <title>组合模式</title>
     <link href="https://leithda.github.io/posts/1191195587.html"/>
     <id>https://leithda.github.io/posts/1191195587.html</id>
@@ -392,30 +416,6 @@
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
 &lt;p&gt;组合模式(Composite),将对象组合成树形结构以表示’部分-整体’的层次结构。组合模式使得用户对单个对象和组合对象的使用具有一致性&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
-    
-    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>责任链模式</title>
-    <link href="https://leithda.github.io/posts/1644716670.html"/>
-    <id>https://leithda.github.io/posts/1644716670.html</id>
-    <published>2021-05-27T04:50:00.000Z</published>
-    <updated>2021-05-27T08:54:52.737Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;顾名思义，责任链模式(Chain of Responsibility Pattern) 为请求创建了一个接收者对象的链。这种模式给予请求的类型，对请求的发送者和接收者进行解耦。这种类型的设计模式属于行为型模式。&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
@@ -456,15 +456,15 @@
   </entry>
   
   <entry>
-    <title>适配器模式</title>
-    <link href="https://leithda.github.io/posts/4123342314.html"/>
-    <id>https://leithda.github.io/posts/4123342314.html</id>
+    <title>责任链模式</title>
+    <link href="https://leithda.github.io/posts/1644716670.html"/>
+    <id>https://leithda.github.io/posts/1644716670.html</id>
     <published>2021-05-27T04:50:00.000Z</published>
-    <updated>2021-05-27T08:36:49.424Z</updated>
+    <updated>2021-05-27T08:54:52.737Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;将一个接口转换成客户希望的另一个接口，使接口不兼容的那些类可以一起工作，其别名为包装器(Wrapper)。适配器模式既可以作为类结构型模式，也可以作为对象结构型模式&lt;/p&gt;
+&lt;p&gt;顾名思义，责任链模式(Chain of Responsibility Pattern) 为请求创建了一个接收者对象的链。这种模式给予请求的类型，对请求的发送者和接收者进行解耦。这种类型的设计模式属于行为型模式。&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
@@ -480,16 +480,15 @@
   </entry>
   
   <entry>
-    <title>单例模式</title>
-    <link href="https://leithda.github.io/posts/4049607742.html"/>
-    <id>https://leithda.github.io/posts/4049607742.html</id>
+    <title>适配器模式</title>
+    <link href="https://leithda.github.io/posts/4123342314.html"/>
+    <id>https://leithda.github.io/posts/4123342314.html</id>
     <published>2021-05-27T04:50:00.000Z</published>
-    <updated>2021-05-27T06:27:28.919Z</updated>
+    <updated>2021-05-27T08:36:49.424Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;单例模式（Singleton Pattern）是 Java 中最简单的设计模式之一。这种类型的设计模式属于创建型模式，它提供了一种创建对象的最佳方式。&lt;/p&gt;
-&lt;p&gt;这种模式涉及到一个单一的类，该类负责创建自己的对象，同时确保只有单个对象被创建。这个类提供了一种访问其唯一的对象的方式，可以直接访问，不需要实例化该类的对象。&lt;/p&gt;
+&lt;p&gt;将一个接口转换成客户希望的另一个接口，使接口不兼容的那些类可以一起工作，其别名为包装器(Wrapper)。适配器模式既可以作为类结构型模式，也可以作为对象结构型模式&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
