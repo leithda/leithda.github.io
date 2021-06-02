@@ -29,7 +29,8 @@ date: 2021-05-30 12:30:00
 创建配置文件目录`cluster-test`及数据文件目录
 
 ```bash
-mkdir -p /home/dev/data/redis/data/cluster-test mkdir -p /home/dev/data/redis/conf/cluster-test
+mkdir -p /home/dev/data/redis/data/cluster-test 
+mkdir -p /home/dev/data/redis/conf/cluster-test
 ```
 
 
@@ -202,15 +203,16 @@ dev      4001  3552  0 08:21 pts/1    00:00:00 grep --color=auto redis
 
 ### 添加master节点
 
-> `redis-cli --cluster add-node <host_new>:<port_new> <host>:<port>`
->
-> - **\<host_new\>:\<port_new\>**：新加入集群节点
-> - **\<host\>:\<port\>**：集群内任意节点
+`redis-cli --cluster add-node <host_new>:<port_new> <host>:<port>`
+
+- **\<host_new\>:\<port_new\>**：新加入集群节点
+
+- **\<host\>:\<port\>**：集群内任意节点
 
 
 
 ```bash
-[blog@localhost cluster-test]$ redis-cli --cluster add-node 127.0.0.1:6385 127.0.0.1:6379
+[dev@localhost cluster-test]$ redis-cli --cluster add-node 127.0.0.1:6385 127.0.0.1:6379
 >>> Adding node 127.0.0.1:6385 to cluster 127.0.0.1:6379
 >>> Performing Cluster Check (using node 127.0.0.1:6379)
 M: e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 127.0.0.1:6379
@@ -243,30 +245,27 @@ S: 3eee4e2dc41e924d313b6fef575fab40055b69d9 127.0.0.1:6382
 
 ### 分配槽
 
-> ```bash
-> redis-cli --cluster reshard <host>:<port> --cluster-from <node-id> --cluster-to <node-id> --cluster-slots <number of slots> --cluster-yes
-> ```
->
-> - **\<host\>:\<port\>**：集群内任意节点
-> - `--cluster-from`：从集群中哪些节点转移槽，多个几点用`,`分割
-> - `--cluster-to`：转移槽到集群中的那个节点
-> - `--cluster-slots`：分配的槽的数量
-> - `--cluster-yes`：自动确认，不加此参数，需要手动输入yes确认槽迁移计划
->
-> - **\<node-id\>**: 节点对应的集群ID，以集群模式启动时会写入到`nodes-{port}.conf`配置中。也可以通过`redis-cli cluster nodes`查看
->
->   ```bash
->   [blog@localhost create-cluster]$ redis-cli cluster nodes
->   b48e9109610b9952cde3f032f77563e441a3d75d 127.0.0.1:6385@16385 master - 0 1622449778389 0 connected
->   fcceb74f27471d80e991b33e23817200b47866ff 127.0.0.1:6381@16381 master - 0 1622449776378 3 connected 10923-16383
->   208df20aedbbf1687ac66386fc064771793504e6 127.0.0.1:6383@16383 slave e34482fb5455d94959f5b46b41fc17cf72646a4c 0 1622449774000 2 connected
->   6964ab0161d106093024f643bbe03bf9daf57760 127.0.0.1:6384@16384 slave fcceb74f27471d80e991b33e23817200b47866ff 0 1622449776000 3 connected
->   e34482fb5455d94959f5b46b41fc17cf72646a4c 127.0.0.1:6380@16380 master - 0 1622449777384 2 connected 5461-10922
->   e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 127.0.0.1:6379@16379 myself,master - 0 1622449775000 1 connected 0-5460
->   3eee4e2dc41e924d313b6fef575fab40055b69d9 127.0.0.1:6382@16382 slave e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 0 1622449777000 1 connected
->   ```
->
->   
+```bash
+redis-cli --cluster reshard <host>:<port> --cluster-from <node-id> --cluster-to <node-id> --cluster-slots <number of slots> --cluster-yes
+```
+
+- **\<host\>:\<port\>**：集群内任意节点
+- `--cluster-from`：从集群中哪些节点转移槽，多个几点用`,`分割
+- `--cluster-to`：转移槽到集群中的那个节点
+- `--cluster-slots`：分配的槽的数量
+- `--cluster-yes`：自动确认，不加此参数，需要手动输入yes确认槽迁移计划
+- **\<node-id\>**: 节点对应的集群ID，以集群模式启动时会写入到`nodes-{port}.conf`配置中。也可以通过`redis-cli cluster nodes`查看
+
+```bash
+[dev@localhost create-cluster]$ redis-cli cluster nodes
+b48e9109610b9952cde3f032f77563e441a3d75d 127.0.0.1:6385@16385 master - 0 1622449778389 0 connected
+fcceb74f27471d80e991b33e23817200b47866ff 127.0.0.1:6381@16381 master - 0 1622449776378 3 connected 10923-16383
+208df20aedbbf1687ac66386fc064771793504e6 127.0.0.1:6383@16383 slave e34482fb5455d94959f5b46b41fc17cf72646a4c 0 1622449774000 2 connected
+6964ab0161d106093024f643bbe03bf9daf57760 127.0.0.1:6384@16384 slave fcceb74f27471d80e991b33e23817200b47866ff 0 1622449776000 3 connected
+e34482fb5455d94959f5b46b41fc17cf72646a4c 127.0.0.1:6380@16380 master - 0 1622449777384 2 connected 5461-10922
+e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 127.0.0.1:6379@16379 myself,master - 0 1622449775000 1 connected 0-5460
+3eee4e2dc41e924d313b6fef575fab40055b69d9 127.0.0.1:6382@16382 slave e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 0 1622449777000 1 connected
+```
 
 
 
@@ -281,7 +280,7 @@ redis-cli --cluster reshard 127.0.0.1:6379 --cluster-from e8e05250b518f5e774ce12
 迁移后的集群节点信息：
 
 ```bash
-[blog@localhost create-cluster]$ redis-cli cluster nodes
+[dev@localhost create-cluster]$ redis-cli cluster nodes
 b48e9109610b9952cde3f032f77563e441a3d75d 127.0.0.1:6385@16385 master - 0 1622450708439 7 connected 0-340 5461-5802 10923-11263
 fcceb74f27471d80e991b33e23817200b47866ff 127.0.0.1:6381@16381 master - 0 1622450708000 3 connected 11264-16383
 208df20aedbbf1687ac66386fc064771793504e6 127.0.0.1:6383@16383 slave e34482fb5455d94959f5b46b41fc17cf72646a4c 0 1622450706000 2 connected
@@ -295,18 +294,17 @@ e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 127.0.0.1:6379@16379 myself,master - 0 
 
 ### 添加从节点
 
-> ```bash
-> redis-cli --cluster add-node <host_new>:<port_new> <host>:<port> --cluster-slave \
-> --cluster-master-id <node-id>
-> ```
->
-> - `--cluster-slave`：添加从节点
-> - `--cluster-master-id <node-id>`：从节点的主节点id
+```bash
+redis-cli --cluster add-node <host_new>:<port_new> <host>:<port> --cluster-slave \
+--cluster-master-id <node-id>
+```
+- `--cluster-slave`：添加从节点
+- `--cluster-master-id <node-id>`：从节点的主节点id
 
 
 
 ```bash
-[blog@localhost create-cluster]$ redis-cli --cluster add-node 127.0.0.1:6386 127.0.0.1:6385 --cluster-slave --cluster-master-id b48e9109610b9952cde3f032f77563e441a3d75d
+[dev@localhost create-cluster]$ redis-cli --cluster add-node 127.0.0.1:6386 127.0.0.1:6385 --cluster-slave --cluster-master-id b48e9109610b9952cde3f032f77563e441a3d75d
 >>> Adding node 127.0.0.1:6386 to cluster 127.0.0.1:6385
 >>> Performing Cluster Check (using node 127.0.0.1:6385)
 M: b48e9109610b9952cde3f032f77563e441a3d75d 127.0.0.1:6385
@@ -345,7 +343,7 @@ Waiting for the cluster to join
 - 查看集群状态
 
   ```bash
-  [blog@localhost create-cluster]$ redis-cli cluster nodes
+  [dev@localhost create-cluster]$ redis-cli cluster nodes
   703596043233487cc79ef364d56a13907ccf7cb6 127.0.0.1:6386@16386 slave b48e9109610b9952cde3f032f77563e441a3d75d 0 1622451294000 7 connected
   b48e9109610b9952cde3f032f77563e441a3d75d 127.0.0.1:6385@16385 master - 0 1622451294000 7 connected 0-340 5461-5802 10923-11263
   fcceb74f27471d80e991b33e23817200b47866ff 127.0.0.1:6381@16381 master - 0 1622451293000 3 connected 11264-16383
@@ -371,7 +369,7 @@ Waiting for the cluster to join
 - 查看从节点
 
   ```bash
-  [blog@localhost create-cluster]$ redis-cli cluster nodes | grep :6386
+  [dev@localhost create-cluster]$ redis-cli cluster nodes | grep :6386
   703596043233487cc79ef364d56a13907ccf7cb6 127.0.0.1:6386@16386 slave b48e9109610b9952cde3f032f77563e441a3d75d 0 1622451429000 7 connected
   ```
 
@@ -398,7 +396,7 @@ redis-cli --cluster reshard 127.0.0.1:6379 --cluster-from b48e9109610b9952cde3f0
 - 查看当前集群槽分配状态
 
   ```bash
-  [blog@localhost create-cluster]$ redis-cli cluster slots
+  [dev@localhost create-cluster]$ redis-cli cluster slots
   1) 1) (integer) 0 # 槽起始位置
      2) (integer) 5460 # 槽结束位置
      3) 1) "127.0.0.1" # master:host
@@ -446,12 +444,12 @@ redis-cli --cluster reshard 127.0.0.1:6379 --cluster-from b48e9109610b9952cde3f0
 ### 下线master节点
 
 ```bash
-[blog@localhost create-cluster]$ redis-cli --cluster del-node 127.0.0.1:6379 b48e9109610b9952cde3f032f77563e441a3d75d
+[dev@localhost create-cluster]$ redis-cli --cluster del-node 127.0.0.1:6379 b48e9109610b9952cde3f032f77563e441a3d75d
 >>> Removing node b48e9109610b9952cde3f032f77563e441a3d75d from cluster 127.0.0.1:6379
 >>> Sending CLUSTER FORGET messages to the cluster...
 >>> Sending CLUSTER RESET SOFT to the deleted node.
 
-[blog@localhost create-cluster]$ redis-cli cluster nodes # 查看当前集群节点状态
+[dev@localhost create-cluster]$ redis-cli cluster nodes # 查看当前集群节点状态
 fcceb74f27471d80e991b33e23817200b47866ff 127.0.0.1:6381@16381 master - 0 1622452136635 10 connected 5802 10923-16383
 208df20aedbbf1687ac66386fc064771793504e6 127.0.0.1:6383@16383 slave e34482fb5455d94959f5b46b41fc17cf72646a4c 0 1622452136000 9 connected
 6964ab0161d106093024f643bbe03bf9daf57760 127.0.0.1:6384@16384 slave fcceb74f27471d80e991b33e23817200b47866ff 0 1622452138653 10 connected
