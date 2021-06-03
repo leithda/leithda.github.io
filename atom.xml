@@ -6,7 +6,7 @@
   <link href="https://leithda.github.io/atom.xml" rel="self"/>
   
   <link href="https://leithda.github.io/"/>
-  <updated>2021-06-02T10:22:13.378Z</updated>
+  <updated>2021-06-03T12:37:49.016Z</updated>
   <id>https://leithda.github.io/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Redis开发与运维笔记_总结</title>
+    <link href="https://leithda.github.io/posts/2279241279.html"/>
+    <id>https://leithda.github.io/posts/2279241279.html</id>
+    <published>2021-06-03T14:25:00.000Z</published>
+    <updated>2021-06-03T12:37:49.016Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;至此，已经将《Redis开发与运维》一书中的大部分内容整理并学习完毕，这篇文章将按照书中章节目录进行归纳总结，加深记忆。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
+    
+    
+    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
+    
+  </entry>
   
   <entry>
     <title>Redis开发与运维笔记-缓存设计</title>
@@ -465,30 +489,6 @@
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
 &lt;p&gt;顾名思义，责任链模式(Chain of Responsibility Pattern) 为请求创建了一个接收者对象的链。这种模式给予请求的类型，对请求的发送者和接收者进行解耦。这种类型的设计模式属于行为型模式。&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
-    
-    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>适配器模式</title>
-    <link href="https://leithda.github.io/posts/4123342314.html"/>
-    <id>https://leithda.github.io/posts/4123342314.html</id>
-    <published>2021-05-27T04:50:00.000Z</published>
-    <updated>2021-05-27T08:36:49.424Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;将一个接口转换成客户希望的另一个接口，使接口不兼容的那些类可以一起工作，其别名为包装器(Wrapper)。适配器模式既可以作为类结构型模式，也可以作为对象结构型模式&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
