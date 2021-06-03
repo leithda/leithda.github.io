@@ -37,7 +37,7 @@ RDB持久化就是把当前数据生成快照保存到硬盘的过程。
 
 - 使用`save`相关配置,如`save m n`。m秒内数据集存在n此修改，自动触发`bgsave`
 - 主从复制，主节点自动执行`bgsave`生成RDB文件并发送给从节点
-- 执行`debuf reload`命令重新加载Redis时，会自动触发`save`操作
+- 执行`debug reload`命令重新加载Redis时，会自动触发`save`操作
 - 默认情况下执行`shutdown`命令，如果没有开启AOF持久化功能则自动执行`bgsave`
 
 
@@ -61,7 +61,7 @@ config set dbfilename {newFileName} # rdb文件名
 
 > 遇到坏盘或磁盘写满的情况时，可以通过config set dir {newDir}在线修改文件路径，之后执行bgsave进行磁盘切换，同样适用于AOF持久化文件
 > Redis默认采用LZF算法对生成的RDB文件做压缩处理。可以通过参数`config set rdbcompression {yes|no}`动态修改，默认开启。
-> Redis加载孙欢的RDB文件时拒绝启动，并打印如下日志`# Short read or OOM loading DB. Unrecoverable error, aborting now.`，此时可以通过`redis-check-dump`工具检测RDB文件并获取对应的错误报告
+> Redis加载损坏的RDB文件时拒绝启动，并打印如下日志`# Short read or OOM loading DB. Unrecoverable error, aborting now.`，此时可以通过`redis-check-dump`工具检测RDB文件并获取对应的错误报告
 
 ### RDB的优缺点
 

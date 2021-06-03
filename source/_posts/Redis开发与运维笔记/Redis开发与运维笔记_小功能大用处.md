@@ -252,7 +252,7 @@ redis-cli --eval lrange_and_mincr.lua hot:user:list
 ### Redis如何管理Lua
 
 1. `script load script`
-2. `scripts exists sha1 [sha1 ...]`
+2. `script exists sha1 [sha1 ...]`
 3. `script flush` 清除已经加载的脚本
 4. `script kill` 停止正在执行的脚本，当脚本进行写操作时，无法通过此命令终止，需要使用`shutdown save`关闭Redis实例。
 
