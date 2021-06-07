@@ -31,7 +31,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://leithda.github.io/posts/2279241279/sentinel%E7%A4%BA%E4%BE%8B.png">
 <meta property="article:published_time" content="2021-06-03T14:25:00.000Z">
-<meta property="article:modified_time" content="2021-06-03T12:37:49.016Z">
+<meta property="article:modified_time" content="2021-06-07T11:22:14.178Z">
 <meta property="article:author" content="Leithda">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
@@ -156,7 +156,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Redis总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">初识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E7%9A%84%E7%89%B9%E6%80%A7"><span class="nav-number">1.1.1.</span> <span class="nav-text">Redis的特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.1.2.</span> <span class="nav-text">Redis的使用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API%E7%9A%84%E7%90%86%E8%A7%A3%E5%92%8C%E4%BD%BF%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">API的理解和使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.1.</span> <span class="nav-text">五种数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4"><span class="nav-number">1.2.2.</span> <span class="nav-text">命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.2.3.</span> <span class="nav-text">应用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E5%8A%9F%E8%83%BD%E5%A4%A7%E7%94%A8%E5%A4%84"><span class="nav-number">1.3.</span> <span class="nav-text">小功能大用处</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%85%A2%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.3.1.</span> <span class="nav-text">慢查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-Shell"><span class="nav-number">1.3.2.</span> <span class="nav-text">Redis Shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pipeline"><span class="nav-number">1.3.3.</span> <span class="nav-text">Pipeline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E4%B8%8ELua"><span class="nav-number">1.3.4.</span> <span class="nav-text">事务与Lua</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bitmaps"><span class="nav-number">1.3.5.</span> <span class="nav-text">Bitmaps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HyperLoglog"><span class="nav-number">1.3.6.</span> <span class="nav-text">HyperLoglog</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85-Pub-Sub"><span class="nav-number">1.3.7.</span> <span class="nav-text">发布订阅(Pub&#x2F;Sub)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Geo"><span class="nav-number">1.3.8.</span> <span class="nav-text">Geo</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">1.4.</span> <span class="nav-text">客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">1.5.</span> <span class="nav-text">持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB"><span class="nav-number">1.5.1.</span> <span class="nav-text">RDB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF"><span class="nav-number">1.5.2.</span> <span class="nav-text">AOF</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6"><span class="nav-number">1.6.</span> <span class="nav-text">复制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BB%E5%A1%9E"><span class="nav-number">1.7.</span> <span class="nav-text">阻塞</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%9C%A8%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.7.1.</span> <span class="nav-text">内在原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E5%9C%A8%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.7.2.</span> <span class="nav-text">外在原因</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E5%86%85%E5%AD%98"><span class="nav-number">1.8.</span> <span class="nav-text">理解内存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%B6%88%E8%80%97"><span class="nav-number">1.8.1.</span> <span class="nav-text">内存消耗</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%A8%E5%85%B5"><span class="nav-number">1.9.</span> <span class="nav-text">哨兵</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2"><span class="nav-number">1.9.1.</span> <span class="nav-text">部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">1.9.2.</span> <span class="nav-text">故障转移</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4"><span class="nav-number">1.10.</span> <span class="nav-text">集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.11.</span> <span class="nav-text">缓存设计</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Redis总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">初识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E7%9A%84%E7%89%B9%E6%80%A7"><span class="nav-number">1.1.1.</span> <span class="nav-text">Redis的特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.1.2.</span> <span class="nav-text">Redis的使用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API%E7%9A%84%E7%90%86%E8%A7%A3%E5%92%8C%E4%BD%BF%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">API的理解和使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.1.</span> <span class="nav-text">五种数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4"><span class="nav-number">1.2.2.</span> <span class="nav-text">命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.2.3.</span> <span class="nav-text">应用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E5%8A%9F%E8%83%BD%E5%A4%A7%E7%94%A8%E5%A4%84"><span class="nav-number">1.3.</span> <span class="nav-text">小功能大用处</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%85%A2%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.3.1.</span> <span class="nav-text">慢查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-Shell"><span class="nav-number">1.3.2.</span> <span class="nav-text">Redis Shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pipeline"><span class="nav-number">1.3.3.</span> <span class="nav-text">Pipeline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E4%B8%8ELua"><span class="nav-number">1.3.4.</span> <span class="nav-text">事务与Lua</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bitmaps"><span class="nav-number">1.3.5.</span> <span class="nav-text">Bitmaps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HyperLoglog"><span class="nav-number">1.3.6.</span> <span class="nav-text">HyperLoglog</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85-Pub-Sub"><span class="nav-number">1.3.7.</span> <span class="nav-text">发布订阅(Pub&#x2F;Sub)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Geo"><span class="nav-number">1.3.8.</span> <span class="nav-text">Geo</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">1.4.</span> <span class="nav-text">客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">1.5.</span> <span class="nav-text">持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB"><span class="nav-number">1.5.1.</span> <span class="nav-text">RDB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF"><span class="nav-number">1.5.2.</span> <span class="nav-text">AOF</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6"><span class="nav-number">1.6.</span> <span class="nav-text">复制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BB%E5%A1%9E"><span class="nav-number">1.7.</span> <span class="nav-text">阻塞</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%9C%A8%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.7.1.</span> <span class="nav-text">内在原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E5%9C%A8%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.7.2.</span> <span class="nav-text">外在原因</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E5%86%85%E5%AD%98"><span class="nav-number">1.8.</span> <span class="nav-text">理解内存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%B6%88%E8%80%97"><span class="nav-number">1.8.1.</span> <span class="nav-text">内存消耗</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%A8%E5%85%B5"><span class="nav-number">1.9.</span> <span class="nav-text">哨兵</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2"><span class="nav-number">1.9.1.</span> <span class="nav-text">部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">1.9.2.</span> <span class="nav-text">故障转移</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4"><span class="nav-number">1.10.</span> <span class="nav-text">集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.11.</span> <span class="nav-text">缓存设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E5%85%A5%E7%BC%93%E5%AD%98"><span class="nav-number">1.11.1.</span> <span class="nav-text">引入缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F"><span class="nav-number">1.11.2.</span> <span class="nav-text">缓存穿透</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E5%BA%95%E6%B4%9E%E4%BC%98%E5%8C%96"><span class="nav-number">1.11.3.</span> <span class="nav-text">无底洞优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%AA%E5%B4%A9%E4%BC%98%E5%8C%96"><span class="nav-number">1.11.4.</span> <span class="nav-text">雪崩优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%83%AD%E7%82%B9key%E9%87%8D%E5%BB%BA%E4%BC%98%E5%8C%96"><span class="nav-number">1.11.5.</span> <span class="nav-text">热点key重建优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-number">1.12.</span> <span class="nav-text">Redis的配置</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -172,7 +172,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -272,10 +272,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2021-06-03 22:25:00 / 修改时间：20:37:49" itemprop="dateCreated datePublished" datetime="2021-06-03T22:25:00+08:00">2021-06-03</time>
+      <time title="创建时间：2021-06-03 22:25:00" itemprop="dateCreated datePublished" datetime="2021-06-03T22:25:00+08:00">2021-06-03</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-06-07 19:22:14" itemprop="dateModified" datetime="2021-06-07T19:22:14+08:00">2021-06-07</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -298,14 +304,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>7.5k</span>
+      <span>8.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>7 分钟</span>
+      <span>8 分钟</span>
     </span>
 </div>
 
@@ -651,6 +657,40 @@
 <p>集群节点收到请求时会先计算是否是自己的key，如果不是返回<strong>Move重定向</strong>响应供客户端使用。当键包含<code>&#123;hash_tag&#125;</code>时，槽会根据hash_tag进行计算，相同hash_tag的键会分布到同一个节点上。</p>
 <p>当集群进行数据迁移时，如果命令对应的键不在本节点，则可能在迁移目标节点中，此时会返回<strong>ASK重定向</strong>响应。</p>
 <h2 id="缓存设计"><a class="header-anchor" href="#缓存设计"></a>缓存设计</h2>
+<h3 id="引入缓存"><a class="header-anchor" href="#引入缓存"></a>引入缓存</h3>
+<p>缓存解决了数据访问速度慢的问题，降低了数据库的压力，但同时也引入了新的问题：缓存层与存储层的数据不一致，编码的复杂度，降低了系统的稳定性等等。</p>
+<p>缓存的更新策略主要分为主动更新和自动触发</p>
+<ul>
+<li>自动：通过Redis的过期和剔除策略，可以自动的清除不需要的缓存</li>
+<li>手动：更新存储层数据时，同步更新缓存内容(或者清除缓存内容，再次查询时增加缓存)</li>
+</ul>
+<h3 id="缓存穿透"><a class="header-anchor" href="#缓存穿透"></a>缓存穿透</h3>
+<p>缓存穿透是指查询一个不存在的数据，处于容错的考虑，通常不会对此次查询进行缓存。解决方法是缓存空对象，添加一个短时间的过期时间避免内存资源浪费。</p>
+<h3 id="无底洞优化"><a class="header-anchor" href="#无底洞优化"></a>无底洞优化</h3>
+<p>批量操作的key分布在多个节点上时，操作时间为<code>n*网络时间+n*命令时间</code>，常见优化手段:</p>
+<ol>
+<li>串行命令，执行n次get</li>
+<li>串行IO，对映射到相同槽的键执行mget或者pipeline操作，时间为 node*网络时间+n次命令时间</li>
+<li>并行IO，多线程执行2中方案，时间为:max(node网络时间)+n次命令时间，编程复杂</li>
+<li>利用hash_tag：时间为1次网络时间+N次命令时间。但是可能造成数据倾斜</li>
+</ol>
+<h3 id="雪崩优化"><a class="header-anchor" href="#雪崩优化"></a>雪崩优化</h3>
+<p>缓存层由于故障或其他原因不能提供服务，大量请求命中储存层，造成级联崩溃的情况。解决方案如下：</p>
+<ol>
+<li>使用Redis Sentinel 或 Redis Cluster 保证缓存高可用</li>
+<li>使用熔断组件如<a target="_blank" rel="noopener" href="https://github.com/netflix/hystrix">Hystrix</a>等进行资源隔离并熔断处理。</li>
+<li>上线前演练，尽量模拟极端情况，避免线上问题</li>
+</ol>
+<h3 id="热点key重建优化"><a class="header-anchor" href="#热点key重建优化"></a>热点key重建优化</h3>
+<p>当一个热点key的并发量非常大，并且更新缓存不能在短时间内完成时，缓存失效到重建期间，大量请求的话，会导致大量线程重建缓存，增加后端负载。要解决这个问题可以减少重建缓存的次数。</p>
+<ol>
+<li>互斥锁，缓存失效期间，只允许一个或少量线程去进行缓存重建，其他线程进行阻塞等待或其他熔断措施</li>
+<li>设置不过期，过期由业务系统维护，当业务系统发现数据过期时使用单独的线程去进行缓存重建。注：会导致数据不一致情况。</li>
+</ol>
+<h2 id="Redis的配置"><a class="header-anchor" href="#Redis的配置"></a>Redis的配置</h2>
+<blockquote>
+<p>详情请参考:<a target="_blank" rel="noopener" href="https://redis.io/topics/config">Redis configuration – Redis</a></p>
+</blockquote>
 
     </div>
 
@@ -699,6 +739,9 @@
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/posts/2.html" rel="next" title="">
+                   <i class="fa fa-chevron-right"></i>
+                </a>
             </div>
           </div>
     </footer>
@@ -731,7 +774,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">158k</span>
+    <span title="站点总字数">159k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
