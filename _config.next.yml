@@ -141,7 +141,8 @@ site_state: true
 # Value before `||` delimiter is the target permalink, value after `||` delimiter is the name of Font Awesome icon.
 social:
   GitHub: https://github.com/leithda || fab fa-github
-  E-Mail: mailto:leithda@163.com || fa fa-envelope
+  邮箱: mailto:leithda@163.com || fa fa-envelope
+  语雀: https://www.yuque.com/leithda || fas fa-book
   #Weibo: https://weibo.com/yourname || fab fa-weibo
   #Google: https://plus.google.com/yourname || fab fa-google
   #Twitter: https://twitter.com/yourname || fab fa-twitter
@@ -150,7 +151,7 @@ social:
   #YouTube: https://youtube.com/yourname || fab fa-youtube
   #Instagram: https://instagram.com/yourname || fab fa-instagram
   #Skype: skype:yourname?call|chat || fab fa-skype
-
+  
 social_icons:
   enable: true
   icons_only: false

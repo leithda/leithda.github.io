@@ -47,8 +47,10 @@ comments: false
 ## 联系方式
 - 手机: 198 6576 5690
 - email: leithda@163.com
+- 语雀： [长歌·语雀](https://www.yuque.com/leithda)
 - github: [github.com/leithda](github.com/leithda)
 - gitee: [gitee.com/leithda](gitee.com/leithda)
+
 
 
 ---
