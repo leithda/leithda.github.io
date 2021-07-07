@@ -6,7 +6,7 @@
   <link href="https://leithda.github.io/atom.xml" rel="self"/>
   
   <link href="https://leithda.github.io/"/>
-  <updated>2021-06-23T08:54:48.025Z</updated>
+  <updated>2021-07-07T08:49:19.383Z</updated>
   <id>https://leithda.github.io/</id>
   
   <author>
@@ -17,15 +17,72 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>MySQL读写分离</title>
+    <link href="https://leithda.github.io/posts/2814237590.html"/>
+    <id>https://leithda.github.io/posts/2814237590.html</id>
+    <published>2021-07-07T14:30:00.000Z</published>
+    <updated>2021-07-07T08:49:19.383Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;等SpringBoot多数据源…&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="知识点" scheme="https://leithda.github.io/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
+    
+    
+    <category term="MySQL" scheme="https://leithda.github.io/tags/MySQL/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Nginx基础</title>
+    <link href="https://leithda.github.io/posts/2814237589.html"/>
+    <id>https://leithda.github.io/posts/2814237589.html</id>
+    <published>2021-07-07T13:30:00.000Z</published>
+    <updated>2021-07-07T08:33:58.068Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Nginx (“engine x”) 是一个高性能的 &lt;strong&gt;HTTP&lt;/strong&gt; 和 &lt;strong&gt;反向代理&lt;/strong&gt; 服务器，也是一个 IMAP/POP3/SMTP 代理服务器。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="知识点" scheme="https://leithda.github.io/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
+    
+    
+    <category term="Nginx" scheme="https://leithda.github.io/tags/Nginx/"/>
+    
+  </entry>
+  
+  <entry>
+    <title></title>
+    <link href="https://leithda.github.io/posts/3.html"/>
+    <id>https://leithda.github.io/posts/3.html</id>
+    <published>2021-07-07T08:49:04.363Z</published>
+    <updated>2021-07-07T08:49:04.682Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
     <title>Redis设计与实现笔记_简单动态字符串</title>
     <link href="https://leithda.github.io/posts/1542299328.html"/>
     <id>https://leithda.github.io/posts/1542299328.html</id>
     <published>2021-06-21T14:40:00.000Z</published>
-    <updated>2021-06-23T08:54:48.025Z</updated>
+    <updated>2021-07-07T09:47:52.239Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;待完成&lt;/p&gt;
+&lt;p&gt;Reids没有使用C语言传统的字符串表示，而是定义了一种结构用于表示字符串，即简单动态字符串（Simple Dynamic String，SDS），并将SDS作为Redis默认字符串表示&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
@@ -89,30 +146,6 @@
   </entry>
   
   <entry>
-    <title>Redis开发与运维笔记-集群</title>
-    <link href="https://leithda.github.io/posts/ddc0d24d.html"/>
-    <id>https://leithda.github.io/posts/ddc0d24d.html</id>
-    <published>2021-06-02T13:15:00.000Z</published>
-    <updated>2021-06-02T08:53:12.246Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;Redis Cluster是Redis的分布式解决方案，在3.0版本正式推出，有效地解决了Redis分布式方面的需求。当遇到单机内存、并发、流量等瓶颈时，可以采用Cluster架构方案达到负载均衡的目的。&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
-    
-    
-    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Redis开发与运维笔记-缓存设计</title>
     <link href="https://leithda.github.io/posts/3358854259.html"/>
     <id>https://leithda.github.io/posts/3358854259.html</id>
@@ -137,11 +170,35 @@
   </entry>
   
   <entry>
+    <title>Redis开发与运维笔记-集群</title>
+    <link href="https://leithda.github.io/posts/ddc0d24d.html"/>
+    <id>https://leithda.github.io/posts/ddc0d24d.html</id>
+    <published>2021-06-02T13:15:00.000Z</published>
+    <updated>2021-06-02T08:53:12.246Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Redis Cluster是Redis的分布式解决方案，在3.0版本正式推出，有效地解决了Redis分布式方面的需求。当遇到单机内存、并发、流量等瓶颈时，可以采用Cluster架构方案达到负载均衡的目的。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
+    
+    
+    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Redis集群搭建(Redis5.0版)</title>
     <link href="https://leithda.github.io/posts/1044596185.html"/>
     <id>https://leithda.github.io/posts/1044596185.html</id>
     <published>2021-05-30T04:30:00.000Z</published>
-    <updated>2021-06-02T08:51:53.412Z</updated>
+    <updated>2021-07-07T08:33:52.912Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
@@ -152,7 +209,7 @@
     
     
     
-    <category term="瞎折腾" scheme="https://leithda.github.io/categories/%E7%9E%8E%E6%8A%98%E8%85%BE/"/>
+    <category term="知识点" scheme="https://leithda.github.io/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
     
     
     <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
@@ -164,7 +221,7 @@
     <link href="https://leithda.github.io/posts/778231993.html"/>
     <id>https://leithda.github.io/posts/778231993.html</id>
     <published>2021-05-29T04:50:00.000Z</published>
-    <updated>2021-05-31T09:57:12.144Z</updated>
+    <updated>2021-07-07T08:34:02.218Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
@@ -175,7 +232,7 @@
     
     
     
-    <category term="瞎折腾" scheme="https://leithda.github.io/categories/%E7%9E%8E%E6%8A%98%E8%85%BE/"/>
+    <category term="知识点" scheme="https://leithda.github.io/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
     
     
     <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
@@ -415,79 +472,6 @@
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
 &lt;p&gt;在模板模式（Template Pattern）中，一个抽象类公开定义了执行它的方法的方式/模板。它的子类可以按需要重写方法实现，但调用将以抽象类中定义的方式进行&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
-    
-    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>状态模式</title>
-    <link href="https://leithda.github.io/posts/307019047.html"/>
-    <id>https://leithda.github.io/posts/307019047.html</id>
-    <published>2021-05-27T04:50:00.000Z</published>
-    <updated>2021-05-27T08:15:24.777Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;状态模式(State):当一个对象的内在状态改变时允许改变其行为，这个对象看起来像是改变了一个类&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
-    
-    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>空对象模式</title>
-    <link href="https://leithda.github.io/posts/3159547075.html"/>
-    <id>https://leithda.github.io/posts/3159547075.html</id>
-    <published>2021-05-27T04:50:00.000Z</published>
-    <updated>2021-05-27T08:30:50.569Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;在空对象模式（Null Object Pattern）中，一个空对象取代 NULL 对象实例的检查。Null 对象不是检查空值，&lt;br&gt;
-而是反应一个不做任何动作的关系。这样的 Null 对象也可以在数据不可用的时候提供默认的行为。&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
-    
-    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>组合模式</title>
-    <link href="https://leithda.github.io/posts/1191195587.html"/>
-    <id>https://leithda.github.io/posts/1191195587.html</id>
-    <published>2021-05-27T04:50:00.000Z</published>
-    <updated>2021-05-27T08:44:01.977Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;组合模式(Composite),将对象组合成树形结构以表示’部分-整体’的层次结构。组合模式使得用户对单个对象和组合对象的使用具有一致性&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
