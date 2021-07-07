@@ -1,6 +1,6 @@
 ---
 title: Redis集群搭建(Redis5.0版)
-category: 瞎折腾
+category: 知识点
 tag: Redis
 abbrlink: 1044596185
 date: 2021-05-30 12:30:00

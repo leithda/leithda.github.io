@@ -1,7 +1,7 @@
 ---
 title: Redis集群搭建(Redis3.0版)
 abbrlink: 778231993
-category: 瞎折腾
+category: 知识点
 tag: Redis
 date: 2021-05-29 12:50:00
 ---
