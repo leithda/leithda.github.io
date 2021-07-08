@@ -6,7 +6,7 @@
   <link href="https://leithda.github.io/atom.xml" rel="self"/>
   
   <link href="https://leithda.github.io/"/>
-  <updated>2021-07-07T08:49:19.383Z</updated>
+  <updated>2021-07-08T08:59:18.892Z</updated>
   <id>https://leithda.github.io/</id>
   
   <author>
@@ -17,15 +17,63 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>MySQL读写分离</title>
-    <link href="https://leithda.github.io/posts/2814237590.html"/>
-    <id>https://leithda.github.io/posts/2814237590.html</id>
-    <published>2021-07-07T14:30:00.000Z</published>
-    <updated>2021-07-07T08:49:19.383Z</updated>
+    <title>搭建基础服务器</title>
+    <link href="https://leithda.github.io/posts/2556627931.html"/>
+    <id>https://leithda.github.io/posts/2556627931.html</id>
+    <published>2021-07-08T14:00:00.000Z</published>
+    <updated>2021-07-08T08:59:18.892Z</updated>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;等SpringBoot多数据源…&lt;/p&gt;
+&lt;p&gt;由于后续要搞各种分布式的实验，迫切希望快速搭建服务器集群的方法，故整理了这篇文章，主要介绍如何搭建一个基础版的虚拟机并通过导入导出快速完成服务器集群的建设。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="知识点" scheme="https://leithda.github.io/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
+    
+    
+    <category term="Linux" scheme="https://leithda.github.io/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ShardingSphere</title>
+    <link href="https://leithda.github.io/posts/4138508200.html"/>
+    <id>https://leithda.github.io/posts/4138508200.html</id>
+    <published>2021-07-07T14:50:00.000Z</published>
+    <updated>2021-07-08T09:59:22.845Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Apache ShardingSphere 是一套开源的分布式数据库解决方案组成的生态圈，它由 JDBC、Proxy 和 Sidecar（规划中）这 3 款既能够独立部署，又支持混合部署配合使用的产品组成。 它们均提供标准化的数据水平扩展、分布式事务和分布式治理等功能，可适用于如 Java 同构、异构语言、云原生等各种多样化的应用场景。&lt;/p&gt;
+&lt;p&gt;Apache ShardingSphere 5.x 版本开始致力于可插拔架构，项目的功能组件能够灵活的以可插拔的方式进行扩展。 目前，数据分片、读写分离、数据加密、影子库压测等功能，以及 MySQL、PostgreSQL、SQLServer、Oracle 等 SQL 与协议的支持，均通过插件的方式织入项目。 开发者能够像使用积木一样定制属于自己的独特系统。Apache ShardingSphere 目前已提供数十个 SPI 作为系统的扩展点，仍在不断增加中。&lt;/p&gt;
+&lt;p&gt;ShardingSphere 已于2020年4月16日成为 Apache 软件基金会的顶级项目。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="中间件" scheme="https://leithda.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
+    
+    <category term="ShardingSphere" scheme="https://leithda.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/ShardingSphere/"/>
+    
+    
+    <category term="数据库" scheme="https://leithda.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MySQL主从</title>
+    <link href="https://leithda.github.io/posts/2814237590.html"/>
+    <id>https://leithda.github.io/posts/2814237590.html</id>
+    <published>2021-07-07T14:30:00.000Z</published>
+    <updated>2021-07-08T10:36:18.111Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;MySQL的主从一般用于读写分离，主要是为了提高数据库的读写性能，提高并发能力，本章介绍如何通过Docker搭建MySQL主从结构&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
@@ -57,19 +105,6 @@
     
     
     <category term="Nginx" scheme="https://leithda.github.io/tags/Nginx/"/>
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://leithda.github.io/posts/3.html"/>
-    <id>https://leithda.github.io/posts/3.html</id>
-    <published>2021-07-07T08:49:04.363Z</published>
-    <updated>2021-07-07T08:49:04.682Z</updated>
-    
-    
-    
-    
     
   </entry>
   
@@ -448,30 +483,6 @@
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
 &lt;p&gt;桥接模式(Bridge),将抽象部分与它的实线部分分离，使他们都可以独立地变化。&lt;/p&gt;
 &lt;p&gt;对于两个独立变化的维度，使用桥接模式可以避免通过继承导致的类爆炸&lt;/p&gt;
-
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="理论" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/"/>
-    
-    <category term="设计模式" scheme="https://leithda.github.io/categories/%E7%90%86%E8%AE%BA/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-    <category term="设计模式" scheme="https://leithda.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>模板模式</title>
-    <link href="https://leithda.github.io/posts/2374608698.html"/>
-    <id>https://leithda.github.io/posts/2374608698.html</id>
-    <published>2021-05-27T04:50:00.000Z</published>
-    <updated>2021-05-27T07:19:14.230Z</updated>
-    
-    
-    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
-&lt;p&gt;在模板模式（Template Pattern）中，一个抽象类公开定义了执行它的方法的方式/模板。它的子类可以按需要重写方法实现，但调用将以抽象类中定义的方式进行&lt;/p&gt;
 
 &lt;/blockquote&gt;</summary>
     
