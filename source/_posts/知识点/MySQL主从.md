@@ -54,6 +54,20 @@ Server: Docker Engine - Community
 
 ## 主从集群搭建
 
+### 服务器
+
+| 角色    | 服务器IP      | 备注          |
+| ------- | ------------- | ------------- |
+| master  | 192.168.33.51 | mysql_master  |
+| slave01 | 192.168.33.52 | mysql_slave01 |
+| slave02 | 192.168.33.53 | mysql_slave02 |
+
+- 使用虚拟机多服务器环境，如图所示
+
+![image-20210708183516045](MySQL主从/image-20210708183516045.png)
+
+
+
 ### 主库
 
 - 配置文件内新增如下配置：
@@ -70,11 +84,11 @@ log-bin-index=master-bin.index
 - 使用Docker运行容器
 
 ```bash
-docker run -p 3307:3306 --name mysql_master \
+docker run -p 3306:3306 --name mysql_master \
 --privileged=true \
--v /home/dev/data/mysql_master_slave/master/conf:/etc/mysql/conf.d \
--v /home/dev/data/mysql_master_slave/master/logs:/logs \
--v /home/dev/data/mysql_master_slave/master/data:/var/lib/mysql \
+-v /home/dev/data/mysql/conf:/etc/mysql/conf.d \
+-v /home/dev/data/mysql/logs:/logs \
+-v /home/dev/data/mysql/data:/var/lib/mysql \
 -e MYSQL_ROOT_PASSWORD=master123 -d mysql:5.7
 ```
 
@@ -92,7 +106,7 @@ docker exec -it mysql_master /bin/bash
 mysql -uroot -pmaster123
 
 # 创建用户并分配权限
-mysql> CREATE USER 'slave'@'%' IDENTIFIED BY 'slave123'; #创建用户
+mysql> CREATE USER 'slave'@'%' IDENTIFIED BY 'slave'; #创建用户
 mysql> GRANT REPLICATION SLAVE ON *.* TO 'slave'@'%'; #分配权限
 mysql> flush privileges;   #刷新权限
 ```
@@ -111,13 +125,13 @@ mysql> show master status;
 1 row in set (0.01 sec)
 ```
 
-
+- 这里记录File以及Position，后续建立主从时需要这两个值
 
 
 
 ### 从库
 
-- 配置文件内新增以下配置
+- 配置文件内新增以下配置（**注：slave01和slave02需要配置为不同的server-id**）
 
 ```properties
 [mysqld]
@@ -129,25 +143,22 @@ relay-log=slave-relay-bin
 - 使用Docker运行容器
 
 ```bash
-docker run -p 3308:3306 --name mysql_slave01  \
+docker run -p 3306:3306 --name mysql_slave01  \
 --privileged=true \
--v /home/dev/data/mysql_master_slave/slave01/conf:/etc/mysql/conf.d \
--v /home/dev/data/mysql_master_slave/slave01/logs:/logs \
--v /home/dev/data/mysql_master_slave/slave01/data:/var/lib/mysql  \
---link mysql_master:master \
+-v /home/dev/data/mysql/conf:/etc/mysql/conf.d \
+-v /home/dev/data/mysql/logs:/logs \
+-v /home/dev/data/mysql/data:/var/lib/mysql  \
 -e MYSQL_ROOT_PASSWORD=slave123 \
 -d mysql:5.7
 
-docker run -p 3309:3306 --name mysql_slave02  \
+docker run -p 3306:3306 --name mysql_slave02  \
 --privileged=true \
--v /home/dev/data/mysql_master_slave/slave02/conf:/etc/mysql/conf.d \
--v /home/dev/data/mysql_master_slave/slave02/logs:/logs \
--v /home/dev/data/mysql_master_slave/slave02/data:/var/lib/mysql  \
---link mysql_master:master \
+-v /home/dev/data/mysql/conf:/etc/mysql/conf.d \
+-v /home/dev/data/mysql/logs:/logs \
+-v /home/dev/data/mysqldata:/var/lib/mysql  \
 -e MYSQL_ROOT_PASSWORD=slave123 \
 -d mysql:5.7
 
-# --link：指定当前容器所要连接的容器，后跟随`{容器名}:{别名}`。这个没用明白，直接使用虚拟机IP了，后续再补充相关内容
 # --privileged=true ：指定当前容器具有宿主机的root权限
 
 ```
@@ -162,7 +173,7 @@ docker exec -it mysql_slave01 /bin/bash
 mysql -uroot -pslave123
 
 # 配置主库信息
-mysql> change master to master_host='192.168.33.10',master_port=3307,master_user='slave', master_password='slave123', master_port=3307, master_log_file='master-bin.000003', master_log_pos=749, master_connect_retry=30;
+mysql> change master to master_host='192.168.33.51', master_port=3306, master_user='slave', master_password='slave', master_log_file='master-bin.000003', master_log_pos=749, master_connect_retry=30;
 Query OK, 0 rows affected, 2 warnings (0.02 sec)
 
 # 开启复制
@@ -243,44 +254,6 @@ No query specified
 
 
 
-
-
-### 最终目录
-
-```bash
-@10 ➜ mysql_master_slave  pwd
-/home/dev/data/mysql_master_slave
-@10 ➜ mysql_master_slave  tree -L 3
-.
-├── master
-│   ├── conf
-│   │   ├── docker.cnf
-│   │   ├── mysql.cnf
-│   │   └── mysqldump.cnf
-│   ├── data
-│   └── logs
-├── slave01
-│   ├── conf
-│   │   ├── docker.cnf
-│   │   ├── mysql.cnf
-│   │   └── mysqldump.cnf
-│   ├── data
-│   └── logs
-└── slave02
-    ├── conf
-    │   ├── docker.cnf
-    │   ├── mysql.cnf
-    │   └── mysqldump.cnf
-    ├── data
-    └── logs
-
-12 directories, 9 files
-```
-
-- 注意这里的从库slave01和slave02需要配置为不同的server-id
-
-
-
 ## 测试主从服务
 
 使用Navicat分别连接三个服务器，在主服务器上创建测试数据库、新增表t_user并增加一行数据。查看从服务器，主从功能正常。
@@ -289,7 +262,7 @@ No query specified
 
 
 
-## 小结
+## 使用ShardingSphere搭建主从应用服务
 
-至此，一个简单的MySQL主从环境已经搭建完成，更多高级部分的内容后续补充到这里。
+
 
