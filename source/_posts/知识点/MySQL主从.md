@@ -262,7 +262,9 @@ No query specified
 
 
 
-## 使用ShardingSphere搭建主从应用服务
+## 小结
+
+至此，MySQL的主从结构已经搭建完成，后续会介绍基于ShardingSphere完成应用方的搭建。
 
 
 
