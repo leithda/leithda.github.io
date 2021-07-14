@@ -1,5 +1,5 @@
 ---
-title: SpringBoo读写分离
+title: SpringBoot读写分离
 category: 知识点
 author: leithda
 tag:
