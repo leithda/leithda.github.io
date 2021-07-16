@@ -564,3 +564,7 @@ protected DataSource determineTargetDataSource() {
 >
 > 但是使用此种方式存在一个缺点，即数据源无法动态切换，**动态修改数据源需要重启服务**。
 
+
+
+代码地址：https://gitee.com/leithda/labs/tree/master/TechnicalPoints/ReadWriteSplitting/springboot-demo
+

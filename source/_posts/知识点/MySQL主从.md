@@ -1,5 +1,5 @@
 ---
-title: MySQL主从
+title: MySQL主备
 category: 知识点
 tag: MySQL
 abbrlink: 2814237590
@@ -14,7 +14,7 @@ MySQL的主从一般用于读写分离，主要是为了提高数据库的读写
 
 <!-- more -->
 
-# MySQL主从
+# MySQL主备
 
 ## 环境准备
 
@@ -54,13 +54,17 @@ Server: Docker Engine - Community
 
 ## 主从集群搭建
 
+不了解如何使用Docker运行MySQL的可以参考[Docker安装MySQL](./728095789)来完成MySQL的安装。
+
+
+
 ### 服务器
 
-| 角色    | 服务器IP      | 备注          |
-| ------- | ------------- | ------------- |
-| master  | 192.168.33.51 | mysql_master  |
-| slave01 | 192.168.33.52 | mysql_slave01 |
-| slave02 | 192.168.33.53 | mysql_slave02 |
+| 角色    | 服务器IP      | 备注            |
+| ------- | ------------- | --------------- |
+| master  | 192.168.33.51 | mysql_ms_master |
+| slave01 | 192.168.33.52 | mysql_ms_slave1 |
+| slave02 | 192.168.33.53 | mysql_ms_slave2 |
 
 - 使用虚拟机多服务器环境，如图所示
 
@@ -84,11 +88,11 @@ log-bin-index=master-bin.index
 - 使用Docker运行容器
 
 ```bash
-docker run -p 3306:3306 --name mysql_master \
+docker run -p 3307:3306 --name mysql_ms_master \
 --privileged=true \
--v /home/dev/data/mysql/conf:/etc/mysql/conf.d \
--v /home/dev/data/mysql/logs:/logs \
--v /home/dev/data/mysql/data:/var/lib/mysql \
+-v /home/dev/data/mysql/ms/conf:/etc/mysql/conf.d \
+-v /home/dev/data/mysql/ms/logs:/logs \
+-v /home/dev/data/mysql/ms/data:/var/lib/mysql \
 -e MYSQL_ROOT_PASSWORD=master123 -d mysql:5.7
 ```
 
@@ -100,7 +104,7 @@ docker run -p 3306:3306 --name mysql_master \
 
 ```mysql
 # 进入容器内部
-docker exec -it mysql_master /bin/bash
+docker exec -it mysql_ms_master /bin/bash
 
 # 使用mysql命令行工具
 mysql -uroot -pmaster123
@@ -131,7 +135,7 @@ mysql> show master status;
 
 ### 从库
 
-- 配置文件内新增以下配置（**注：slave01和slave02需要配置为不同的server-id**）
+- 配置文件内新增以下配置（**注：slave1和slave2需要配置为不同的server-id**）
 
 ```properties
 [mysqld]
@@ -143,19 +147,19 @@ relay-log=slave-relay-bin
 - 使用Docker运行容器
 
 ```bash
-docker run -p 3306:3306 --name mysql_slave01  \
+docker run -p 3307:3306 --name mysql_ms_slave1  \
 --privileged=true \
--v /home/dev/data/mysql/conf:/etc/mysql/conf.d \
--v /home/dev/data/mysql/logs:/logs \
--v /home/dev/data/mysql/data:/var/lib/mysql  \
+-v /home/dev/data/mysql/ms/conf:/etc/mysql/conf.d \
+-v /home/dev/data/mysql/ms/logs:/logs \
+-v /home/dev/data/mysql/ms/data:/var/lib/mysql  \
 -e MYSQL_ROOT_PASSWORD=slave123 \
 -d mysql:5.7
 
-docker run -p 3306:3306 --name mysql_slave02  \
+docker run -p 3307:3306 --name mysql_ms_slave2  \
 --privileged=true \
--v /home/dev/data/mysql/conf:/etc/mysql/conf.d \
--v /home/dev/data/mysql/logs:/logs \
--v /home/dev/data/mysqldata:/var/lib/mysql  \
+-v /home/dev/data/mysql/ms/conf:/etc/mysql/conf.d \
+-v /home/dev/data/mysql/ms/logs:/logs \
+-v /home/dev/data/mysql/ms/data:/var/lib/mysql  \
 -e MYSQL_ROOT_PASSWORD=slave123 \
 -d mysql:5.7
 
@@ -167,13 +171,13 @@ docker run -p 3306:3306 --name mysql_slave02  \
 
 ```bash
 # 进入容器内部
-docker exec -it mysql_slave01 /bin/bash
+docker exec -it mysql_ms_slave1 /bin/bash
 
 # 使用mysql命令行工具
 mysql -uroot -pslave123
 
 # 配置主库信息
-mysql> change master to master_host='192.168.33.51', master_port=3306, master_user='slave', master_password='slave', master_log_file='master-bin.000003', master_log_pos=749, master_connect_retry=30;
+mysql> change master to master_host='192.168.33.51', master_port=3307, master_user='slave', master_password='slave', master_log_file='master-bin.000003', master_log_pos=749, master_connect_retry=30;
 Query OK, 0 rows affected, 2 warnings (0.02 sec)
 
 # 开启复制
@@ -264,7 +268,7 @@ No query specified
 
 ## 小结
 
-至此，MySQL的主从结构已经搭建完成，后续会介绍基于ShardingSphere完成应用方的搭建。
+至此，MySQL的主从结构已经搭建完成，后续完成读写分离应用方的创建。
 
 
 

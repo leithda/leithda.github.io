@@ -37,7 +37,7 @@ hello-world   latest    d1165f221234   4 months ago   13.3kB
 $ docker save -o ~/mysql_5.7.tar mysql:5.7
 ```
 
-- docker save -o 输出文件路径 REPOSITORY:TAG
+- `docker save -o {FILE_NAME} {REPOSITORY:TAG}`
 
 
 
@@ -45,7 +45,7 @@ $ docker save -o ~/mysql_5.7.tar mysql:5.7
 
 ## 导入
 
-将导出的镜像文件上传至服务器，使用如下命令加载
+将导出的镜像文件上传至服务器，使用命令`docker load < {FILE_NAME}`加载
 
 ```bash
 # 查看镜像

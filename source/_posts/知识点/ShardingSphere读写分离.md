@@ -6,11 +6,11 @@ tag:
   - SpringBoot
   - 数据库
 abbrlink: 450540427
-date: 2020-07-09 20:00:00
+date: 2021-07-14 22:00:00
 ---
 
 {% cq %}
-本文完成基于SpringBoot+ShardingSphere搭建MySQL读写分离应用
+SpringBoot+ShardingSphere+MySQL读写分离
 {% endcq %}
 
 <!-- more -->
@@ -22,6 +22,8 @@ date: 2020-07-09 20:00:00
 ## 创建应用
 
 ### 依赖
+
+> 引入druid数据源，sharding-jdbc启动器，lombok（使用@Slf4j进行日志打印）
 
 ```xml
     <dependencies>
@@ -409,4 +411,8 @@ ShardingSphere-SQL                       : SQL: ${select语句} ::: DataSources:
 ```
 
 
+
+
+
+> 代码地址：https://gitee.com/leithda/labs/tree/master/TechnicalPoints/ReadWriteSplitting/shardingsphere-demo
 
