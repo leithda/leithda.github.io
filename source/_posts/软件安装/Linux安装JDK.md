@@ -19,9 +19,9 @@ Linux 安装 JDK
 
 ## 解压
 ```bash
-mkdir -p /opt/soft
+sudo mkdir -p /opt/soft
 
-tar -zxvf jdk-8u291-linux-x64.tar.gz -C /opt/soft
+sudo tar -zxvf jdk-8u291-linux-x64.tar.gz -C /opt/soft
 
 ```
 
