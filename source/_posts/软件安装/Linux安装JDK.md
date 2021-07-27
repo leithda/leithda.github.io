@@ -2,6 +2,7 @@
 title: Linux安装JDK
 category: 软件安装
 tag: jdk
+abbrlink: 1441854962
 date: 2021-07-27 19:00:00
 ---
 
