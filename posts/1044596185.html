@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css">
+  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;leithda.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:&quot;enable&quot;,&quot;bookmark&quot;:{&quot;enable&quot;:&quot;enable&quot;,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:&quot;utterances&quot;,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null,&quot;activeClass&quot;:&quot;utterances&quot;},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;},&quot;path&quot;:&quot;&#x2F;search.xml&quot;,&quot;localsearch&quot;:{&quot;enable&quot;:true,&quot;trigger&quot;:&quot;auto&quot;,&quot;top_n_per_article&quot;:1,&quot;unescape&quot;:false,&quot;preload&quot;:false}}</script>
+<meta name="description" content="在Redis5中redis-trib.rb的功能被集成到了redis-cli中，大大简化了redis的集群部署，加快了进群部署的速度，也方便后期维护与扩容。此篇文章参考官方文档搭建Redis集群。 注：Redis版本应在5.0及以上。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis集群搭建(Redis5.0版)">
+<meta property="og:url" content="https://leithda.github.io/posts/1044596185.html">
+<meta property="og:site_name" content="Leithda&#39;s Blog">
+<meta property="og:description" content="在Redis5中redis-trib.rb的功能被集成到了redis-cli中，大大简化了redis的集群部署，加快了进群部署的速度，也方便后期维护与扩容。此篇文章参考官方文档搭建Redis集群。 注：Redis版本应在5.0及以上。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-30T04:30:00.000Z">
+<meta property="article:modified_time" content="2021-07-07T14:32:37.090Z">
+<meta property="article:author" content="Leithda">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://leithda.github.io/posts/1044596185.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;leithda.github.io&#x2F;posts&#x2F;1044596185.html&quot;,&quot;path&quot;:&quot;posts&#x2F;1044596185.html&quot;,&quot;title&quot;:&quot;Redis集群搭建(Redis5.0版)&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>Redis集群搭建(Redis5.0版) | Leithda's Blog</title><script src="/js/config.js"></script>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?3540567b868217169a5241159ab1e032"></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Leithda's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Leithda's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-guide"><a href="/guide/" rel="section"><i class="fa fa-bars fa-fw"></i>导航</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Redis集群搭建(Redis5.0版)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.1.</span> <span class="nav-text">编写配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E9%9B%86%E7%BE%A4"><span class="nav-number">1.2.</span> <span class="nav-text">启动集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81"><span class="nav-number">1.3.</span> <span class="nav-text">查看集群状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9"><span class="nav-number">1.4.</span> <span class="nav-text">集群扩容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%A4%87%E7%94%A8%E8%8A%82%E7%82%B9%EF%BC%9A"><span class="nav-number">1.4.1.</span> <span class="nav-text">启动备用节点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8Bredis"><span class="nav-number">1.4.2.</span> <span class="nav-text">查看redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0master%E8%8A%82%E7%82%B9"><span class="nav-number">1.4.3.</span> <span class="nav-text">添加master节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E9%85%8D%E6%A7%BD"><span class="nav-number">1.4.4.</span> <span class="nav-text">分配槽</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E4%BB%8E%E8%8A%82%E7%82%B9"><span class="nav-number">1.4.5.</span> <span class="nav-text">添加从节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E6%94%B6%E7%BC%A9"><span class="nav-number">1.5.</span> <span class="nav-text">集群收缩</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4master%E5%AF%B9%E5%BA%94%E7%9A%84%E4%BB%8E%E8%8A%82%E7%82%B9"><span class="nav-number">1.5.1.</span> <span class="nav-text">删除master对应的从节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B8%85%E7%A9%BA%E6%A7%BD"><span class="nav-number">1.5.2.</span> <span class="nav-text">清空槽</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E7%BA%BFmaster%E8%8A%82%E7%82%B9"><span class="nav-number">1.5.3.</span> <span class="nav-text">下线master节点</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Leithda"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">Leithda</p>
+  <div class="site-description" itemprop="description">Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="sidebar-button site-overview-item animated">
+    <a onclick="Chatra('openChat', true);"><i class="fa fa-comment"></i>
+    Chat
+  </a>
+  </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/leithda" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:leithda@163.com" title="邮箱 → mailto:leithda@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>邮箱</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.yuque.com/leithda" title="语雀 → https:&#x2F;&#x2F;www.yuque.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>语雀</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dbreset.github.io/" title="https:&#x2F;&#x2F;dbreset.github.io" rel="noopener" target="_blank">DbReset</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://leithda.github.io/posts/1044596185.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Leithda">
+      <meta itemprop="description" content="Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leithda's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis集群搭建(Redis5.0版)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-05-30 12:30:00" itemprop="dateCreated datePublished" datetime="2021-05-30T12:30:00+08:00">2021-05-30</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-07-07 22:32:37" itemprop="dateModified" datetime="2021-07-07T22:32:37+08:00">2021-07-07</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/" itemprop="url" rel="index"><span itemprop="name">知识点</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>15k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>14 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote class="blockquote-center">
+<p>在Redis5中redis-trib.rb的功能被集成到了redis-cli中，大大简化了redis的集群部署，加快了进群部署的速度，也方便后期维护与扩容。此篇文章参考<a target="_blank" rel="noopener" href="https://redis.io/topics/cluster-tutorial">官方文档</a>搭建Redis集群。</p>
+<p><strong>注：Redis版本应在5.0及以上。</strong></p>
+
+</blockquote>
+<span id="more"></span>
+<h1>Redis集群搭建(Redis5.0版)</h1>
+<h2 id="编写配置文件"><a class="header-anchor" href="#编写配置文件"></a>编写配置文件</h2>
+<p>创建配置文件目录<code>cluster-test</code>及数据文件目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /home/dev/data/redis/data/cluster-test </span><br><span class="line">mkdir -p /home/dev/data/redis/conf/cluster-test</span><br></pre></td></tr></table></figure>
+<p>编写配置文件</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## /home/dev/data/redis/conf/cluster-test/redis-6379.conf 同理编写6380-6386的配置</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">#节点端口 </span></span><br><span class="line"><span class="attr">port</span> <span class="string">6379</span></span><br><span class="line"><span class="comment"># 开启集群模式 </span></span><br><span class="line"><span class="meta">cluster-enabled</span> <span class="string">yes</span></span><br><span class="line"><span class="comment"># 节点超时时间，单位毫秒 </span></span><br><span class="line"><span class="meta">cluster-node-timeout</span> <span class="string">15000</span></span><br><span class="line"><span class="comment"># 集群内部配置文件 </span></span><br><span class="line"><span class="meta">cluster-config-file</span> <span class="string">&quot;nodes-6379.conf&quot;</span></span><br><span class="line"><span class="comment"># 指定本地数据库文件名，默认值为dump.rdb</span></span><br><span class="line"><span class="attr">dbfilename</span> <span class="string">dump-6379.rdb</span></span><br><span class="line"><span class="comment"># dump 文件保存目录</span></span><br><span class="line"><span class="attr">dir</span> <span class="string">/home/dev/data/redis/data/cluster-test</span></span><br></pre></td></tr></table></figure>
+<p>启动redis</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">redis-server redis-6379.conf &amp;</span><br><span class="line">redis-server redis-6380.conf &amp;</span><br><span class="line">redis-server redis-6381.conf &amp;</span><br><span class="line">redis-server redis-6382.conf &amp;</span><br><span class="line">redis-server redis-6383.conf &amp;</span><br><span class="line">redis-server redis-6384.conf &amp;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>这里可以使用redis官方提供的脚本进行基础集群的搭建。具体查看目录<code>redis-x.x.x/utils/create-cluster</code>。其中包含README说明及create-cluster脚本</li>
+</ul>
+<h2 id="启动集群"><a class="header-anchor" href="#启动集群"></a>启动集群</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli --cluster create 127.0.0.1:6379 127.0.0.1:6380 127.0.0.1:6381 127.0.0.1:6382 127.0.0.1:6383 127.0.0.1:6384 --cluster-replicas 1</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>–cluster-replicas：1</strong>：代表集群中的主节点有几个从节点</li>
+</ul>
+<p>执行过程如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">[dev@localhost create-cluster]$ redis-cli --cluster create 127.0.0.1:6379 127.0.0.1:6380 127.0.0.1:6381 127.0.0.1:6382 127.0.0.1:6383 127.0.0.1:6384 --cluster-replicas 1</span><br><span class="line">&gt;&gt;&gt; Performing <span class="built_in">hash</span> slots allocation on 6 nodes...</span><br><span class="line">Master[0] -&gt; Slots 0 - 5460</span><br><span class="line">Master[1] -&gt; Slots 5461 - 10922</span><br><span class="line">Master[2] -&gt; Slots 10923 - 16383</span><br><span class="line">Adding replica 127.0.0.1:6383 to 127.0.0.1:6379</span><br><span class="line">Adding replica 127.0.0.1:6384 to 127.0.0.1:6380</span><br><span class="line">Adding replica 127.0.0.1:6382 to 127.0.0.1:6381</span><br><span class="line">&gt;&gt;&gt; Trying to optimize slaves allocation <span class="keyword">for</span> anti-affinity</span><br><span class="line">[WARNING] Some slaves are <span class="keyword">in</span> the same host as their master</span><br><span class="line">M: e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 127.0.0.1:6379</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">M: e34482fb5455d94959f5b46b41fc17cf72646a4c 127.0.0.1:6380</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">M: fcceb74f27471d80e991b33e23817200b47866ff 127.0.0.1:6381</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">S: 3eee4e2dc41e924d313b6fef575fab40055b69d9 127.0.0.1:6382</span><br><span class="line">   replicates e8e05250b518f5e774ce12f9cd8ff0c285c96bd5</span><br><span class="line">S: 208df20aedbbf1687ac66386fc064771793504e6 127.0.0.1:6383</span><br><span class="line">   replicates e34482fb5455d94959f5b46b41fc17cf72646a4c</span><br><span class="line">S: 6964ab0161d106093024f643bbe03bf9daf57760 127.0.0.1:6384</span><br><span class="line">   replicates fcceb74f27471d80e991b33e23817200b47866ff</span><br><span class="line">Can I <span class="built_in">set</span> the above configuration? (<span class="built_in">type</span> <span class="string">&#x27;yes&#x27;</span> to accept): yes</span><br><span class="line">&gt;&gt;&gt; Nodes configuration updated</span><br><span class="line">&gt;&gt;&gt; Assign a different config epoch to each node</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER MEET messages to join the cluster</span><br><span class="line">Waiting <span class="keyword">for</span> the cluster to join</span><br><span class="line">.</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:6379)</span><br><span class="line">M: e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 127.0.0.1:6379</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: fcceb74f27471d80e991b33e23817200b47866ff 127.0.0.1:6381</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 208df20aedbbf1687ac66386fc064771793504e6 127.0.0.1:6383</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates e34482fb5455d94959f5b46b41fc17cf72646a4c</span><br><span class="line">S: 6964ab0161d106093024f643bbe03bf9daf57760 127.0.0.1:6384</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates fcceb74f27471d80e991b33e23817200b47866ff</span><br><span class="line">M: e34482fb5455d94959f5b46b41fc17cf72646a4c 127.0.0.1:6380</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 3eee4e2dc41e924d313b6fef575fab40055b69d9 127.0.0.1:6382</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates e8e05250b518f5e774ce12f9cd8ff0c285c96bd5</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check <span class="keyword">for</span> open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br></pre></td></tr></table></figure>
+<h2 id="查看集群状态"><a class="header-anchor" href="#查看集群状态"></a>查看集群状态</h2>
+<ul>
+<li>查看集群状态</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[dev@localhost create-cluster]$ redis-cli cluster info</span><br><span class="line">cluster_state:ok</span><br><span class="line">cluster_slots_assigned:16384</span><br><span class="line">cluster_slots_ok:16384</span><br><span class="line">cluster_slots_pfail:0</span><br><span class="line">cluster_slots_fail:0</span><br><span class="line">cluster_known_nodes:6</span><br><span class="line">cluster_size:3</span><br><span class="line">cluster_current_epoch:6</span><br><span class="line">cluster_my_epoch:1</span><br><span class="line">cluster_stats_messages_ping_sent:281</span><br><span class="line">cluster_stats_messages_pong_sent:281</span><br><span class="line">cluster_stats_messages_sent:562</span><br><span class="line">cluster_stats_messages_ping_received:276</span><br><span class="line">cluster_stats_messages_pong_received:281</span><br><span class="line">cluster_stats_messages_meet_received:5</span><br><span class="line">cluster_stats_messages_received:562</span><br></pre></td></tr></table></figure>
+<ul>
+<li>查看集群节点信息</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[dev@localhost create-cluster]$ redis-cli cluster nodes</span><br><span class="line">fcceb74f27471d80e991b33e23817200b47866ff 127.0.0.1:6381@16381 master - 0 1622448169000 3 connected 10923-16383</span><br><span class="line">208df20aedbbf1687ac66386fc064771793504e6 127.0.0.1:6383@16383 slave e34482fb5455d94959f5b46b41fc17cf72646a4c 0 1622448169000 2 connected</span><br><span class="line">6964ab0161d106093024f643bbe03bf9daf57760 127.0.0.1:6384@16384 slave fcceb74f27471d80e991b33e23817200b47866ff 0 1622448170329 3 connected</span><br><span class="line">e34482fb5455d94959f5b46b41fc17cf72646a4c 127.0.0.1:6380@16380 master - 0 1622448170000 2 connected 5461-10922</span><br><span class="line">e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 127.0.0.1:6379@16379 myself,master - 0 1622448169000 1 connected 0-5460</span><br><span class="line">3eee4e2dc41e924d313b6fef575fab40055b69d9 127.0.0.1:6382@16382 slave e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 0 1622448171335 1 connected</span><br></pre></td></tr></table></figure>
+<h2 id="集群扩容"><a class="header-anchor" href="#集群扩容"></a>集群扩容</h2>
+<h3 id="启动备用节点："><a class="header-anchor" href="#启动备用节点："></a>启动备用节点：</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis-server redis-6385.conf &amp;</span><br><span class="line">redis-server redis-6386.conf &amp;</span><br></pre></td></tr></table></figure>
+<h3 id="查看redis"><a class="header-anchor" href="#查看redis"></a>查看redis</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[dev@localhost cluster-test]$ ps -ef | grep redis</span><br><span class="line">dev      3934  3552  0 07:56 pts/1    00:00:01 redis-server *:6379 [cluster]</span><br><span class="line">dev      3935  3552  0 07:56 pts/1    00:00:01 redis-server *:6380 [cluster]</span><br><span class="line">dev      3936  3552  0 07:56 pts/1    00:00:01 redis-server *:6381 [cluster]</span><br><span class="line">dev      3937  3552  0 07:56 pts/1    00:00:01 redis-server *:6382 [cluster]</span><br><span class="line">dev      3938  3552  0 07:56 pts/1    00:00:01 redis-server *:6383 [cluster]</span><br><span class="line">dev      3959  3552  0 07:56 pts/1    00:00:01 redis-server *:6384 [cluster]</span><br><span class="line">dev      3989  3552  0 08:21 pts/1    00:00:00 redis-server *:6385 [cluster]</span><br><span class="line">dev      3994  3552  0 08:21 pts/1    00:00:00 redis-server *:6386 [cluster]</span><br><span class="line">dev      4001  3552  0 08:21 pts/1    00:00:00 grep --color=auto redis</span><br></pre></td></tr></table></figure>
+<h3 id="添加master节点"><a class="header-anchor" href="#添加master节点"></a>添加master节点</h3>
+<p><code>redis-cli --cluster add-node &lt;host_new&gt;:&lt;port_new&gt; &lt;host&gt;:&lt;port&gt;</code></p>
+<ul>
+<li>
+<p><strong>&lt;host_new&gt;:&lt;port_new&gt;</strong>：新加入集群节点</p>
+</li>
+<li>
+<p><strong>&lt;host&gt;:&lt;port&gt;</strong>：集群内任意节点</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[dev@localhost cluster-test]$ redis-cli --cluster add-node 127.0.0.1:6385 127.0.0.1:6379</span><br><span class="line">&gt;&gt;&gt; Adding node 127.0.0.1:6385 to cluster 127.0.0.1:6379</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:6379)</span><br><span class="line">M: e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 127.0.0.1:6379</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: fcceb74f27471d80e991b33e23817200b47866ff 127.0.0.1:6381</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 208df20aedbbf1687ac66386fc064771793504e6 127.0.0.1:6383</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates e34482fb5455d94959f5b46b41fc17cf72646a4c</span><br><span class="line">S: 6964ab0161d106093024f643bbe03bf9daf57760 127.0.0.1:6384</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates fcceb74f27471d80e991b33e23817200b47866ff</span><br><span class="line">M: e34482fb5455d94959f5b46b41fc17cf72646a4c 127.0.0.1:6380</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 3eee4e2dc41e924d313b6fef575fab40055b69d9 127.0.0.1:6382</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates e8e05250b518f5e774ce12f9cd8ff0c285c96bd5</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check <span class="keyword">for</span> open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line">&gt;&gt;&gt; Send CLUSTER MEET to node 127.0.0.1:6385 to make it join the cluster.</span><br><span class="line">[OK] New node added correctly.</span><br></pre></td></tr></table></figure>
+<h3 id="分配槽"><a class="header-anchor" href="#分配槽"></a>分配槽</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli --cluster reshard &lt;host&gt;:&lt;port&gt; --cluster-from &lt;node-id&gt; --cluster-to &lt;node-id&gt; --cluster-slots &lt;number of slots&gt; --cluster-yes</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>&lt;host&gt;:&lt;port&gt;</strong>：集群内任意节点</li>
+<li><code>--cluster-from</code>：从集群中哪些节点转移槽，多个几点用<code>,</code>分割</li>
+<li><code>--cluster-to</code>：转移槽到集群中的那个节点</li>
+<li><code>--cluster-slots</code>：分配的槽的数量</li>
+<li><code>--cluster-yes</code>：自动确认，不加此参数，需要手动输入yes确认槽迁移计划</li>
+<li><strong>&lt;node-id&gt;</strong>: 节点对应的集群ID，以集群模式启动时会写入到<code>nodes-&#123;port&#125;.conf</code>配置中。也可以通过<code>redis-cli cluster nodes</code>查看</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[dev@localhost create-cluster]$ redis-cli cluster nodes</span><br><span class="line">b48e9109610b9952cde3f032f77563e441a3d75d 127.0.0.1:6385@16385 master - 0 1622449778389 0 connected</span><br><span class="line">fcceb74f27471d80e991b33e23817200b47866ff 127.0.0.1:6381@16381 master - 0 1622449776378 3 connected 10923-16383</span><br><span class="line">208df20aedbbf1687ac66386fc064771793504e6 127.0.0.1:6383@16383 slave e34482fb5455d94959f5b46b41fc17cf72646a4c 0 1622449774000 2 connected</span><br><span class="line">6964ab0161d106093024f643bbe03bf9daf57760 127.0.0.1:6384@16384 slave fcceb74f27471d80e991b33e23817200b47866ff 0 1622449776000 3 connected</span><br><span class="line">e34482fb5455d94959f5b46b41fc17cf72646a4c 127.0.0.1:6380@16380 master - 0 1622449777384 2 connected 5461-10922</span><br><span class="line">e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 127.0.0.1:6379@16379 myself,master - 0 1622449775000 1 connected 0-5460</span><br><span class="line">3eee4e2dc41e924d313b6fef575fab40055b69d9 127.0.0.1:6382@16382 slave e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 0 1622449777000 1 connected</span><br></pre></td></tr></table></figure>
+<p>将6379,6380,6381的词槽分别分给6385节点1024个词槽</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli --cluster reshard 127.0.0.1:6379 --cluster-from e8e05250b518f5e774ce12f9cd8ff0c285c96bd5,e34482fb5455d94959f5b46b41fc17cf72646a4c,fcceb74f27471d80e991b33e23817200b47866ff --cluster-to b48e9109610b9952cde3f032f77563e441a3d75d --cluster-slots 1024 --cluster-yes</span><br></pre></td></tr></table></figure>
+<p>迁移后的集群节点信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[dev@localhost create-cluster]$ redis-cli cluster nodes</span><br><span class="line">b48e9109610b9952cde3f032f77563e441a3d75d 127.0.0.1:6385@16385 master - 0 1622450708439 7 connected 0-340 5461-5802 10923-11263</span><br><span class="line">fcceb74f27471d80e991b33e23817200b47866ff 127.0.0.1:6381@16381 master - 0 1622450708000 3 connected 11264-16383</span><br><span class="line">208df20aedbbf1687ac66386fc064771793504e6 127.0.0.1:6383@16383 slave e34482fb5455d94959f5b46b41fc17cf72646a4c 0 1622450706000 2 connected</span><br><span class="line">6964ab0161d106093024f643bbe03bf9daf57760 127.0.0.1:6384@16384 slave fcceb74f27471d80e991b33e23817200b47866ff 0 1622450707433 3 connected</span><br><span class="line">e34482fb5455d94959f5b46b41fc17cf72646a4c 127.0.0.1:6380@16380 master - 0 1622450706427 2 connected 5803-10922</span><br><span class="line">e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 127.0.0.1:6379@16379 myself,master - 0 1622450705000 1 connected 341-5460</span><br><span class="line">3eee4e2dc41e924d313b6fef575fab40055b69d9 127.0.0.1:6382@16382 slave e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 0 1622450709445 1 connected</span><br></pre></td></tr></table></figure>
+<h3 id="添加从节点"><a class="header-anchor" href="#添加从节点"></a>添加从节点</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis-cli --cluster add-node &lt;host_new&gt;:&lt;port_new&gt; &lt;host&gt;:&lt;port&gt; --cluster-slave \</span><br><span class="line">--cluster-master-id &lt;node-id&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>--cluster-slave</code>：添加从节点</li>
+<li><code>--cluster-master-id &lt;node-id&gt;</code>：从节点的主节点id</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[dev@localhost create-cluster]$ redis-cli --cluster add-node 127.0.0.1:6386 127.0.0.1:6385 --cluster-slave --cluster-master-id b48e9109610b9952cde3f032f77563e441a3d75d</span><br><span class="line">&gt;&gt;&gt; Adding node 127.0.0.1:6386 to cluster 127.0.0.1:6385</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:6385)</span><br><span class="line">M: b48e9109610b9952cde3f032f77563e441a3d75d 127.0.0.1:6385</span><br><span class="line">   slots:[0-340],[5461-5802],[10923-11263] (1024 slots) master</span><br><span class="line">S: 208df20aedbbf1687ac66386fc064771793504e6 127.0.0.1:6383</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates e34482fb5455d94959f5b46b41fc17cf72646a4c</span><br><span class="line">M: e34482fb5455d94959f5b46b41fc17cf72646a4c 127.0.0.1:6380</span><br><span class="line">   slots:[5803-10922] (5120 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 127.0.0.1:6379</span><br><span class="line">   slots:[341-5460] (5120 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: fcceb74f27471d80e991b33e23817200b47866ff 127.0.0.1:6381</span><br><span class="line">   slots:[11264-16383] (5120 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 6964ab0161d106093024f643bbe03bf9daf57760 127.0.0.1:6384</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates fcceb74f27471d80e991b33e23817200b47866ff</span><br><span class="line">S: 3eee4e2dc41e924d313b6fef575fab40055b69d9 127.0.0.1:6382</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates e8e05250b518f5e774ce12f9cd8ff0c285c96bd5</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check <span class="keyword">for</span> open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line">&gt;&gt;&gt; Send CLUSTER MEET to node 127.0.0.1:6386 to make it join the cluster.</span><br><span class="line">Waiting <span class="keyword">for</span> the cluster to join</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; Configure node as replica of 127.0.0.1:6385.</span><br><span class="line">[OK] New node added correctly.</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>查看集群状态</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[dev@localhost create-cluster]$ redis-cli cluster nodes</span><br><span class="line">703596043233487cc79ef364d56a13907ccf7cb6 127.0.0.1:6386@16386 slave b48e9109610b9952cde3f032f77563e441a3d75d 0 1622451294000 7 connected</span><br><span class="line">b48e9109610b9952cde3f032f77563e441a3d75d 127.0.0.1:6385@16385 master - 0 1622451294000 7 connected 0-340 5461-5802 10923-11263</span><br><span class="line">fcceb74f27471d80e991b33e23817200b47866ff 127.0.0.1:6381@16381 master - 0 1622451293000 3 connected 11264-16383</span><br><span class="line">208df20aedbbf1687ac66386fc064771793504e6 127.0.0.1:6383@16383 slave e34482fb5455d94959f5b46b41fc17cf72646a4c 0 1622451291000 2 connected</span><br><span class="line">6964ab0161d106093024f643bbe03bf9daf57760 127.0.0.1:6384@16384 slave fcceb74f27471d80e991b33e23817200b47866ff 0 1622451295061 3 connected</span><br><span class="line">e34482fb5455d94959f5b46b41fc17cf72646a4c 127.0.0.1:6380@16380 master - 0 1622451296066 2 connected 5803-10922</span><br><span class="line">e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 127.0.0.1:6379@16379 myself,master - 0 1622451293000 1 connected 341-5460</span><br><span class="line">3eee4e2dc41e924d313b6fef575fab40055b69d9 127.0.0.1:6382@16382 slave e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 0 1622451294055 1 connected</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="集群收缩"><a class="header-anchor" href="#集群收缩"></a>集群收缩</h2>
+<blockquote>
+<p>下线节点 127.0.0.1:6385、127.0.0.1:6386</p>
+</blockquote>
+<h3 id="删除master对应的从节点"><a class="header-anchor" href="#删除master对应的从节点"></a>删除master对应的从节点</h3>
+<ul>
+<li>
+<p>查看从节点</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[dev@localhost create-cluster]$ redis-cli cluster nodes | grep :6386</span><br><span class="line">703596043233487cc79ef364d56a13907ccf7cb6 127.0.0.1:6386@16386 slave b48e9109610b9952cde3f032f77563e441a3d75d 0 1622451429000 7 connected</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>从集群中删除从节点</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli --cluster del-node 127.0.0.1:6379 703596043233487cc79ef364d56a13907ccf7cb6</span><br></pre></td></tr></table></figure>
+<ul>
+<li>后续使用<code>redis-cli -h 127.0.0.1 -p 6379 cluster nodes</code>查看集群节点状态，6386节点应该已经被移除。</li>
+</ul>
+</li>
+</ul>
+<h3 id="清空槽"><a class="header-anchor" href="#清空槽"></a>清空槽</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">redis-cli --cluster reshard 127.0.0.1:6379 --cluster-from b48e9109610b9952cde3f032f77563e441a3d75d --cluster-to e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 --cluster-slots 341 --cluster-yes</span><br><span class="line"></span><br><span class="line">redis-cli --cluster reshard 127.0.0.1:6379 --cluster-from b48e9109610b9952cde3f032f77563e441a3d75d --cluster-to e34482fb5455d94959f5b46b41fc17cf72646a4c --cluster-slots 341 --cluster-yes</span><br><span class="line"></span><br><span class="line">redis-cli --cluster reshard 127.0.0.1:6379 --cluster-from b48e9109610b9952cde3f032f77563e441a3d75d --cluster-to fcceb74f27471d80e991b33e23817200b47866ff --cluster-slots 342 --cluster-yes</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>由于目标节点只能写一个，因此需要执行三次。</p>
+</li>
+<li>
+<p>查看当前集群槽分配状态</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">[dev@localhost create-cluster]$ redis-cli cluster slots</span><br><span class="line">1) 1) (<span class="built_in">integer</span>) 0 <span class="comment"># 槽起始位置</span></span><br><span class="line">   2) (<span class="built_in">integer</span>) 5460 <span class="comment"># 槽结束位置</span></span><br><span class="line">   3) 1) <span class="string">&quot;127.0.0.1&quot;</span> <span class="comment"># master:host</span></span><br><span class="line">      2) (<span class="built_in">integer</span>) 6379 <span class="comment"># master:port</span></span><br><span class="line">      3) <span class="string">&quot;e8e05250b518f5e774ce12f9cd8ff0c285c96bd5&quot;</span> <span class="comment"># master-node-id</span></span><br><span class="line">   4) 1) <span class="string">&quot;127.0.0.1&quot;</span> <span class="comment"># slave:host</span></span><br><span class="line">      2) (<span class="built_in">integer</span>) 6382 <span class="comment"># slave:port</span></span><br><span class="line">      3) <span class="string">&quot;3eee4e2dc41e924d313b6fef575fab40055b69d9&quot;</span> <span class="comment"># slave-node-id</span></span><br><span class="line">2) 1) (<span class="built_in">integer</span>) 5461</span><br><span class="line">   2) (<span class="built_in">integer</span>) 5801</span><br><span class="line">   3) 1) <span class="string">&quot;127.0.0.1&quot;</span></span><br><span class="line">      2) (<span class="built_in">integer</span>) 6380</span><br><span class="line">      3) <span class="string">&quot;e34482fb5455d94959f5b46b41fc17cf72646a4c&quot;</span></span><br><span class="line">   4) 1) <span class="string">&quot;127.0.0.1&quot;</span></span><br><span class="line">      2) (<span class="built_in">integer</span>) 6383</span><br><span class="line">      3) <span class="string">&quot;208df20aedbbf1687ac66386fc064771793504e6&quot;</span></span><br><span class="line">3) 1) (<span class="built_in">integer</span>) 5802</span><br><span class="line">   2) (<span class="built_in">integer</span>) 5802</span><br><span class="line">   3) 1) <span class="string">&quot;127.0.0.1&quot;</span></span><br><span class="line">      2) (<span class="built_in">integer</span>) 6381</span><br><span class="line">      3) <span class="string">&quot;fcceb74f27471d80e991b33e23817200b47866ff&quot;</span></span><br><span class="line">   4) 1) <span class="string">&quot;127.0.0.1&quot;</span></span><br><span class="line">      2) (<span class="built_in">integer</span>) 6384</span><br><span class="line">      3) <span class="string">&quot;6964ab0161d106093024f643bbe03bf9daf57760&quot;</span></span><br><span class="line">4) 1) (<span class="built_in">integer</span>) 5803</span><br><span class="line">   2) (<span class="built_in">integer</span>) 10922</span><br><span class="line">   3) 1) <span class="string">&quot;127.0.0.1&quot;</span></span><br><span class="line">      2) (<span class="built_in">integer</span>) 6380</span><br><span class="line">      3) <span class="string">&quot;e34482fb5455d94959f5b46b41fc17cf72646a4c&quot;</span></span><br><span class="line">   4) 1) <span class="string">&quot;127.0.0.1&quot;</span></span><br><span class="line">      2) (<span class="built_in">integer</span>) 6383</span><br><span class="line">      3) <span class="string">&quot;208df20aedbbf1687ac66386fc064771793504e6&quot;</span></span><br><span class="line">5) 1) (<span class="built_in">integer</span>) 10923</span><br><span class="line">   2) (<span class="built_in">integer</span>) 16383</span><br><span class="line">   3) 1) <span class="string">&quot;127.0.0.1&quot;</span></span><br><span class="line">      2) (<span class="built_in">integer</span>) 6381</span><br><span class="line">      3) <span class="string">&quot;fcceb74f27471d80e991b33e23817200b47866ff&quot;</span></span><br><span class="line">   4) 1) <span class="string">&quot;127.0.0.1&quot;</span></span><br><span class="line">      2) (<span class="built_in">integer</span>) 6384</span><br><span class="line">      3) <span class="string">&quot;6964ab0161d106093024f643bbe03bf9daf57760&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="下线master节点"><a class="header-anchor" href="#下线master节点"></a>下线master节点</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[dev@localhost create-cluster]$ redis-cli --cluster del-node 127.0.0.1:6379 b48e9109610b9952cde3f032f77563e441a3d75d</span><br><span class="line">&gt;&gt;&gt; Removing node b48e9109610b9952cde3f032f77563e441a3d75d from cluster 127.0.0.1:6379</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER FORGET messages to the cluster...</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER RESET SOFT to the deleted node.</span><br><span class="line"></span><br><span class="line">[dev@localhost create-cluster]$ redis-cli cluster nodes <span class="comment"># 查看当前集群节点状态</span></span><br><span class="line">fcceb74f27471d80e991b33e23817200b47866ff 127.0.0.1:6381@16381 master - 0 1622452136635 10 connected 5802 10923-16383</span><br><span class="line">208df20aedbbf1687ac66386fc064771793504e6 127.0.0.1:6383@16383 slave e34482fb5455d94959f5b46b41fc17cf72646a4c 0 1622452136000 9 connected</span><br><span class="line">6964ab0161d106093024f643bbe03bf9daf57760 127.0.0.1:6384@16384 slave fcceb74f27471d80e991b33e23817200b47866ff 0 1622452138653 10 connected</span><br><span class="line">e34482fb5455d94959f5b46b41fc17cf72646a4c 127.0.0.1:6380@16380 master - 0 1622452137642 9 connected 5461-5801 5803-10922</span><br><span class="line">e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 127.0.0.1:6379@16379 myself,master - 0 1622452136000 8 connected 0-5460</span><br><span class="line">3eee4e2dc41e924d313b6fef575fab40055b69d9 127.0.0.1:6382@16382 slave e8e05250b518f5e774ce12f9cd8ff0c285c96bd5 0 1622452137000 8 connected</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/uploads/wechat.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/778231993.html" rel="prev" title="Redis集群搭建(Redis3.0版)">
+                  <i class="fa fa-chevron-left"></i> Redis集群搭建(Redis3.0版)
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/ddc0d24d.html" rel="next" title="Redis开发与运维笔记-集群">
+                  Redis开发与运维笔记-集群 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div><script src="/js/comments.js"></script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leithda</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">206k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:08</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+  <script class="next-config" data-name="chatra" type="application/json">{&quot;enable&quot;:true,&quot;async&quot;:true,&quot;id&quot;:&quot;FMc6WL5f5hGFsRhzz&quot;}</script>
+  <script src="/js/third-party/chat/chatra.js"></script>
+  <script async src="https://call.chatra.io/chatra.js"></script>
+
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{&quot;enable&quot;:true,&quot;theme&quot;:&quot;forest&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mermaid@8.9.3&#x2F;dist&#x2F;mermaid.min.js&quot;}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script class="next-config" data-name="nprogress" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;spinner&quot;:true}</script>
+  <script src="/js/third-party/nprogress.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="utterances" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;repo&quot;:&quot;leithda&#x2F;leithda.github.io&quot;,&quot;issue_term&quot;:&quot;pathname&quot;,&quot;theme&quot;:&quot;github-light&quot;}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>

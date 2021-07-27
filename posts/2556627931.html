@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css">
+  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;leithda.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:&quot;enable&quot;,&quot;bookmark&quot;:{&quot;enable&quot;:&quot;enable&quot;,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:&quot;utterances&quot;,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null,&quot;activeClass&quot;:&quot;utterances&quot;},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;},&quot;path&quot;:&quot;&#x2F;search.xml&quot;,&quot;localsearch&quot;:{&quot;enable&quot;:true,&quot;trigger&quot;:&quot;auto&quot;,&quot;top_n_per_article&quot;:1,&quot;unescape&quot;:false,&quot;preload&quot;:false}}</script>
+<meta name="description" content="由于后续要搞各种分布式的实验，迫切希望快速搭建服务器集群的方法，故整理了这篇文章，主要介绍如何搭建一个基础版的虚拟机并通过导入导出快速完成服务器集群的建设。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建基础服务器">
+<meta property="og:url" content="https://leithda.github.io/posts/2556627931.html">
+<meta property="og:site_name" content="Leithda&#39;s Blog">
+<meta property="og:description" content="由于后续要搞各种分布式的实验，迫切希望快速搭建服务器集群的方法，故整理了这篇文章，主要介绍如何搭建一个基础版的虚拟机并通过导入导出快速完成服务器集群的建设。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://leithda.github.io/posts/2556627931/image-20210708165301021.png">
+<meta property="og:image" content="https://leithda.github.io/posts/2556627931/image-20210708161656934.png">
+<meta property="article:published_time" content="2021-07-08T14:00:00.000Z">
+<meta property="article:modified_time" content="2021-07-27T12:50:33.217Z">
+<meta property="article:author" content="Leithda">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://leithda.github.io/posts/2556627931/image-20210708165301021.png">
+
+
+<link rel="canonical" href="https://leithda.github.io/posts/2556627931.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;leithda.github.io&#x2F;posts&#x2F;2556627931.html&quot;,&quot;path&quot;:&quot;posts&#x2F;2556627931.html&quot;,&quot;title&quot;:&quot;搭建基础服务器&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>搭建基础服务器 | Leithda's Blog</title><script src="/js/config.js"></script>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?3540567b868217169a5241159ab1e032"></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Leithda's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Leithda's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-guide"><a href="/guide/" rel="section"><i class="fa fa-bars fa-fw"></i>导航</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">搭建基础服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.1.</span> <span class="nav-text">初始化虚拟机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E8%B4%A6%E6%88%B7"><span class="nav-number">1.2.</span> <span class="nav-text">新建账户</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7"><span class="nav-number">1.2.1.</span> <span class="nav-text">添加用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96Sudo%E6%9D%83%E9%99%90"><span class="nav-number">1.2.2.</span> <span class="nav-text">获取Sudo权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E6%94%B9%E6%96%87%E4%BB%B6%E7%BB%84%E5%92%8C%E7%94%A8%E6%88%B7"><span class="nav-number">1.2.3.</span> <span class="nav-text">更改文件组和用户</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E8%BD%AF%E4%BB%B6"><span class="nav-number">1.3.</span> <span class="nav-text">常见软件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%95%9C%E5%83%8F%E6%BA%90"><span class="nav-number">1.4.</span> <span class="nav-text">修改镜像源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#oh-my-zsh"><span class="nav-number">1.5.</span> <span class="nav-text">oh-my-zsh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker"><span class="nav-number">1.6.</span> <span class="nav-text">docker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.6.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E9%95%9C%E5%83%8F%E5%8A%A0%E9%80%9F"><span class="nav-number">1.6.2.</span> <span class="nav-text">配置镜像加速</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BC%E5%87%BA"><span class="nav-number">1.7.</span> <span class="nav-text">导出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5"><span class="nav-number">1.8.</span> <span class="nav-text">导入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5-2"><span class="nav-number">1.8.1.</span> <span class="nav-text">导入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.8.2.</span> <span class="nav-text">查看网络设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9IP"><span class="nav-number">1.8.3.</span> <span class="nav-text">修改IP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Xshell%E8%BF%9E%E6%8E%A5"><span class="nav-number">1.8.4.</span> <span class="nav-text">使用Xshell连接</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Leithda"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">Leithda</p>
+  <div class="site-description" itemprop="description">Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="sidebar-button site-overview-item animated">
+    <a onclick="Chatra('openChat', true);"><i class="fa fa-comment"></i>
+    Chat
+  </a>
+  </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/leithda" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:leithda@163.com" title="邮箱 → mailto:leithda@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>邮箱</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.yuque.com/leithda" title="语雀 → https:&#x2F;&#x2F;www.yuque.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>语雀</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dbreset.github.io/" title="https:&#x2F;&#x2F;dbreset.github.io" rel="noopener" target="_blank">DbReset</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://leithda.github.io/posts/2556627931.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Leithda">
+      <meta itemprop="description" content="Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leithda's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          搭建基础服务器
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-08 22:00:00" itemprop="dateCreated datePublished" datetime="2021-07-08T22:00:00+08:00">2021-07-08</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-07-27 20:50:33" itemprop="dateModified" datetime="2021-07-27T20:50:33+08:00">2021-07-27</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/" itemprop="url" rel="index"><span itemprop="name">知识点</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote class="blockquote-center">
+<p>由于后续要搞各种分布式的实验，迫切希望快速搭建服务器集群的方法，故整理了这篇文章，主要介绍如何搭建一个基础版的虚拟机并通过导入导出快速完成服务器集群的建设。</p>
+
+</blockquote>
+<span id="more"></span>
+<h1>搭建基础服务器</h1>
+<h2 id="初始化虚拟机"><a class="header-anchor" href="#初始化虚拟机"></a>初始化虚拟机</h2>
+<ol>
+<li>
+<p>下载安装 <a target="_blank" rel="noopener" href="https://www.virtualbox.org/">VirtualBox</a> ，注意要开启CPU虚拟化功能</p>
+</li>
+<li>
+<p>下载安装 <a target="_blank" rel="noopener" href="https://www.vagrantup.com/">Vagrant by HashiCorp (vagrantup.com)</a></p>
+</li>
+<li>
+<p>打开Window Cmd窗口，进入到指定目录，运行 <code>vagrant init centos/7</code>，即可在 VirtualBox 中初始化一个centos7系统</p>
+</li>
+<li>
+<p>下载vagrant的<a target="_blank" rel="noopener" href="https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-2004_01.VirtualBox.box">镜像</a></p>
+</li>
+<li>
+<p>进入下载的目录，使用<code>vagrant box add centos/7 CentOS-7-x86_64-Vagrant-2004_01.VirtualBox.box</code></p>
+</li>
+<li>
+<p>使用<code>vagrant up</code>启动虚拟机，会在当前目录下生成<code>Vagrantfile</code>文件，虚拟机<code>root</code>用户的密码为<strong>vagrant</strong></p>
+</li>
+<li>
+<p>修改指定目录下文件<code>Vagrantfile</code>，找到如下位置，将虚拟机IP更改为<code>192.168.56.10</code>,然后使用<code>vagrant ssh</code>连入虚拟机重新启动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># config.vm.network &quot;private_network&quot;, ip: &quot;192.168.33.10&quot;</span><br><span class="line">config.vm.network &quot;private_network&quot;,ip: &quot;192.168.56.10&quot;</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>虚拟机默认只允许ssh登录，为了操作方便，可以配置允许账号密码登录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 进入虚拟机</span><br><span class="line">vagrant ssh</span><br><span class="line"># 编辑ssh配置文件</span><br><span class="line">vi /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改<code>PasswordAuthentication</code>为<code>yes</code></li>
+<li>重启服务 <code>service sshd restart</code></li>
+</ul>
+</li>
+<li>
+<p>之后就可以使用Xshell等ssh工具直接连接虚拟机</p>
+</li>
+</ol>
+<h2 id="新建账户"><a class="header-anchor" href="#新建账户"></a>新建账户</h2>
+<h3 id="添加用户"><a class="header-anchor" href="#添加用户"></a>添加用户</h3>
+<ol>
+<li>添加用户</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo useradd dev</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>设置密码</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo passwd dev</span><br></pre></td></tr></table></figure>
+<h3 id="获取Sudo权限"><a class="header-anchor" href="#获取Sudo权限"></a>获取Sudo权限</h3>
+<ol>
+<li>
+<p>查看sudo配置文件权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ls -l /etc/sudoers</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>添加<code>w</code>权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod u+w /etc/sudoers</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>编辑<code>sudoers</code>文件，添加用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/sudoers</span><br></pre></td></tr></table></figure>
+<p>找到文件中的如下内容，复制一行并将root修改为要修改的账户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Allow root to run any commands anywhere</span><br><span class="line">root    ALL=(ALL)       ALL</span><br><span class="line">dev     ALL=(ALL)       ALL <span class="comment"># 新增</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>将写权限收回</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod u-w /etc/sudoers</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="更改文件组和用户"><a class="header-anchor" href="#更改文件组和用户"></a>更改文件组和用户</h3>
+<ul>
+<li>更改用户</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chown <span class="variable">$&#123;group&#125;</span> PATH</span><br><span class="line">chown -R <span class="variable">$&#123;group&#125;</span> PATH <span class="comment"># 递归修改所有文件</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改组</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chgrp &#123;GROUP&#125; PATH</span><br><span class="line">chgrp -R <span class="variable">$&#123;group&#125;</span> PATH <span class="comment"># 递归修改所有文件</span></span><br></pre></td></tr></table></figure>
+<h2 id="常见软件"><a class="header-anchor" href="#常见软件"></a>常见软件</h2>
+<ul>
+<li>
+<p>wget</p>
+<ul>
+<li>http客户端工具</li>
+<li><code>sudo yum install wget -y</code></li>
+</ul>
+</li>
+<li>
+<p>tree</p>
+<ul>
+<li>用于打印目录结构</li>
+<li><code>sudo yum install tree -y</code></li>
+</ul>
+</li>
+<li>
+<p>vim</p>
+<ul>
+<li>菜鸟程序员使用高档的编辑器，根据高亮判断是否报错~</li>
+<li><code>sudo yum install vim -y</code></li>
+</ul>
+</li>
+<li>
+<p>lrzsz</p>
+<ul>
+<li>客户端文件传输工具</li>
+<li><code>sudo yum install lrzsz -y</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="修改镜像源"><a class="header-anchor" href="#修改镜像源"></a>修改镜像源</h2>
+<ul>
+<li>检查是否安装<code>wget</code>(直接输入<code>wget</code>测试)，如果没有进行安装<code>sudo yum install -y wget</code></li>
+<li>进入目录<code>/etc/yum.repos.d</code>，备份原软件源文件</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mv CentOS-Base.repo CentOS-Base.repo.backup</span><br></pre></td></tr></table></figure>
+<ul>
+<li>下载软件源文件</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo</span><br></pre></td></tr></table></figure>
+<ul>
+<li>清除缓存 <code>sudo yum makecache</code></li>
+<li>加载缓存<code>sudo yum repolist</code></li>
+</ul>
+<h2 id="oh-my-zsh"><a class="header-anchor" href="#oh-my-zsh"></a>oh-my-zsh</h2>
+<p>官网：<a target="_blank" rel="noopener" href="https://ohmyz.sh/">https://ohmyz.sh/</a></p>
+<p>国内安装方法参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qwe641259875/article/details/107201760/">https://blog.csdn.net/qwe641259875/article/details/107201760/</a></p>
+<ul>
+<li>安装git</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install git -y</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装 zsh</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install zsh -y</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装 oh-my-zsh</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 获取安装文件</span></span><br><span class="line">wget https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 添加可执行权限</span></span><br><span class="line">chmod +x install.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 修改为国内git地址</span></span><br><span class="line">vi install.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 修改脚本对应内容为对应的地址</span></span><br><span class="line">REPO=<span class="variable">$&#123;REPO:-mirrors/oh-my-zsh&#125;</span></span><br><span class="line">REMOTE=<span class="variable">$&#123;REMOTE:-https://gitee.com/<span class="variable">$&#123;REPO&#125;</span>.git&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行安装</span></span><br><span class="line">./install.sh</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装插件</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-syntax-highlighting.git <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;</span>/plugins/zsh-syntax-highlighting</span><br><span class="line"></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-autosuggestions <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;</span>/plugins/zsh-autosuggestions</span><br></pre></td></tr></table></figure>
+<ul>
+<li>配置zshrc</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">vi ~/.zshrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 主题配置</span></span><br><span class="line">ZSH_THEME=<span class="string">&quot;ys&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 增加插件配置</span></span><br><span class="line">plugins=(git zsh-syntax-highlighting zsh-autosuggestions)</span><br><span class="line"></span><br><span class="line"><span class="comment"># :wq保存</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使配置生效</span></span><br><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure>
+<h2 id="docker"><a class="header-anchor" href="#docker"></a>docker</h2>
+<h3 id="安装"><a class="header-anchor" href="#安装"></a>安装</h3>
+<ol>
+<li>
+<p>安装 <code>yum-utils</code>工具包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>添加docker的yum源(阿里源)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo yum-config-manager \</span><br><span class="line">    --add-repo \</span><br><span class="line">    http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>卸载旧版本(如果存在则删除)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum -y remove docker docker-common docker-selinux docker-engine</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>查看所有版本，并选择指定版本安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum list docker-ce --showduplicates | sort -r</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>安装docker</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install docker-ce # 默认安装最新版本</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>$ yum install docker-ce-&lt;VERSION_STRING&gt; </code>(指定安装版本)。例：<code> yum install docker-ce-18.03.1.ce</code></li>
+</ul>
+</li>
+<li>
+<p>验证安装成功</p>
+</li>
+<li>
+<p>启动并加入开机启动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start docker       # (重启命令  $  systemctl restart docker ) </span><br><span class="line">sudo systemctl enable docker   # 开机自启动</span><br><span class="line">sudo docker version  # 查看docker版本号</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>验证安装成功</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run hello-world</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>将当前用户(此时可以使用blog登录)加入到<code>docker</code>用户组</p>
+<ul>
+<li>
+<p>新增<code>docker</code>用户组，已存在可忽略</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo groupadd docker</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>将用户加入<code>docker</code>用户组</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo usermod -aG docker $&#123;USER&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>重启<code>docker</code>服务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>重新登录用户</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="配置镜像加速"><a class="header-anchor" href="#配置镜像加速"></a>配置镜像加速</h3>
+<ul>
+<li>
+<p>使用阿里云镜像加速地址： <a target="_blank" rel="noopener" href="https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors%EF%BC%8C%E8%8E%B7%E5%8F%96%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80%E5%B9%B6%E6%8C%89%E7%85%A7%E8%AF%B4%E6%98%8E%E9%85%8D%E7%BD%AE%E5%88%B0%E7%9B%B8%E5%BA%94%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%B8%AD%E3%80%82">https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors，获取加速地址并按照说明配置到相应配置文件中。</a></p>
+</li>
+<li>
+<p>使用其他镜像源</p>
+<ul>
+<li>
+<p>创建或修改配置文件，镜像地址：</p>
+<ul>
+<li>
+<p><strong>Docker中国区官方镜像</strong>：<a target="_blank" rel="noopener" href="https://registry.docker-cn.com">https://registry.docker-cn.com</a></p>
+</li>
+<li>
+<p><strong>网易</strong>：<a target="_blank" rel="noopener" href="http://hub-mirror.c.163.com">http://hub-mirror.c.163.com</a></p>
+</li>
+<li>
+<p><strong>ustc</strong>：<a target="_blank" rel="noopener" href="https://docker.mirrors.ustc.edu.cn">https://docker.mirrors.ustc.edu.cn</a></p>
+</li>
+<li>
+<p><strong>中国科技大学</strong>：<a target="_blank" rel="noopener" href="https://docker.mirrors.ustc.edu.cn">https://docker.mirrors.ustc.edu.cn</a></p>
+</li>
+</ul>
+</li>
+<li>
+<p>重新启动服务：<code>sudo systemctl daemon-reload &amp;&amp; sudo systemctl restart docker</code></p>
+</li>
+<li>
+<p>具体配置如下：</p>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;registry-mirrors&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;https://registry.docker-cn.com&quot;</span>,</span><br><span class="line">    <span class="string">&quot;http://hub-mirror.c.163.com&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="导出"><a class="header-anchor" href="#导出"></a>导出</h2>
+<ul>
+<li>
+<p>关闭虚拟机：终端内<code>sudo shutdown now</code>或者使用<code>Virtual Box</code></p>
+</li>
+<li>
+<p>导出：VirtualBox中选择虚拟机右键选中选择导出</p>
+</li>
+</ul>
+<img src="/posts/2556627931/image-20210708165301021.png" class="" title="image-20210708165301021">
+<ul>
+<li>Mac地址选择清除所有网卡的MAC地址，避免多个虚拟机MAC地址重复，感兴趣的可以试试将mac地址设置成一样是否有问题~</li>
+</ul>
+<h2 id="导入"><a class="header-anchor" href="#导入"></a>导入</h2>
+<h3 id="导入-2"><a class="header-anchor" href="#导入-2"></a>导入</h3>
+<p>使用VirtualBox导入之前导出的备份文件。</p>
+<h3 id="查看网络设置"><a class="header-anchor" href="#查看网络设置"></a>查看网络设置</h3>
+<p>导入后使用VirtualBox打开虚拟机，使用<code>ip addr</code>查看网络设置.</p>
+<img src="/posts/2556627931/image-20210708161656934.png" class="" title="image-20210708161656934">
+<ul>
+<li>如图，ip由网卡3(eth1)指定。</li>
+</ul>
+<h3 id="修改IP"><a class="header-anchor" href="#修改IP"></a>修改IP</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入配置文件路径</span></span><br><span class="line"><span class="built_in">cd</span> /etc/sysconfig/network-scripts</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改网络配置</span></span><br><span class="line">sudo vi ifcfg-eth1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改ip地址,修改IPADDR项</span></span><br><span class="line">IPADDR=192.168.33.51</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启</span></span><br><span class="line">reboot</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看网络配置</span></span><br><span class="line">ip addr</span><br></pre></td></tr></table></figure>
+<h3 id="使用Xshell连接"><a class="header-anchor" href="#使用Xshell连接"></a>使用Xshell连接</h3>
+<p>分别启动两个服务器(在VirtualBox上右键使用无界面启动)，使用Xshell连接51服务器。使用ping检测虚拟机是否可以连通。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># dev @ localhost in ~ [8:25:40] </span></span><br><span class="line">$ ping 192.168.33.50</span><br><span class="line">PING 192.168.33.50 (192.168.33.50) 56(84) bytes of data.</span><br><span class="line">64 bytes from 192.168.33.50: icmp_seq=1 ttl=64 time=1.37 ms</span><br><span class="line">64 bytes from 192.168.33.50: icmp_seq=2 ttl=64 time=0.663 ms</span><br><span class="line">64 bytes from 192.168.33.50: icmp_seq=3 ttl=64 time=0.642 ms</span><br><span class="line">64 bytes from 192.168.33.50: icmp_seq=4 ttl=64 time=0.639 ms</span><br><span class="line">64 bytes from 192.168.33.50: icmp_seq=5 ttl=64 time=0.726 ms</span><br><span class="line">64 bytes from 192.168.33.50: icmp_seq=6 ttl=64 time=11.8 ms</span><br><span class="line">64 bytes from 192.168.33.50: icmp_seq=7 ttl=64 time=0.641 ms</span><br><span class="line">^C</span><br><span class="line">--- 192.168.33.50 ping statistics ---</span><br><span class="line">7 packets transmitted, 7 received, 0% packet loss, time 6011ms</span><br><span class="line">rtt min/avg/max/mdev = 0.639/2.355/11.804/3.865 ms</span><br></pre></td></tr></table></figure>
+<p>备份好导出的文件，后续可以直接通过导入完成虚拟机的创建。</p>
+<p>基本成功，skr~~~</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/uploads/wechat.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/2814237590.html" rel="prev" title="MySQL主备">
+                  <i class="fa fa-chevron-left"></i> MySQL主备
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/4234153870.html" rel="next" title="SpringBoot读写分离">
+                  SpringBoot读写分离 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div><script src="/js/comments.js"></script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leithda</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">206k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:08</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+  <script class="next-config" data-name="chatra" type="application/json">{&quot;enable&quot;:true,&quot;async&quot;:true,&quot;id&quot;:&quot;FMc6WL5f5hGFsRhzz&quot;}</script>
+  <script src="/js/third-party/chat/chatra.js"></script>
+  <script async src="https://call.chatra.io/chatra.js"></script>
+
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{&quot;enable&quot;:true,&quot;theme&quot;:&quot;forest&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mermaid@8.9.3&#x2F;dist&#x2F;mermaid.min.js&quot;}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script class="next-config" data-name="nprogress" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;spinner&quot;:true}</script>
+  <script src="/js/third-party/nprogress.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="utterances" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;repo&quot;:&quot;leithda&#x2F;leithda.github.io&quot;,&quot;issue_term&quot;:&quot;pathname&quot;,&quot;theme&quot;:&quot;github-light&quot;}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>

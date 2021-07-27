@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css">
+  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;leithda.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:&quot;enable&quot;,&quot;bookmark&quot;:{&quot;enable&quot;:&quot;enable&quot;,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:&quot;utterances&quot;,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null,&quot;activeClass&quot;:&quot;utterances&quot;},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;},&quot;path&quot;:&quot;&#x2F;search.xml&quot;,&quot;localsearch&quot;:{&quot;enable&quot;:true,&quot;trigger&quot;:&quot;auto&quot;,&quot;top_n_per_article&quot;:1,&quot;unescape&quot;:false,&quot;preload&quot;:false}}</script>
+<meta name="description" content="Redis是典型的单线程架构，所有的读写操作都是在一条主线程中完成的。当Redis用于高并发场景时，这条线程就变成了它的生命线。如果出现阻塞，哪怕是很短时间，对于我们的应用来说都是噩梦">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis开发与运维笔记-Redis的噩梦-阻塞">
+<meta property="og:url" content="https://leithda.github.io/posts/3586754738.html">
+<meta property="og:site_name" content="Leithda&#39;s Blog">
+<meta property="og:description" content="Redis是典型的单线程架构，所有的读写操作都是在一条主线程中完成的。当Redis用于高并发场景时，这条线程就变成了它的生命线。如果出现阻塞，哪怕是很短时间，对于我们的应用来说都是噩梦">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-26T14:50:00.000Z">
+<meta property="article:modified_time" content="2021-06-01T12:39:25.002Z">
+<meta property="article:author" content="Leithda">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://leithda.github.io/posts/3586754738.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;leithda.github.io&#x2F;posts&#x2F;3586754738.html&quot;,&quot;path&quot;:&quot;posts&#x2F;3586754738.html&quot;,&quot;title&quot;:&quot;Redis开发与运维笔记-Redis的噩梦-阻塞&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>Redis开发与运维笔记-Redis的噩梦-阻塞 | Leithda's Blog</title><script src="/js/config.js"></script>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?3540567b868217169a5241159ab1e032"></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Leithda's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Leithda's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-guide"><a href="/guide/" rel="section"><i class="fa fa-bars fa-fw"></i>导航</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Redis的噩梦-阻塞</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E7%8E%B0%E9%98%BB%E5%A1%9E"><span class="nav-number">1.1.</span> <span class="nav-text">发现阻塞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%9C%A8%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.2.</span> <span class="nav-text">内在原因</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#API%E6%88%96%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%90%88%E7%90%86"><span class="nav-number">1.2.1.</span> <span class="nav-text">API或数据结构使用不合理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU%E9%A5%B1%E5%92%8C%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.2.</span> <span class="nav-text">CPU饱和的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96%E7%9B%B8%E5%85%B3%E7%9A%84%E9%98%BB%E5%A1%9E"><span class="nav-number">1.2.3.</span> <span class="nav-text">持久化相关的阻塞</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%96%E5%9C%A8%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.3.</span> <span class="nav-text">外在原因</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU%E7%AB%9E%E4%BA%89"><span class="nav-number">1.3.1.</span> <span class="nav-text">CPU竞争</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E4%BA%A4%E6%8D%A2"><span class="nav-number">1.3.2.</span> <span class="nav-text">内存交换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98"><span class="nav-number">1.3.3.</span> <span class="nav-text">网络问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%8B%92%E7%BB%9D"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">连接拒绝</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%BB%B6%E8%BF%9F"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">网络延迟</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E5%8D%A1%E8%BD%AF%E4%B8%AD%E6%96%AD"><span class="nav-number">1.3.3.3.</span> <span class="nav-text">网卡软中断</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E7%AB%A0%E9%87%8D%E7%82%B9%E5%9B%9E%E9%A1%BE"><span class="nav-number">1.4.</span> <span class="nav-text">本章重点回顾</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Leithda"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">Leithda</p>
+  <div class="site-description" itemprop="description">Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="sidebar-button site-overview-item animated">
+    <a onclick="Chatra('openChat', true);"><i class="fa fa-comment"></i>
+    Chat
+  </a>
+  </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/leithda" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:leithda@163.com" title="邮箱 → mailto:leithda@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>邮箱</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.yuque.com/leithda" title="语雀 → https:&#x2F;&#x2F;www.yuque.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>语雀</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dbreset.github.io/" title="https:&#x2F;&#x2F;dbreset.github.io" rel="noopener" target="_blank">DbReset</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://leithda.github.io/posts/3586754738.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Leithda">
+      <meta itemprop="description" content="Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leithda's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis开发与运维笔记-Redis的噩梦-阻塞
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-05-26 22:50:00" itemprop="dateCreated datePublished" datetime="2021-05-26T22:50:00+08:00">2021-05-26</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-06-01 20:39:25" itemprop="dateModified" datetime="2021-06-01T20:39:25+08:00">2021-06-01</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote class="blockquote-center">
+<p>Redis是典型的单线程架构，所有的读写操作都是在一条主线程中完成的。当Redis用于高并发场景时，这条线程就变成了它的生命线。如果出现阻塞，哪怕是很短时间，对于我们的应用来说都是噩梦</p>
+
+</blockquote>
+<span id="more"></span>
+<blockquote>
+<p>参考书籍：<a target="_blank" rel="noopener" href="https://book.douban.com/subject/26971561/">Redis开发与运维</a></p>
+</blockquote>
+<hr>
+<h1>Redis的噩梦-阻塞</h1>
+<h2 id="发现阻塞"><a class="header-anchor" href="#发现阻塞"></a>发现阻塞</h2>
+<p>通过收集Redis日志或者通过监控Redis的关键指标等发现Redis阻塞问题。</p>
+<h2 id="内在原因"><a class="header-anchor" href="#内在原因"></a>内在原因</h2>
+<h3 id="API或数据结构使用不合理"><a class="header-anchor" href="#API或数据结构使用不合理"></a>API或数据结构使用不合理</h3>
+<p>对大数据量的hash结构执行<code>hgetall</code>操作，由于其算法复杂度为<code>O(n)</code>，这条命令执行速度必然很慢。这个问题就是典型的不合理使用API和数据结构。</p>
+<ol>
+<li>
+<p>发现慢查询<br>
+通过<code>slowlog get &#123;n&#125;</code>获取慢查询日志。更多详情请查看<a href="./2425201134.html#%E6%85%A2%E6%9F%A5%E8%AF%A2%E5%88%86%E6%9E%90">Redis开发与运维笔记-小功能大用处</a></p>
+</li>
+<li>
+<p>发现大对象<br>
+通过<code>redis-cli -h &#123;ip&#125; -p &#123;port&#125; bigkeys</code>发现大对象。其内部采用分段进行scan操作，把扫描过的最大对象统计出来便于分析优化。</p>
+</li>
+</ol>
+<h3 id="CPU饱和的问题"><a class="header-anchor" href="#CPU饱和的问题"></a>CPU饱和的问题</h3>
+<p>通过<code>reids-cli --stat</code>获取当前Redis使用情况。<br>
+通过<code>top</code>命令获取进程对CPU的利用率等信息<br>
+通过<code>info commandstats</code>统计信息分析出命令不合理开销时间，查看是否是因为高算法复杂度或者过度的内存优化问题。</p>
+<h3 id="持久化相关的阻塞"><a class="header-anchor" href="#持久化相关的阻塞"></a>持久化相关的阻塞</h3>
+<ol>
+<li>
+<p>fork阻塞<br>
+持久化时，Redis调用fork操作产生共享内存的子进程，由子进程完成持久化文件重写工作。fork时间过长，阻塞主线程。<br>
+通过<code>info stats</code>命令获取到<code>latest_fork_usec</code>指标，表示Redis最近一次fork操作耗时</p>
+</li>
+<li>
+<p>AOF刷盘阻塞<br>
+开启AOF持久化后，文件刷盘一般1s一次，如果主线程发现距离上次fsync成功超过2秒，为了数据安全性它会阻塞直到后台线程执行fsync操作完成。通过Redis日志可以识别这种情况。也可以通过<code>info persistence</code>统计中的<code>aof_delayed_fsync</code>指标，每次发生fdatasync阻塞主线程时会累加。</p>
+</li>
+<li>
+<p>HugePage写操作阻塞<br>
+子进程在执行重写期间利用Linux写时复制技术降低内存开销，因此只有写操作时Redis才复制要修改的内存页。对于开启**Transparent HugePages<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>**的操作系统，，每次写复制的内存页单位由4K变为2MB，会拖慢写操作的执行时间，导致大量写操作慢查询。</p>
+</li>
+</ol>
+<h2 id="外在原因"><a class="header-anchor" href="#外在原因"></a>外在原因</h2>
+<h3 id="CPU竞争"><a class="header-anchor" href="#CPU竞争"></a>CPU竞争</h3>
+<ul>
+<li>进程竞争： Redis是典型的CPU密集型应用，不建议和其他多核CPU密集型服务部署在一起.通过<code>top</code>、<code>sar</code>命令定位CPU消耗的时间点和具体进程</li>
+<li>绑定CPU：部署Redis时为了充分利用多核CPU，通常在一个机器上部署多个实例。常见的一种优化是将Redis进程绑定在CPU上，用于降低CPU频繁上下文切换的开销。但是当Redis进行RDB/AOF重写时，如果绑定CPU，子进程重写时会大量消耗CPU资源，对Redis主进程造成影响。因此对于开启持久化或复制的主节点不建议绑定CPU。</li>
+</ul>
+<h3 id="内存交换"><a class="header-anchor" href="#内存交换"></a>内存交换</h3>
+<p>内存交换是非常致命的。Redis保证高性能主要原因是所有数据在内存中，如果操作系统把Redis使用的部分内存换出到硬盘，会造成性能的机制下降。识别Redis内存交换的检查方法如下：</p>
+<ol>
+<li>查询Redis进程号</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">reids-cli -p 6383 info server | grep process_id</span><br><span class="line">process_id: 4476</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>根据进程号查询内存交换信息</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/4476/smaps | grep Swap</span><br><span class="line">Swap: 0kB</span><br><span class="line">Swap: 0kB</span><br><span class="line">Swap: 4kB</span><br><span class="line">Swap: 0kB</span><br><span class="line">Swap: 0kB</span><br><span class="line">.....</span><br></pre></td></tr></table></figure>
+<p>如果交换量都是0KB或者个别的是4KB，则正常。预防内存交换的方法由：</p>
+<ul>
+<li>保证机器充足的可用内存</li>
+<li>确保所有Redis实例设置最大可用内存(maxmemory)，防止极端情况Redis内存不可控的增长</li>
+<li>降低系统使用swap优先级，如<code>echo 10 &gt; /proc/sys/vm/swappiness</code></li>
+</ul>
+<h3 id="网络问题"><a class="header-anchor" href="#网络问题"></a>网络问题</h3>
+<h4 id="连接拒绝"><a class="header-anchor" href="#连接拒绝"></a>连接拒绝</h4>
+<ol>
+<li>
+<p>网络闪断<br>
+一般发生在网络切割或者带宽耗尽的情况，对于网络闪断的识别比较困难，常见做法是通过<code>sar -n DEV</code>查看本机历史流量是否正常，或者借助外部系统监控工具如<code>Ganglia</code>进行识别。</p>
+</li>
+<li>
+<p>Redis连接拒绝<br>
+Redis客户端数量超过<code>maxclients</code>限制时，会拒绝新的连接接入。<code>info stats</code>中的<code>rejected_connections</code>统计指标记录被拒绝连接的数量。</p>
+</li>
+</ol>
+<blockquote>
+<p>建议根据情况设置<code>tcp-keepalive</code>和<code>timeout</code>参数让Redis主动检查和关闭无效连接。</p>
+</blockquote>
+<ol start="3">
+<li>连接溢出
+<ol>
+<li>操作系统文件句柄数限制 <code>ulimit -n</code></li>
+<li>backlog队列溢出<br>
+系统对于特定的TCP连接使用backlog队列保存。Redis通过<code>tcp-backlog</code>设置，默认511.系统的backlog默认128，使用<code>echo 511 &gt; /proc/sys/net/core/somaxconn</code>命令修改。<br>
+通过<code>netstat -s | grep overflowed</code>查看因backlog队列溢出造成的连接拒绝统计指标。</li>
+</ol>
+</li>
+</ol>
+<h4 id="网络延迟"><a class="header-anchor" href="#网络延迟"></a>网络延迟</h4>
+<p>网络延迟经常出现在跨机房的部署结构上，对于机房之间延迟比较严重的场景需要调整拓扑结构。<br>
+测试网络延迟可以使用<code>redis-cli --latency</code>相关命令进行测试。<br>
+带宽瓶颈通常出现在以下几个方面：</p>
+<ul>
+<li>机器网卡带宽</li>
+<li>机器交换机带宽</li>
+<li>机房之间专线带宽</li>
+</ul>
+<h4 id="网卡软中断"><a class="header-anchor" href="#网卡软中断"></a>网卡软中断</h4>
+<p>网卡软中断是指由于单个网卡队列只能使用一个CPU，高并发下数据交互都集中在一个CPU上，导致无法充分利用多核CPU的情况。网卡软中断瓶颈一般出现在网络高流量吞吐的场景，使用<code>top</code>后按数字<code>1</code>查看CPU使用情况，其中<code>si</code>为软中断参数</p>
+<h2 id="本章重点回顾"><a class="header-anchor" href="#本章重点回顾"></a>本章重点回顾</h2>
+<ol>
+<li>客户端最先感知阻塞等Redis超时行为，加入日志监控报警工具可快速定位阻塞问题，同时需要对Redis进程和机器做全面监控。</li>
+<li>阻塞的内在原因：确认主线程是否存在阻塞，检查慢查询等信息，发现不合理使用API或数据结构的情况，如<code>keys</code>、<code>sort</code>、<code>hgetall</code>等。关注CPU使用率防止单核跑满。当硬盘IO资源紧张时，AOF追加也会阻塞主进程。</li>
+<li>阻塞的外在原因：CPU竞争、内存交换、网络问题等。</li>
+</ol>
+<hr>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>关于Huge Pages与 Transparent Huge Pages的关系与区别请参阅博客<a target="_blank" rel="noopener" href="https://www.cnblogs.com/kerrycode/p/7760026.html">潇湘隐者 - Linux传统Huge Pages与Transparent Huge Pages再次学习总结</a> <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/uploads/wechat.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/3460365957.html" rel="prev" title="Redis开发与运维笔记-复制">
+                  <i class="fa fa-chevron-left"></i> Redis开发与运维笔记-复制
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/1495994843.html" rel="next" title="Redis开发与运维笔记-理解内存">
+                  Redis开发与运维笔记-理解内存 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div><script src="/js/comments.js"></script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leithda</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">206k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:08</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+  <script class="next-config" data-name="chatra" type="application/json">{&quot;enable&quot;:true,&quot;async&quot;:true,&quot;id&quot;:&quot;FMc6WL5f5hGFsRhzz&quot;}</script>
+  <script src="/js/third-party/chat/chatra.js"></script>
+  <script async src="https://call.chatra.io/chatra.js"></script>
+
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{&quot;enable&quot;:true,&quot;theme&quot;:&quot;forest&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mermaid@8.9.3&#x2F;dist&#x2F;mermaid.min.js&quot;}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script class="next-config" data-name="nprogress" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;spinner&quot;:true}</script>
+  <script src="/js/third-party/nprogress.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="utterances" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;repo&quot;:&quot;leithda&#x2F;leithda.github.io&quot;,&quot;issue_term&quot;:&quot;pathname&quot;,&quot;theme&quot;:&quot;github-light&quot;}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>

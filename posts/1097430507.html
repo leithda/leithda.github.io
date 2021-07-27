@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css">
+  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;leithda.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:&quot;enable&quot;,&quot;bookmark&quot;:{&quot;enable&quot;:&quot;enable&quot;,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:&quot;utterances&quot;,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null,&quot;activeClass&quot;:&quot;utterances&quot;},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;},&quot;path&quot;:&quot;&#x2F;search.xml&quot;,&quot;localsearch&quot;:{&quot;enable&quot;:true,&quot;trigger&quot;:&quot;auto&quot;,&quot;top_n_per_article&quot;:1,&quot;unescape&quot;:false,&quot;preload&quot;:false}}</script>
+<meta name="description" content="本章将带领读者进入Redis的世界，了解它的前世今生、众多特性、典型应用场景、安装配置、如何好用等，最后会对Redis发展过程中的重要版本进行说明">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis开发与运维笔记_初识Redis">
+<meta property="og:url" content="https://leithda.github.io/posts/1097430507.html">
+<meta property="og:site_name" content="Leithda&#39;s Blog">
+<meta property="og:description" content="本章将带领读者进入Redis的世界，了解它的前世今生、众多特性、典型应用场景、安装配置、如何好用等，最后会对Redis发展过程中的重要版本进行说明">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-25T14:00:00.000Z">
+<meta property="article:modified_time" content="2021-06-03T14:28:07.102Z">
+<meta property="article:author" content="Leithda">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://leithda.github.io/posts/1097430507.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;leithda.github.io&#x2F;posts&#x2F;1097430507.html&quot;,&quot;path&quot;:&quot;posts&#x2F;1097430507.html&quot;,&quot;title&quot;:&quot;Redis开发与运维笔记_初识Redis&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>Redis开发与运维笔记_初识Redis | Leithda's Blog</title><script src="/js/config.js"></script>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?3540567b868217169a5241159ab1e032"></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Leithda's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Leithda's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-guide"><a href="/guide/" rel="section"><i class="fa fa-bars fa-fw"></i>导航</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">初识Redis</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%9B%E8%B5%9ERedis"><span class="nav-number">1.1.</span> <span class="nav-text">盛赞Redis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E7%89%B9%E6%80%A7"><span class="nav-number">1.2.</span> <span class="nav-text">Redis特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.3.</span> <span class="nav-text">Redis的使用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E5%8F%AF%E4%BB%A5%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-number">1.3.1.</span> <span class="nav-text">Redis可以做什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E4%B8%8D%E5%8F%AF%E4%BB%A5%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-number">1.3.2.</span> <span class="nav-text">Redis不可以做什么</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E5%A5%BDRedis%E7%9A%84%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.4.</span> <span class="nav-text">用好Redis的建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E7%A1%AE%E5%AE%89%E8%A3%85%E5%B9%B6%E5%90%AF%E5%8A%A8Redis"><span class="nav-number">1.5.</span> <span class="nav-text">正确安装并启动Redis</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Redis"><span class="nav-number">1.5.1.</span> <span class="nav-text">安装Redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E3%80%81%E5%90%AF%E5%8A%A8%E3%80%81%E6%93%8D%E4%BD%9C%E3%80%81%E5%85%B3%E9%97%ADRedis"><span class="nav-number">1.5.2.</span> <span class="nav-text">配置、启动、操作、关闭Redis</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E7%9A%84%E9%87%8D%E5%A4%A7%E7%89%88%E6%9C%AC"><span class="nav-number">1.6.</span> <span class="nav-text">Redis的重大版本</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Leithda"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">Leithda</p>
+  <div class="site-description" itemprop="description">Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="sidebar-button site-overview-item animated">
+    <a onclick="Chatra('openChat', true);"><i class="fa fa-comment"></i>
+    Chat
+  </a>
+  </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/leithda" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:leithda@163.com" title="邮箱 → mailto:leithda@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>邮箱</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.yuque.com/leithda" title="语雀 → https:&#x2F;&#x2F;www.yuque.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>语雀</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dbreset.github.io/" title="https:&#x2F;&#x2F;dbreset.github.io" rel="noopener" target="_blank">DbReset</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://leithda.github.io/posts/1097430507.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Leithda">
+      <meta itemprop="description" content="Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leithda's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis开发与运维笔记_初识Redis
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-05-25 22:00:00" itemprop="dateCreated datePublished" datetime="2021-05-25T22:00:00+08:00">2021-05-25</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-06-03 22:28:07" itemprop="dateModified" datetime="2021-06-03T22:28:07+08:00">2021-06-03</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote class="blockquote-center">
+<p>本章将带领读者进入Redis的世界，了解它的前世今生、众多特性、典型应用场景、安装配置、如何好用等，最后会对Redis发展过程中的重要版本进行说明</p>
+
+</blockquote>
+<span id="more"></span>
+<p>参考书籍：<a target="_blank" rel="noopener" href="https://book.douban.com/subject/26971561/">Redis开发与运维</a></p>
+<hr>
+<h1>初识Redis</h1>
+<h2 id="盛赞Redis"><a class="header-anchor" href="#盛赞Redis"></a>盛赞Redis</h2>
+<p>Redis[1]是一种基于键值对(key-value)的NoSQL数据库，与很多键值对 数据库不同的是，Redis中的值可以是由string(字符串)、hash(哈希)、 list(列表)、set(集合)、zset(有序集合)、Bitmaps(位图)、 HyperLogLog、GEO(地理信息定位)等多种数据结构和算法组成，因此 Redis可以满足很多的应用场景，而且因为Redis会将所有数据都存放在内存 中，所以它的读写性能非常惊人。不仅如此，Redis还可以将内存的数据利 用快照和日志的形式保存到硬盘上，这样在发生类似断电或者机器故障的时 候，内存中的数据不会“丢失”。除了上述功能以外，Redis还提供了键过 期、发布订阅、事务、流水线、Lua脚本等附加功能。总之，如果在合适的 场景使用好Redis，它就会像一把瑞士军刀一样所向披靡。</p>
+<blockquote>
+<p>Redis官网：  <a target="_blank" rel="noopener" href="http://redis.io">redis.io</a></p>
+</blockquote>
+<h2 id="Redis特性"><a class="header-anchor" href="#Redis特性"></a>Redis特性</h2>
+<ol>
+<li>
+<p>速度快</p>
+<ul>
+<li>数据基于内存</li>
+<li>使用C语言实现，更接近操作系统</li>
+<li>Redis使用了单线程架构，避免多线程线程间切换开销</li>
+<li>Redis代码优化</li>
+</ul>
+</li>
+<li>
+<p>5种数据结构</p>
+<p>String(字符串)、Hash(哈希)、List(列表)、Set(集合)、ZSet(有序集合)</p>
+</li>
+<li>
+<p>丰富的功能</p>
+<ul>
+<li>过期功能：方便缓存的实现</li>
+<li>发布/订阅功能：可以实现消息系统</li>
+<li>支持Lua脚本，可以利用Lua创造出新的Redis命令</li>
+<li>提供了简单的事务</li>
+<li>提供了Pipeline(流水线)功能，可以减少网络开销</li>
+</ul>
+</li>
+<li>
+<p>稳定简单</p>
+<p>源码简短而不简单</p>
+</li>
+<li>
+<p>客户端语言多</p>
+<p>提供了多种语言的客户端</p>
+</li>
+<li>
+<p>持久化</p>
+<p>RDB和AOF</p>
+</li>
+<li>
+<p>主从复制</p>
+<p>Redis提供了复制功能，实现了多个数据相同的Redis副本</p>
+</li>
+<li>
+<p>高可用和分布式</p>
+<p>Redis 2.8版本实现了高可用实现<code>Redis Sentinel</code>，它能够保证Redis节点的故障发现和故障自动转移。Redis 3.0版本实现了分布式实现<code>Redis Cluster</code>，它是Redis真正的分布式实现，提供了高可用、读写和容量的扩展</p>
+</li>
+</ol>
+<h2 id="Redis的使用场景"><a class="header-anchor" href="#Redis的使用场景"></a>Redis的使用场景</h2>
+<h3 id="Redis可以做什么"><a class="header-anchor" href="#Redis可以做什么"></a>Redis可以做什么</h3>
+<ol>
+<li>缓存</li>
+<li>排行榜</li>
+<li>计数器应用</li>
+<li>社交网络</li>
+<li>消息队列系统</li>
+</ol>
+<h3 id="Redis不可以做什么"><a class="header-anchor" href="#Redis不可以做什么"></a>Redis不可以做什么</h3>
+<ol>
+<li>数据量过大不适合使用Redis，Redis数据存放在内存中，数据量过大会导致内存资源紧张</li>
+<li>常用热数据适合缓存，反之，冷数据如果缓存会造成内存资源的浪费</li>
+</ol>
+<h2 id="用好Redis的建议"><a class="header-anchor" href="#用好Redis的建议"></a>用好Redis的建议</h2>
+<ol>
+<li>使用者应了解Redis的<strong>单线程模型</strong>，<strong>持久化策略(RDB&amp;AOF)</strong>。</li>
+<li>阅读Redis源码，吃透原理并可以根据业务需求对Redis进行定制化开发</li>
+</ol>
+<h2 id="正确安装并启动Redis"><a class="header-anchor" href="#正确安装并启动Redis"></a>正确安装并启动Redis</h2>
+<h3 id="安装Redis"><a class="header-anchor" href="#安装Redis"></a>安装Redis</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.redis.io/releases/redis-3.0.7.tar.gz</span><br><span class="line">tar xzf redis-3.0.7.tar.gz</span><br><span class="line">ln -s redis-3.0.7 redis</span><br><span class="line"><span class="built_in">cd</span> redis</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<ul>
+<li>下载Redis指定版本的源码压缩包到当前目录。</li>
+<li>解压缩Redis源码压缩包。</li>
+<li>建立一个redis目录的软连接，指向redis-3.0.7。</li>
+<li>进入redis目录。</li>
+<li>编译(编译之前确保操作系统已经安装gcc)。</li>
+<li>安装</li>
+</ul>
+<blockquote>
+<p>注： 安装后会将Redis相关运行文件放到<code>/usr/local/bin</code>目录下</p>
+</blockquote>
+<h3 id="配置、启动、操作、关闭Redis"><a class="header-anchor" href="#配置、启动、操作、关闭Redis"></a>配置、启动、操作、关闭Redis</h3>
+<p>Redis安装后，<code>/usr/local/bin</code>目录下会新增几个redis开头的可执行文件，说明如下：</p>
+<table>
+<thead>
+<tr>
+<th>可执行文件</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>redis-server</td>
+<td>启动Redis</td>
+</tr>
+<tr>
+<td>redis-cli</td>
+<td>Redis命令行工具</td>
+</tr>
+<tr>
+<td>redis-benchmark</td>
+<td>Redis基准测试工具</td>
+</tr>
+<tr>
+<td>redis-check-aof</td>
+<td>Redis AOF 持久化文件检测和修复工具</td>
+</tr>
+<tr>
+<td>redis-check-dump</td>
+<td>Redis RDB 持久化文件检测和修复工具</td>
+</tr>
+<tr>
+<td>redis-sentinel</td>
+<td>启动 Redis Sentinel</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>
+<p>启动Redis</p>
+<ul>
+<li>
+<p>默认配置，执行<code>redis-server</code></p>
+</li>
+<li>
+<p>运行启动，<code>redis-server --configKey1 configValue1 --configKey2 configValue2</code></p>
+<p>例如：<code>redis-server --port 6378</code></p>
+</li>
+<li>
+<p>配置文件启动，<code>redis-server /opt/redis/redis.conf</code></p>
+</li>
+</ul>
+</li>
+<li>
+<p>Redis命令行客户端</p>
+<p><code>redis-cli -h &#123;host&#125; -p &#123;port&#125;</code>，例如<code>redis-cli -h 127.0.0.1 -p 6379</code></p>
+</li>
+<li>
+<p>停止Redis服务</p>
+<p><code>redis-cli shutdown</code></p>
+</li>
+</ol>
+<h2 id="Redis的重大版本"><a class="header-anchor" href="#Redis的重大版本"></a>Redis的重大版本</h2>
+<blockquote>
+<p>Redis借鉴了Linux对于版本号的命名规则，版本号第二位为奇数则表示版本为非稳定版本，且为下一稳定版本的开发版本</p>
+</blockquote>
+<ol>
+<li>Redis 2.6
+<ul>
+<li>服务端支持Lua脚本。</li>
+<li>去掉虚拟内存相关功能。</li>
+<li>放开对客户端连接数的硬编码限制。</li>
+<li>键的过期时间支持毫秒。</li>
+<li>从节点提供只读功能。</li>
+<li>两个新的位图命令:bitcount和bitop。</li>
+<li>增强了redis-benchmark的功能:支持定制化的压测，CSV输出等功能。</li>
+<li>基于浮点数自增命令:incrbyfloat和hincrbyfloat。</li>
+<li>redis-cli可以使用–eval参数实现Lua脚本执行。</li>
+<li>shutdown命令增强。</li>
+<li>info可以按照section输出，并且添加了一些统计项。</li>
+<li>重构了大量的核心代码，所有集群相关的代码都去掉了，cluster功 能将会是3.0版本最大的亮点。</li>
+<li>sort命令优化。</li>
+</ul>
+</li>
+<li>Redis 2.8
+<ul>
+<li>添加部分主从复制的功能，在一定程度上降低了由于网络问题，造成频繁全量复制生成RDB对系统造成的压力。</li>
+<li>尝试性地支持IPv6。</li>
+<li>可以通过config set命令设置maxclients。</li>
+<li>可以用bind命令绑定多个IP地址。</li>
+<li>Redis设置了明显的进程名，方便使用ps命令查看系统进程。</li>
+<li>config rewrite命令可以将config set持久化到Redis配置文件中。</li>
+<li>发布订阅添加了pubsub命令。</li>
+<li>Redis Sentinel第二版，相比于Redis2.6的Redis Sentinel，此版本已经 变成生产可用。</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>可以通过github仓库查看各版本重大改动： <a target="_blank" rel="noopener" href="https://github.com/redis/redis/tags">Redis版本</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/uploads/wechat.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/4a17b156.html" rel="prev" title="Hello World">
+                  <i class="fa fa-chevron-left"></i> Hello World
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/4241361649.html" rel="next" title="Redis开发与运维笔记_API的理解和使用">
+                  Redis开发与运维笔记_API的理解和使用 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div><script src="/js/comments.js"></script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leithda</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">206k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:08</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+  <script class="next-config" data-name="chatra" type="application/json">{&quot;enable&quot;:true,&quot;async&quot;:true,&quot;id&quot;:&quot;FMc6WL5f5hGFsRhzz&quot;}</script>
+  <script src="/js/third-party/chat/chatra.js"></script>
+  <script async src="https://call.chatra.io/chatra.js"></script>
+
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{&quot;enable&quot;:true,&quot;theme&quot;:&quot;forest&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mermaid@8.9.3&#x2F;dist&#x2F;mermaid.min.js&quot;}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script class="next-config" data-name="nprogress" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;spinner&quot;:true}</script>
+  <script src="/js/third-party/nprogress.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="utterances" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;repo&quot;:&quot;leithda&#x2F;leithda.github.io&quot;,&quot;issue_term&quot;:&quot;pathname&quot;,&quot;theme&quot;:&quot;github-light&quot;}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>

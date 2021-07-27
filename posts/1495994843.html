@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css">
+  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;leithda.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:&quot;enable&quot;,&quot;bookmark&quot;:{&quot;enable&quot;:&quot;enable&quot;,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:&quot;utterances&quot;,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null,&quot;activeClass&quot;:&quot;utterances&quot;},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;},&quot;path&quot;:&quot;&#x2F;search.xml&quot;,&quot;localsearch&quot;:{&quot;enable&quot;:true,&quot;trigger&quot;:&quot;auto&quot;,&quot;top_n_per_article&quot;:1,&quot;unescape&quot;:false,&quot;preload&quot;:false}}</script>
+<meta name="description" content="Redis所有的数据都存在内存中，高效利用Redis内存首先需要理解Redis内存消耗在哪里，如何管理内存，最后才能考虑如何优化内存。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis开发与运维笔记-理解内存">
+<meta property="og:url" content="https://leithda.github.io/posts/1495994843.html">
+<meta property="og:site_name" content="Leithda&#39;s Blog">
+<meta property="og:description" content="Redis所有的数据都存在内存中，高效利用Redis内存首先需要理解Redis内存消耗在哪里，如何管理内存，最后才能考虑如何优化内存。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://leithda.github.io/posts/1495994843/redisObject.png">
+<meta property="og:image" content="https://leithda.github.io/posts/1495994843/sds.png">
+<meta property="article:published_time" content="2021-05-26T15:05:00.000Z">
+<meta property="article:modified_time" content="2021-05-27T14:52:54.018Z">
+<meta property="article:author" content="Leithda">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://leithda.github.io/posts/1495994843/redisObject.png">
+
+
+<link rel="canonical" href="https://leithda.github.io/posts/1495994843.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;leithda.github.io&#x2F;posts&#x2F;1495994843.html&quot;,&quot;path&quot;:&quot;posts&#x2F;1495994843.html&quot;,&quot;title&quot;:&quot;Redis开发与运维笔记-理解内存&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>Redis开发与运维笔记-理解内存 | Leithda's Blog</title><script src="/js/config.js"></script>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?3540567b868217169a5241159ab1e032"></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Leithda's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Leithda's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-guide"><a href="/guide/" rel="section"><i class="fa fa-bars fa-fw"></i>导航</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">理解内存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%B6%88%E8%80%97"><span class="nav-number">1.1.</span> <span class="nav-text">内存消耗</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E7%BB%9F%E8%AE%A1"><span class="nav-number">1.1.1.</span> <span class="nav-text">内存使用统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%B6%88%E8%80%97%E5%88%92%E5%88%86"><span class="nav-number">1.1.2.</span> <span class="nav-text">内存消耗划分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%90%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E6%B6%88%E8%80%97"><span class="nav-number">1.1.3.</span> <span class="nav-text">子进程内存消耗</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text">内存管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96"><span class="nav-number">1.3.</span> <span class="nav-text">内存优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#redisObject%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.3.1.</span> <span class="nav-text">redisObject对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%A9%E5%87%8F%E9%94%AE%E5%80%BC%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.3.2.</span> <span class="nav-text">缩减键值对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E5%AF%B9%E8%B1%A1%E6%B1%A0"><span class="nav-number">1.3.3.</span> <span class="nav-text">共享对象池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%BC%98%E5%8C%96"><span class="nav-number">1.3.4.</span> <span class="nav-text">字符串优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%BB%93%E6%9E%84"><span class="nav-number">1.3.4.1.</span> <span class="nav-text">字符串结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%84%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6"><span class="nav-number">1.3.4.2.</span> <span class="nav-text">预分配机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%87%8D%E6%9E%84"><span class="nav-number">1.3.4.3.</span> <span class="nav-text">字符串重构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E4%BC%98%E5%8C%96"><span class="nav-number">1.3.5.</span> <span class="nav-text">编码优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E9%94%AE%E7%9A%84%E6%95%B0%E9%87%8F"><span class="nav-number">1.3.6.</span> <span class="nav-text">控制键的数量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E7%AB%A0%E9%87%8D%E7%82%B9%E5%9B%9E%E9%A1%BE"><span class="nav-number">1.4.</span> <span class="nav-text">本章重点回顾</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Leithda"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">Leithda</p>
+  <div class="site-description" itemprop="description">Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="sidebar-button site-overview-item animated">
+    <a onclick="Chatra('openChat', true);"><i class="fa fa-comment"></i>
+    Chat
+  </a>
+  </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/leithda" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:leithda@163.com" title="邮箱 → mailto:leithda@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>邮箱</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.yuque.com/leithda" title="语雀 → https:&#x2F;&#x2F;www.yuque.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>语雀</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dbreset.github.io/" title="https:&#x2F;&#x2F;dbreset.github.io" rel="noopener" target="_blank">DbReset</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://leithda.github.io/posts/1495994843.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Leithda">
+      <meta itemprop="description" content="Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leithda's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis开发与运维笔记-理解内存
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-05-26 23:05:00" itemprop="dateCreated datePublished" datetime="2021-05-26T23:05:00+08:00">2021-05-26</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-05-27 22:52:54" itemprop="dateModified" datetime="2021-05-27T22:52:54+08:00">2021-05-27</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote class="blockquote-center">
+<p>Redis所有的数据都存在内存中，高效利用Redis内存首先需要理解Redis内存消耗在哪里，如何管理内存，最后才能考虑如何优化内存。</p>
+
+</blockquote>
+<span id="more"></span>
+<blockquote>
+<p>参考书籍：<a target="_blank" rel="noopener" href="https://book.douban.com/subject/26971561/">Redis开发与运维</a></p>
+</blockquote>
+<hr>
+<h1>理解内存</h1>
+<h2 id="内存消耗"><a class="header-anchor" href="#内存消耗"></a>内存消耗</h2>
+<h3 id="内存使用统计"><a class="header-anchor" href="#内存使用统计"></a>内存使用统计</h3>
+<p><code>info memory</code></p>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>used_memory</td>
+<td>Redis分配器分配的内存总量，也就是内部存储的所有数据的内存占用量</td>
+</tr>
+<tr>
+<td>used_memory_human</td>
+<td>以可读的格式返回used_memory</td>
+</tr>
+<tr>
+<td>used_memory_rss</td>
+<td>从操作系统的角度显示Redis进程占用的物理内存总量</td>
+</tr>
+<tr>
+<td>used_memory_peak</td>
+<td>内存使用的最大值，表示used_memory的峰值</td>
+</tr>
+<tr>
+<td>used_memory_peak_human</td>
+<td>以可读的格式返回used_memory_peak</td>
+</tr>
+<tr>
+<td>used_memory_lua</td>
+<td>Lua引擎所消耗的内存大小</td>
+</tr>
+<tr>
+<td>mem_fragmentation_retio</td>
+<td>used_memory_rss/used_memory比值，表示内存碎片率</td>
+</tr>
+<tr>
+<td>mem_allocator</td>
+<td>Redis所使用的内存分配器。默认为jemalloc</td>
+</tr>
+</tbody>
+</table>
+<p>重点关注的指标：<code>used_memory_rss</code>、<code>used_memory</code>以及<code>mem_fragmentation_ratio</code></p>
+<p>mem_fragmentation&gt;1，说明存在内存碎片。&lt;1时说明操作系统Reids内存交换(Swap)到硬盘。</p>
+<h3 id="内存消耗划分"><a class="header-anchor" href="#内存消耗划分"></a>内存消耗划分</h3>
+<p>Redis进程内消耗主要包括：自身内存+对象内存+缓存内存+内存碎片。</p>
+<ul>
+<li>
+<p>对象内存<br>
+是Redis内存占用最大的一块，存储着用户所有的数据。</p>
+</li>
+<li>
+<p>缓存内存</p>
+<ul>
+<li>客户端缓冲：接入到服务器TCP了解的输入输出缓冲。输入缓冲无法控制，最大为1G。输出缓冲通过<code>client-output-buffer-limit</code>控制。普通客户端要注意控制数量，从客户端不要挂载过多，订阅客户端要注意生产及消费消息的速度</li>
+<li>复制积压缓冲区：用于实现部分复制功能，Redis提供的一个缓冲区，建议在合理范围内调大，可以有效避免全量复制</li>
+<li>AOF缓冲区：这部分空间用于在Redis重写期间保存最近的写入命令。</li>
+</ul>
+</li>
+<li>
+<p>内存碎片<br>
+容易出现高内存碎片的场景：</p>
+<ol>
+<li>频繁做更新操作，例如频繁对已存在的键执行<code>append、setrange</code>等更新操作</li>
+<li>大量过期键删除，键对象过期删除后，释放的空间无法得到充分利用，导致碎片率上升。</li>
+<li>解决以上问题的方法：1）尽量做到数据对齐，2）安全重启</li>
+</ol>
+</li>
+</ul>
+<h3 id="子进程内存消耗"><a class="header-anchor" href="#子进程内存消耗"></a>子进程内存消耗</h3>
+<p>主要发生在AOF/RDB重写时Redis创建的子进程内存消耗。总结如下：</p>
+<ol>
+<li>Redis产生的子进程因为写时复制技术，并不需要消耗1倍的父进程内存。预留足够内存防止溢出即可</li>
+<li>需要设置<code>sysctl vm.overcommit_memory=1</code>允许内核可以分配所有物理内存，防止Redis进程执行fork时因系统剩余内存不足而失败</li>
+<li>排查当前系统是否支持并开启THP，如果开启建议关闭，防止copy-on-write期间内存过度消耗</li>
+</ol>
+<h2 id="内存管理"><a class="header-anchor" href="#内存管理"></a>内存管理</h2>
+<ol>
+<li>通过<code>maxmemory</code>设置Redis最大内存，需要注意的是由于碎片率的存在，实际消耗的内存可能会比<code>maxmemory</code>设置的更大</li>
+<li>通过<code>config set maxmemory 2GB</code>可以动态调整内存上限</li>
+<li>内存回收策略
+<ul>
+<li>过期键删除策略：惰性删除和定时任务删除</li>
+<li>内存溢出控制策略，通过<code>maxmemory-policy</code>参数控制
+<ul>
+<li><code>noeviction</code>:默认策略，不删除数据。拒绝所有写入操作并返回客户端错误信息<code>(error)OOM command not allowed when used memory</code>，此时Redis只响应读操作</li>
+<li><code>vloatile-lru</code>：根据LRU算法删除设置了超时的键，直到腾出足够空间。如果没有可删除的键，回退到<code>noeviction</code></li>
+<li><code>allkeys-lru</code>：根据LRU算法删除键。直到腾出足够空间</li>
+<li><code>allkeys-random</code>：随机删除所有键，直到腾出足够空间</li>
+<li><code>volatile-ttl</code>：根据键值对象的ttl，删除最近要过期的数据，如果没有，回退到noeviction策略</li>
+<li>设置了<code>maxmemory</code>时，当<code>used_memory&gt;maxmemory</code>的状态下，会触发回收内存操作。应设置足够大的<code>maxmemory</code>避免长期处于这种状态下。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="内存优化"><a class="header-anchor" href="#内存优化"></a>内存优化</h2>
+<h3 id="redisObject对象"><a class="header-anchor" href="#redisObject对象"></a>redisObject对象</h3>
+<blockquote>
+<p>Redis存储的所有值对象在内部定义为redisObject结构体，内部结构如图：</p>
+</blockquote>
+<img src="/posts/1495994843/redisObject.png" class="" title="redisObject">
+<ul>
+<li>type:当前对象数据类型。可以使用<code>type &#123;key&#125;</code>查看对象所属类型</li>
+<li>encoding:redis内部编码类型</li>
+<li>lru:对象最后一次被访问的时间。可以使用<code>object idletime &#123;key&#125;</code>在不更新lru字段情况下查看键的空闲时间</li>
+<li>refcount:记录对象被引用次数</li>
+<li>*ptr:整数直接存储数据，否则为指向数据的指针</li>
+</ul>
+<h3 id="缩减键值对象"><a class="header-anchor" href="#缩减键值对象"></a>缩减键值对象</h3>
+<blockquote>
+<p>在保证业务的前提下，缩减键<code>key</code>和值<code>value</code>的长度。</p>
+</blockquote>
+<h3 id="共享对象池"><a class="header-anchor" href="#共享对象池"></a>共享对象池</h3>
+<p>Redis内部维护[0-9999]的整数对象池。优先使用整型数字有助于节省内存开销。需要注意的是对象池与<code>maxmemory</code>和<code>LRU</code>淘汰算法冲突。</p>
+<h3 id="字符串优化"><a class="header-anchor" href="#字符串优化"></a>字符串优化</h3>
+<h4 id="字符串结构"><a class="header-anchor" href="#字符串结构"></a>字符串结构</h4>
+<blockquote>
+<p>Redis实现了自己的字符串结构，内部简单动态字符串(simple dynamic string,SDS).结构如图：</p>
+</blockquote>
+<img src="/posts/1495994843/sds.png" class="" title="sds">
+<p>Redis字符串结构的特点：</p>
+<ol>
+<li>字符串长度，已用长度，未用长度的操作复杂度为O(1)</li>
+<li>可用于保存字节数组，支持安全的二进制数据存储</li>
+<li>预分配机制，降低内存再分配次数</li>
+<li>惰性删除机制，字符串缩减后的空间不释放，作为预分配空间保留</li>
+</ol>
+<h4 id="预分配机制"><a class="header-anchor" href="#预分配机制"></a>预分配机制</h4>
+<ol>
+<li>第一次创建len属性等于数据实际大小，free等于0，不做预分配</li>
+<li>修改后如果free空间不够且数据小于1M，每次预分配一倍的容量</li>
+<li>修改后如果free空间不够且数据大于1M，每次预分配1MB的容量</li>
+</ol>
+<h4 id="字符串重构"><a class="header-anchor" href="#字符串重构"></a>字符串重构</h4>
+<blockquote>
+<p>JSON数据不一定要用string来存储，可以改为通过hash结构实现，同时使用hash结构也可以使用hmget、hmset命令支持字段的部分读取修改，而不用每次全部读取。</p>
+</blockquote>
+<h3 id="编码优化"><a class="header-anchor" href="#编码优化"></a>编码优化</h3>
+<blockquote>
+<p>主要是根据业务场景，选择合适的参数保证Redis使用合适的内部编码进而在性能和内存上进行取舍。</p>
+</blockquote>
+<h3 id="控制键的数量"><a class="header-anchor" href="#控制键的数量"></a>控制键的数量</h3>
+<blockquote>
+<p>客户端可以预估键的数量规模，把大量键映射到多个hash结构中降低键的数量</p>
+</blockquote>
+<ul>
+<li>hash的field可以记录原始key字符串，方便哈希查找</li>
+<li>hash的value保存原始值对象，确保不要超过<code>hash-max-ziplist-value</code>限制</li>
+</ul>
+<h2 id="本章重点回顾"><a class="header-anchor" href="#本章重点回顾"></a>本章重点回顾</h2>
+<ol>
+<li>Redis实际内存消耗主要包括：键值对象、缓冲区碎片、内存碎片</li>
+<li>通过<code>maxmemory</code>控制Redis最大可用内存。内存溢出时，根据<code>maxmemory-policy</code>控制内存回收策略</li>
+<li>内存资源宝贵，可以通过以下手段优化内存使用:
+<ol>
+<li>精简键值对大小，使用高效二进制序列化工具</li>
+<li>使用对象共享池优化小整数对象</li>
+<li>数据优先使用整数</li>
+<li>优化字符串的使用，避免预分配造成的内存浪费</li>
+<li>使用ziplist压缩编码优化hash、list等结构，注重效率和空间的平衡</li>
+<li>使用intset编码优化整数集合</li>
+</ol>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/uploads/wechat.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/3586754738.html" rel="prev" title="Redis开发与运维笔记-Redis的噩梦-阻塞">
+                  <i class="fa fa-chevron-left"></i> Redis开发与运维笔记-Redis的噩梦-阻塞
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/2400819807.html" rel="next" title="Redis开发与运维笔记-哨兵">
+                  Redis开发与运维笔记-哨兵 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div><script src="/js/comments.js"></script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leithda</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">206k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:08</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+  <script class="next-config" data-name="chatra" type="application/json">{&quot;enable&quot;:true,&quot;async&quot;:true,&quot;id&quot;:&quot;FMc6WL5f5hGFsRhzz&quot;}</script>
+  <script src="/js/third-party/chat/chatra.js"></script>
+  <script async src="https://call.chatra.io/chatra.js"></script>
+
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{&quot;enable&quot;:true,&quot;theme&quot;:&quot;forest&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mermaid@8.9.3&#x2F;dist&#x2F;mermaid.min.js&quot;}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script class="next-config" data-name="nprogress" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;spinner&quot;:true}</script>
+  <script src="/js/third-party/nprogress.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="utterances" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;repo&quot;:&quot;leithda&#x2F;leithda.github.io&quot;,&quot;issue_term&quot;:&quot;pathname&quot;,&quot;theme&quot;:&quot;github-light&quot;}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>

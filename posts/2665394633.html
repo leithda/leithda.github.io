@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css">
+  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;leithda.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:&quot;enable&quot;,&quot;bookmark&quot;:{&quot;enable&quot;:&quot;enable&quot;,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:&quot;utterances&quot;,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null,&quot;activeClass&quot;:&quot;utterances&quot;},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;},&quot;path&quot;:&quot;&#x2F;search.xml&quot;,&quot;localsearch&quot;:{&quot;enable&quot;:true,&quot;trigger&quot;:&quot;auto&quot;,&quot;top_n_per_article&quot;:1,&quot;unescape&quot;:false,&quot;preload&quot;:false}}</script>
+<meta name="description" content="mathjax是一个开源的数学公式渲染器，通过特定语法可以输出不同的数学公式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Markdown-数学公式">
+<meta property="og:url" content="https://leithda.github.io/posts/2665394633.html">
+<meta property="og:site_name" content="Leithda&#39;s Blog">
+<meta property="og:description" content="mathjax是一个开源的数学公式渲染器，通过特定语法可以输出不同的数学公式">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://leithda.github.io/posts/2665394633/image-20210527172000754.png">
+<meta property="article:published_time" content="2021-05-27T11:10:00.000Z">
+<meta property="article:modified_time" content="2021-05-27T14:52:54.054Z">
+<meta property="article:author" content="Leithda">
+<meta property="article:tag" content="Markdown">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://leithda.github.io/posts/2665394633/image-20210527172000754.png">
+
+
+<link rel="canonical" href="https://leithda.github.io/posts/2665394633.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;leithda.github.io&#x2F;posts&#x2F;2665394633.html&quot;,&quot;path&quot;:&quot;posts&#x2F;2665394633.html&quot;,&quot;title&quot;:&quot;Markdown-数学公式&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>Markdown-数学公式 | Leithda's Blog</title><script src="/js/config.js"></script>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?3540567b868217169a5241159ab1e032"></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Leithda's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Leithda's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-guide"><a href="/guide/" rel="section"><i class="fa fa-bars fa-fw"></i>导航</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">基础语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%E7%89%87%E6%AE%B5"><span class="nav-number">1.1.</span> <span class="nav-text">公式片段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%E5%9D%97"><span class="nav-number">1.2.</span> <span class="nav-text">公式块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%8C%E8%85%8A%E5%AD%97%E6%AF%8D"><span class="nav-number">2.</span> <span class="nav-text">希腊字母</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%AC%A6%E5%8F%B7"><span class="nav-number">3.</span> <span class="nav-text">常用符号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E6%AF%8D%E4%BF%AE%E9%A5%B0"><span class="nav-number">4.</span> <span class="nav-text">字母修饰</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E4%B8%8B%E6%A0%87"><span class="nav-number">4.1.</span> <span class="nav-text">上下标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%AC%E5%8F%B7"><span class="nav-number">4.2.</span> <span class="nav-text">括号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%BB%84"><span class="nav-number">4.3.</span> <span class="nav-text">分组</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97"><span class="nav-number">5.</span> <span class="nav-text">计算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%BC%8F%E4%B8%8E%E6%A0%B9%E5%BC%8F"><span class="nav-number">5.1.</span> <span class="nav-text">分式与根式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%82%E5%92%8C%E3%80%81%E6%9E%81%E9%99%90%E5%92%8C%E7%A7%AF%E5%88%86"><span class="nav-number">5.2.</span> <span class="nav-text">求和、极限和积分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E6%AE%8A%E5%87%BD%E6%95%B0"><span class="nav-number">5.3.</span> <span class="nav-text">特殊函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5"><span class="nav-number">6.</span> <span class="nav-text">矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="nav-number">6.1.</span> <span class="nav-text">基本语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E8%BE%B9%E6%A1%86"><span class="nav-number">6.2.</span> <span class="nav-text">矩阵边框</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9C%81%E7%95%A5"><span class="nav-number">6.3.</span> <span class="nav-text">省略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E7%A8%8B%E7%BB%84"><span class="nav-number">6.4.</span> <span class="nav-text">方程组</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Leithda"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">Leithda</p>
+  <div class="site-description" itemprop="description">Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="sidebar-button site-overview-item animated">
+    <a onclick="Chatra('openChat', true);"><i class="fa fa-comment"></i>
+    Chat
+  </a>
+  </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/leithda" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:leithda@163.com" title="邮箱 → mailto:leithda@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>邮箱</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.yuque.com/leithda" title="语雀 → https:&#x2F;&#x2F;www.yuque.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>语雀</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dbreset.github.io/" title="https:&#x2F;&#x2F;dbreset.github.io" rel="noopener" target="_blank">DbReset</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://leithda.github.io/posts/2665394633.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Leithda">
+      <meta itemprop="description" content="Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leithda's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Markdown-数学公式
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-05-27 19:10:00 / 修改时间：22:52:54" itemprop="dateCreated datePublished" datetime="2021-05-27T19:10:00+08:00">2021-05-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7/%E6%97%A5%E5%B8%B8/" itemprop="url" rel="index"><span itemprop="name">日常</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7/%E6%97%A5%E5%B8%B8/Markdown/" itemprop="url" rel="index"><span itemprop="name">Markdown</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote class="blockquote-center">
+<p>mathjax是一个开源的数学公式渲染器，通过特定语法可以输出不同的数学公式</p>
+
+</blockquote>
+<span id="more"></span>
+<blockquote>
+<p><strong>写在前面</strong></p>
+<ol>
+<li>
+<p>不同的解析器可能实现上有细微差距，但是基本语法应该相同~~~</p>
+</li>
+<li>
+<p>该文档使用typora完成编辑，Hexo显示不太准确，可以下载源文件从Typora打开。注意要打开如下设置</p>
+</li>
+</ol>
+ <img src="/posts/2665394633/image-20210527172000754.png" class="" title="image-20210527172000754">
+</blockquote>
+<h2 id="基础语法"><a class="header-anchor" href="#基础语法"></a>基础语法</h2>
+<h3 id="公式片段"><a class="header-anchor" href="#公式片段"></a>公式片段</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">公式为: $S·T=\frac&#123;1&#125; &#123;m&#125;\sum_&#123;i=0&#125;^mS_iT_i=0$</span><br></pre></td></tr></table></figure>
+<ul>
+<li>显示效果如下:<br>
+公式为: $S·T=\frac{1} {m}\sum_{i=0}^mS_iT_i=0$</li>
+</ul>
+<h3 id="公式块"><a class="header-anchor" href="#公式块"></a>公式块</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">S·S=\frac&#123;1&#125; &#123;m&#125;\sum_&#123;i=0&#125;^mS_iS_i=\frac&#123;1&#125; &#123;m&#125;\sum_&#123;i=0&#125;^mS_i^2=\frac&#123;1&#125; &#123;m&#125;\sum_&#123;i=0&#125;^m(\pm1)^2=1</span><br><span class="line">$$</span><br></pre></td></tr></table></figure>
+<ul>
+<li>显示效果如下:<br>
+$$<br>
+S·S=\frac{1} {m}\sum_{i=0}^mS_iS_i=\frac{1} {m}\sum_{i=0}<sup>mS_i</sup>2=\frac{1} {m}\sum_{i=0}<sup>m(\pm1)</sup>2=1<br>
+$$</li>
+</ul>
+<h2 id="希腊字母"><a class="header-anchor" href="#希腊字母"></a>希腊字母</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">显示</th>
+<th style="text-align:center">命令</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">α</td>
+<td style="text-align:center">\alpha</td>
+<td>β</td>
+<td>\beta</td>
+</tr>
+<tr>
+<td style="text-align:center">γ</td>
+<td style="text-align:center">\gamma</td>
+<td>δ</td>
+<td>\delta</td>
+</tr>
+<tr>
+<td style="text-align:center">ε</td>
+<td style="text-align:center">\epsilon</td>
+<td>ζ</td>
+<td>\zeta</td>
+</tr>
+<tr>
+<td style="text-align:center">η</td>
+<td style="text-align:center">\eta</td>
+<td>θ</td>
+<td>\theta</td>
+</tr>
+<tr>
+<td style="text-align:center">ι</td>
+<td style="text-align:center">\iota</td>
+<td>κ</td>
+<td>\kappa</td>
+</tr>
+<tr>
+<td style="text-align:center">λ</td>
+<td style="text-align:center">\lambda</td>
+<td>μ</td>
+<td>\mu</td>
+</tr>
+<tr>
+<td style="text-align:center">ν</td>
+<td style="text-align:center">\nu</td>
+<td>ξ</td>
+<td>\xi</td>
+</tr>
+<tr>
+<td style="text-align:center">π</td>
+<td style="text-align:center">\pi</td>
+<td>ρ</td>
+<td>\rho</td>
+</tr>
+<tr>
+<td style="text-align:center">σ</td>
+<td style="text-align:center">\sigma</td>
+<td>τ</td>
+<td>\tau</td>
+</tr>
+<tr>
+<td style="text-align:center">υ</td>
+<td style="text-align:center">\upsilon</td>
+<td>φ</td>
+<td>\phi</td>
+</tr>
+<tr>
+<td style="text-align:center">χ</td>
+<td style="text-align:center">\chi</td>
+<td>ψ</td>
+<td>\psi</td>
+</tr>
+<tr>
+<td style="text-align:center">ω</td>
+<td style="text-align:center">\omega</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p>如果需要大写希腊字母，将命令首字母大写即可<code>\Gamma</code>:<br>
+$$<br>
+\Gamma<br>
+$$</p>
+</li>
+<li>
+<p>如果需要斜体希腊字母，将命令钱加上<code>var</code>前缀<code>\varGamma</code></p>
+</li>
+</ul>
+<p>$$<br>
+\varGamma<br>
+$$</p>
+<h2 id="常用符号"><a class="header-anchor" href="#常用符号"></a>常用符号</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">显示</th>
+<th style="text-align:center">命令</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">×</td>
+<td style="text-align:center">\times</td>
+<td>乘号</td>
+</tr>
+<tr>
+<td style="text-align:center">≈</td>
+<td style="text-align:center">\approx</td>
+<td>约等于</td>
+</tr>
+<tr>
+<td style="text-align:center">≤</td>
+<td style="text-align:center">\leq</td>
+<td>小于等于</td>
+</tr>
+<tr>
+<td style="text-align:center">≥</td>
+<td style="text-align:center">\geq</td>
+<td>大于等于</td>
+</tr>
+<tr>
+<td style="text-align:center">±</td>
+<td style="text-align:center">\pm</td>
+<td>正负号</td>
+</tr>
+<tr>
+<td style="text-align:center">∞</td>
+<td style="text-align:center">\infty</td>
+<td>无穷大</td>
+</tr>
+<tr>
+<td style="text-align:center">∪</td>
+<td style="text-align:center">\cup</td>
+<td>并集</td>
+</tr>
+<tr>
+<td style="text-align:center">∩</td>
+<td style="text-align:center">\cap</td>
+<td>交集</td>
+</tr>
+<tr>
+<td style="text-align:center">⊂</td>
+<td style="text-align:center">\subset</td>
+<td>子集</td>
+</tr>
+<tr>
+<td style="text-align:center">⊆</td>
+<td style="text-align:center">\subseteq</td>
+<td>真子集</td>
+</tr>
+<tr>
+<td style="text-align:center">⊃</td>
+<td style="text-align:center">\supset</td>
+<td>父集</td>
+</tr>
+<tr>
+<td style="text-align:center">∈</td>
+<td style="text-align:center">\in</td>
+<td>属于</td>
+</tr>
+<tr>
+<td style="text-align:center">∉</td>
+<td style="text-align:center">\notin</td>
+<td>不属于</td>
+</tr>
+<tr>
+<td style="text-align:center">Φ</td>
+<td style="text-align:center">\vatnoting</td>
+<td>空集</td>
+</tr>
+<tr>
+<td style="text-align:center">∀</td>
+<td style="text-align:center">\forall</td>
+<td>任意</td>
+</tr>
+<tr>
+<td style="text-align:center">∃</td>
+<td style="text-align:center">\exists</td>
+<td>存在</td>
+</tr>
+<tr>
+<td style="text-align:center">∵</td>
+<td style="text-align:center">\because</td>
+<td>因为</td>
+</tr>
+<tr>
+<td style="text-align:center">∴</td>
+<td style="text-align:center">\therefore</td>
+<td>所以</td>
+</tr>
+</tbody>
+</table>
+<h2 id="字母修饰"><a class="header-anchor" href="#字母修饰"></a>字母修饰</h2>
+<h3 id="上下标"><a class="header-anchor" href="#上下标"></a>上下标</h3>
+<ul>
+<li>上标: <code>^</code></li>
+<li>下标: <code>_</code></li>
+</ul>
+<p>举例 <code>C_n^2</code> : $C_n^2$</p>
+<h3 id="括号"><a class="header-anchor" href="#括号"></a>括号</h3>
+<ul>
+<li>小括号: <code>()</code> : $()$</li>
+<li>中括号: <code>[]</code> : $[]$</li>
+<li>尖括号:<code>\langle  \rangle</code>: $\langle \rangle$</li>
+<li>自适应括号<code>\left( \right)</code>,举例<code>a*\left(b-\left(\frac &#123;c&#125; &#123;d&#125;\right)\right)</code>： $a*\left(b-\left(\frac {c} {d}\right)\right)$</li>
+</ul>
+<h3 id="分组"><a class="header-anchor" href="#分组"></a>分组</h3>
+<ul>
+<li>使用<code>&#123;&#125;</code>将内容括起来组成一个分组，如<code>10^10</code> : $10^10$ ; <code>10^&#123;10&#125;</code> : $10^{10}$</li>
+</ul>
+<h2 id="计算"><a class="header-anchor" href="#计算"></a>计算</h2>
+<h3 id="分式与根式"><a class="header-anchor" href="#分式与根式"></a>分式与根式</h3>
+<ul>
+<li>分式(fractions) : <code>\frac&#123;公式1&#125; &#123;公式2&#125;</code> : $\frac{公式1} {公式2}$</li>
+<li>根式 : <code>\sqrt[3]&#123;x^2y&#125;</code> : $\sqrt[3]{x^2y}$</li>
+</ul>
+<h3 id="求和、极限和积分"><a class="header-anchor" href="#求和、极限和积分"></a>求和、极限和积分</h3>
+<ul>
+<li>
+<p>求和(<code>\sum</code>)</p>
+<p><code>sum_&#123;i=0&#125;^n&#123;a_i&#125;</code> : $sum_{i=0}^n{a_i}$</p>
+</li>
+<li>
+<p>极限(<code>\lim</code>)</p>
+<p><code>\lim_&#123;x \to 0&#125;</code> : $\lim_{x \to 0}$</p>
+</li>
+<li>
+<p>积分(<code>\int</code>)</p>
+<p><code>\int_0^\infty&#123;fxdx&#125;</code> : $\int_0^\infty{fxdx}$</p>
+</li>
+</ul>
+<h3 id="特殊函数"><a class="header-anchor" href="#特殊函数"></a>特殊函数</h3>
+<ul>
+<li><code>\sinx</code>,<code>\lnx</code>,<code>\max(A,B,C)</code> : $\sin x$,$\ln x$,$\max(A,B,C)$</li>
+</ul>
+<h2 id="矩阵"><a class="header-anchor" href="#矩阵"></a>矩阵</h2>
+<h3 id="基本语法"><a class="header-anchor" href="#基本语法"></a>基本语法</h3>
+<ul>
+<li>起始标志<code>\begin&#123;matrix&#125;</code>,结束标记<code>\end&#123;matrix&#125;</code></li>
+<li>每一行末尾<code>\\</code>,行间元素之间<code>&amp;</code>(PS: hexo博客输入<code>\\</code>会被转义为<code>\</code>,所以实际输入时要输入<code>\\\\</code>)</li>
+</ul>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">\begin&#123;matrix&#125;</span><br><span class="line">1&amp;0&amp;0 \\</span><br><span class="line">0&amp;1&amp;0 \\</span><br><span class="line">0&amp;0&amp;1 \\</span><br><span class="line">\end&#123;matrix&#125;</span><br><span class="line">$$</span><br></pre></td></tr></table></figure>
+<p>$$<br>
+\begin{matrix}<br>
+1 &amp; 0 &amp; 0 \\<br>
+0 &amp; 1 &amp; 0 \\<br>
+0 &amp; 0 &amp; 1 \\<br>
+\end{matrix}<br>
+$$</p>
+<h3 id="矩阵边框"><a class="header-anchor" href="#矩阵边框"></a>矩阵边框</h3>
+<ul>
+<li>在起始、结束标记处用下列词替换 <code>matrix</code></li>
+<li><code>pmatrix</code> ：小括号边框</li>
+<li><code>bmatrix</code> ：中括号边框</li>
+<li><code>Bmatrix</code> ：大括号边框</li>
+<li><code>vmatrix</code> ：单竖线边框</li>
+<li><code>Vmatrix</code> ：双竖线边框</li>
+</ul>
+<h3 id="省略"><a class="header-anchor" href="#省略"></a>省略</h3>
+<ul>
+<li>横省略号：<code>\cdots</code></li>
+<li>竖省略号：<code>\vdots</code></li>
+<li>斜省略号：<code>\ddots</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">\begin&#123;bmatrix&#125;</span><br><span class="line">&#123;a_&#123;11&#125;&#125;&amp;&#123;a_&#123;12&#125;&#125;&amp;&#123;\cdots&#125;&amp;&#123;a_&#123;1n&#125;&#125; \\</span><br><span class="line">&#123;a_&#123;21&#125;&#125;&amp;&#123;a_&#123;22&#125;&#125;&amp;&#123;\cdots&#125;&amp;&#123;a_&#123;2n&#125;&#125; \\</span><br><span class="line">&#123;\vdots&#125;&amp;&#123;\vdots&#125;&amp;&#123;\ddots&#125;&amp;&#123;\vdots&#125; \\</span><br><span class="line">&#123;a_&#123;m1&#125;&#125;&amp;&#123;a_&#123;m2&#125;&#125;&amp;&#123;\cdots&#125;&amp;&#123;a_&#123;mn&#125;&#125; \\</span><br><span class="line">\end&#123;bmatrix&#125;</span><br><span class="line">$$</span><br></pre></td></tr></table></figure>
+<p>$$<br>
+\begin{bmatrix}<br>
+{a_{11}}&amp;{a_{12}}&amp;{\cdots}&amp;{a_{1n}} \\<br>
+{a_{21}}&amp;{a_{22}}&amp;{\cdots}&amp;{a_{2n}} \\<br>
+{\vdots}&amp;{\vdots}&amp;{\ddots}&amp;{\vdots} \\<br>
+{a_{m1}}&amp;{a_{m2}}&amp;{\cdots}&amp;{a_{mn}} \\<br>
+\end{bmatrix}<br>
+$$</p>
+<h3 id="方程组"><a class="header-anchor" href="#方程组"></a>方程组</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">\begin&#123;cases&#125;</span><br><span class="line">a_1x+b_1y+c_1z=d_1 \\</span><br><span class="line">a_2x+b_2y+c_2z=d_2 \\</span><br><span class="line">a_3x+b_3y+c_3z=d_3 \\</span><br><span class="line">\end&#123;cases&#125;</span><br><span class="line">$$</span><br></pre></td></tr></table></figure>
+<p>$$<br>
+\begin{cases}<br>
+a_1x+b_1y+c_1z=d_1 \\<br>
+a_2x+b_2y+c_2z=d_2 \\<br>
+a_3x+b_3y+c_3z=d_3 \\<br>
+\end{cases}<br>
+$$</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/uploads/wechat.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Markdown/" rel="tag"># Markdown</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/3540196146.html" rel="prev" title="Markdown-流程图">
+                  <i class="fa fa-chevron-left"></i> Markdown-流程图
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/778231993.html" rel="next" title="Redis集群搭建(Redis3.0版)">
+                  Redis集群搭建(Redis3.0版) <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div><script src="/js/comments.js"></script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leithda</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">206k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:08</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+  <script class="next-config" data-name="chatra" type="application/json">{&quot;enable&quot;:true,&quot;async&quot;:true,&quot;id&quot;:&quot;FMc6WL5f5hGFsRhzz&quot;}</script>
+  <script src="/js/third-party/chat/chatra.js"></script>
+  <script async src="https://call.chatra.io/chatra.js"></script>
+
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{&quot;enable&quot;:true,&quot;theme&quot;:&quot;forest&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mermaid@8.9.3&#x2F;dist&#x2F;mermaid.min.js&quot;}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script class="next-config" data-name="nprogress" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;spinner&quot;:true}</script>
+  <script src="/js/third-party/nprogress.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="utterances" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;repo&quot;:&quot;leithda&#x2F;leithda.github.io&quot;,&quot;issue_term&quot;:&quot;pathname&quot;,&quot;theme&quot;:&quot;github-light&quot;}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>

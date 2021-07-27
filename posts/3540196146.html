@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css">
+  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;leithda.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:&quot;enable&quot;,&quot;bookmark&quot;:{&quot;enable&quot;:&quot;enable&quot;,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:&quot;utterances&quot;,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null,&quot;activeClass&quot;:&quot;utterances&quot;},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;},&quot;path&quot;:&quot;&#x2F;search.xml&quot;,&quot;localsearch&quot;:{&quot;enable&quot;:true,&quot;trigger&quot;:&quot;auto&quot;,&quot;top_n_per_article&quot;:1,&quot;unescape&quot;:false,&quot;preload&quot;:false}}</script>
+<meta name="description" content="Markdown可以使用指定语法绘制流程图、时序图、甘特图等">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Markdown-流程图">
+<meta property="og:url" content="https://leithda.github.io/posts/3540196146.html">
+<meta property="og:site_name" content="Leithda&#39;s Blog">
+<meta property="og:description" content="Markdown可以使用指定语法绘制流程图、时序图、甘特图等">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-27T11:05:00.000Z">
+<meta property="article:modified_time" content="2021-05-27T14:52:54.056Z">
+<meta property="article:author" content="Leithda">
+<meta property="article:tag" content="Markdown">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://leithda.github.io/posts/3540196146.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;leithda.github.io&#x2F;posts&#x2F;3540196146.html&quot;,&quot;path&quot;:&quot;posts&#x2F;3540196146.html&quot;,&quot;title&quot;:&quot;Markdown-流程图&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>Markdown-流程图 | Leithda's Blog</title><script src="/js/config.js"></script>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?3540567b868217169a5241159ab1e032"></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Leithda's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Leithda's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-guide"><a href="/guide/" rel="section"><i class="fa fa-bars fa-fw"></i>导航</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">1.</span> <span class="nav-text">流程图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">基本语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.2.</span> <span class="nav-text">示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E5%BA%8F%E5%9B%BE"><span class="nav-number">2.</span> <span class="nav-text">时序图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95-2"><span class="nav-number">2.1.</span> <span class="nav-text">基本语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B-2"><span class="nav-number">2.2.</span> <span class="nav-text">示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%98%E7%89%B9%E5%9B%BE"><span class="nav-number">3.</span> <span class="nav-text">甘特图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95-3"><span class="nav-number">3.1.</span> <span class="nav-text">基本语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B-3"><span class="nav-number">3.2.</span> <span class="nav-text">示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">4.</span> <span class="nav-text">其他</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Leithda"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">Leithda</p>
+  <div class="site-description" itemprop="description">Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="sidebar-button site-overview-item animated">
+    <a onclick="Chatra('openChat', true);"><i class="fa fa-comment"></i>
+    Chat
+  </a>
+  </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/leithda" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:leithda@163.com" title="邮箱 → mailto:leithda@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>邮箱</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.yuque.com/leithda" title="语雀 → https:&#x2F;&#x2F;www.yuque.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>语雀</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dbreset.github.io/" title="https:&#x2F;&#x2F;dbreset.github.io" rel="noopener" target="_blank">DbReset</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://leithda.github.io/posts/3540196146.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Leithda">
+      <meta itemprop="description" content="Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leithda's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Markdown-流程图
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-05-27 19:05:00 / 修改时间：22:52:54" itemprop="dateCreated datePublished" datetime="2021-05-27T19:05:00+08:00">2021-05-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7/%E6%97%A5%E5%B8%B8/" itemprop="url" rel="index"><span itemprop="name">日常</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7/%E6%97%A5%E5%B8%B8/Markdown/" itemprop="url" rel="index"><span itemprop="name">Markdown</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote class="blockquote-center">
+<p>Markdown可以使用指定语法绘制流程图、时序图、甘特图等</p>
+
+</blockquote>
+<span id="more"></span>
+<blockquote>
+<p>hexo的next主题Mermaid代码如下,语法与基础语法稍有不同,此篇内容不再讲解:</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;% mermaid type %&#125;</span><br><span class="line">&#123;% endmermaid %&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>visit <a target="_blank" rel="noopener" href="https://github.com/mermaid-js/mermaid">mermaid</a> for more information about <code>type</code>.</li>
+<li><code>mermaid</code>开关在<code>next</code>主题配置文件中，由<code>false</code>改为<code>true</code>即可。</li>
+</ul>
+<h2 id="流程图"><a class="header-anchor" href="#流程图"></a>流程图</h2>
+<h3 id="基本语法"><a class="header-anchor" href="#基本语法"></a>基本语法</h3>
+<ul>
+<li><code>graph</code> 指定流程图方向：<code>graph LR</code> 横向，<code>graph TD</code> 纵向</li>
+<li>元素的形状定义:
+<ul>
+<li><code>id[描述]</code> 以直角矩形绘制</li>
+<li><code>id(描述)</code> 以圆角矩形绘制</li>
+<li><code>id&#123;描述&#125;</code> 以菱形绘制</li>
+<li><code>id&gt;描述]</code> 以不对称矩形绘制</li>
+<li><code>id((描述))</code> 以圆形绘制</li>
+</ul>
+</li>
+<li>线条定义
+<ul>
+<li><code>A--&gt;B</code> 带箭头指向</li>
+<li><code>A---B</code> 不带箭头连接</li>
+<li><code>A-.-B</code> 虚线连接</li>
+<li><code>A-.-&gt;B</code> 虚线指向</li>
+<li><code>A==&gt;B</code> 加粗箭头指向</li>
+<li><code>A--描述---B</code> 不带箭头指向并在线段中间添加描述</li>
+<li><code>A--描述--&gt;B</code> 带描述的箭头指向</li>
+<li><code>A-.描述.-&gt;B</code> 带描述的虚线连指向</li>
+<li><code>A==描述==&gt;B</code> 带描述的加粗箭头指向</li>
+</ul>
+</li>
+<li>子流程图定义  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">subgraph title</span><br><span class="line">    graph direction</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="示例"><a class="header-anchor" href="#示例"></a>示例</h3>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">​<span class="code">```mermaid</span></span><br><span class="line"><span class="code">graph TD</span></span><br><span class="line"><span class="code">A[Hard] --&gt;|Text| B(Round)</span></span><br><span class="line"><span class="code">B --&gt; C&#123;Decision&#125;</span></span><br><span class="line"><span class="code">C --&gt;|One| D[Result 1]</span></span><br><span class="line"><span class="code">C --&gt;|Two| E[Result 2]</span></span><br><span class="line"><span class="code">​```</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>效果如下:</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">A[Hard] --&gt;|Text| B(Round)</span><br><span class="line">B --&gt; C&#123;Decision&#125;</span><br><span class="line">C --&gt;|One| D[Result 1]</span><br><span class="line">C --&gt;|Two| E[Result 2]</span><br></pre></td></tr></table></figure>
+<h2 id="时序图"><a class="header-anchor" href="#时序图"></a>时序图</h2>
+<h3 id="基本语法-2"><a class="header-anchor" href="#基本语法-2"></a>基本语法</h3>
+<ol>
+<li><code>Title:标题</code> ：指定时序图的标题</li>
+<li><code>Note direction of 对象:描述</code> : 在对象某一侧加入描述，<code>direction</code>可以是<code>right/over/left</code>,对象可以是多个，对象使用<code>,</code>分隔。</li>
+<li><code>participant 对象</code> ： 创建一个对象</li>
+<li><code>loop...end</code> : 创建一个循环体</li>
+<li><code>对象A -&gt; 对象B:描述</code>：绘制A与B之间的对话
+<ul>
+<li><code>-&gt;</code> ： 实线</li>
+<li><code>--&gt;</code> : 虚线</li>
+<li><code>-&gt;&gt;</code> : 实线带箭头</li>
+<li><code>--&gt;&gt;</code> : 虚线带箭头</li>
+</ul>
+</li>
+</ol>
+<h3 id="示例-2"><a class="header-anchor" href="#示例-2"></a>示例</h3>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">​<span class="code">```mermaid</span></span><br><span class="line"><span class="code">sequenceDiagram</span></span><br><span class="line"><span class="code">Title: Example for sequenceDiagram</span></span><br><span class="line"><span class="code">participant a as Alice</span></span><br><span class="line"><span class="code">participant b as John</span></span><br><span class="line"><span class="code">a-&gt;&gt;b: Hello b, how are you?</span></span><br><span class="line"><span class="code">loop Healthcheck</span></span><br><span class="line"><span class="code">    b-&gt;&gt;b: Fight against hypochondria</span></span><br><span class="line"><span class="code">end</span></span><br><span class="line"><span class="code">Note right of b: Rational thoughts!</span></span><br><span class="line"><span class="code">b--&gt;&gt;a: Great!</span></span><br><span class="line"><span class="code">b-&gt;&gt;Bob: How about you?</span></span><br><span class="line"><span class="code">Bob--&gt;&gt;b: Jolly good!</span></span><br><span class="line"><span class="code">​```</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>效果如下:</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sequenceDiagram</span><br><span class="line">Title: Example for sequenceDiagram</span><br><span class="line">participant a as Alice</span><br><span class="line">participant b as John</span><br><span class="line">a-&gt;&gt;b: Hello b, how are you?</span><br><span class="line">loop Healthcheck</span><br><span class="line">    b-&gt;&gt;b: Fight against hypochondria</span><br><span class="line">end</span><br><span class="line">Note right of b: Rational thoughts!</span><br><span class="line">b--&gt;&gt;a: Great!</span><br><span class="line">b-&gt;&gt;Bob: How about you?</span><br><span class="line">Bob--&gt;&gt;b: Jolly good!</span><br></pre></td></tr></table></figure>
+<h2 id="甘特图"><a class="header-anchor" href="#甘特图"></a>甘特图</h2>
+<h3 id="基本语法-3"><a class="header-anchor" href="#基本语法-3"></a>基本语法</h3>
+<ul>
+<li>使用 mermaid 解析语言，在开头使用关键字 gantt 指明</li>
+<li>deteFormat 格式 指明日期的显示格式</li>
+<li>title 标题 设置图标的标题</li>
+<li>section 描述 定义纵向上的一个环节</li>
+<li>定义步骤：每个步骤有两种状态 done（已完成）/ active（执行中）
+<ul>
+<li>描述: 状态,id,开始日期,结束日期/持续时间</li>
+<li>描述: 状态[,id],after id2,持续时间</li>
+<li>crit ：可用于标记该步骤需要被修正，将高亮显示</li>
+<li>如果不指定具体的开始时间或在某个步骤之后，将默认依次顺序排列</li>
+</ul>
+</li>
+</ul>
+<h3 id="示例-3"><a class="header-anchor" href="#示例-3"></a>示例</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">​```mermaid</span><br><span class="line">gantt</span><br><span class="line">dateFormat  YYYY-MM-DD</span><br><span class="line"></span><br><span class="line">        title 软件开发甘特图</span><br><span class="line"></span><br><span class="line">        section 设计</span><br><span class="line">        需求:done,des1, 2019-01-06,2019-01-08</span><br><span class="line">        原型:active,des2, 2019-01-09, 3d</span><br><span class="line">        UI设计:des3, after des2, 5d</span><br><span class="line">        未来任务:des4, after des3, 5d</span><br><span class="line"></span><br><span class="line">        section 开发</span><br><span class="line">        学习准备理解需求:crit, done, 2019-01-06,24h</span><br><span class="line">        设计框架:crit, done, after des2, 2d</span><br><span class="line">        开发:crit, active, 3d</span><br><span class="line">        未来任务:crit, 5d</span><br><span class="line">        休息时间:2d</span><br><span class="line"></span><br><span class="line">        section 测试</span><br><span class="line">        功能测试:active, a1, after des3, 3d</span><br><span class="line">        压力测试:after a1, 20h</span><br><span class="line">        测试报告: 48h</span><br><span class="line">​```</span><br></pre></td></tr></table></figure>
+<ul>
+<li>效果如下:</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">gantt</span><br><span class="line">dateFormat  YYYY-MM-DD</span><br><span class="line"></span><br><span class="line">        title 软件开发甘特图</span><br><span class="line"></span><br><span class="line">        section 设计</span><br><span class="line">        需求:done,des1, 2019-01-06,2019-01-08</span><br><span class="line">        原型:active,des2, 2019-01-09, 3d</span><br><span class="line">        UI设计:des3, after des2, 5d</span><br><span class="line">        未来任务:des4, after des3, 5d</span><br><span class="line"></span><br><span class="line">        section 开发</span><br><span class="line">        学习准备理解需求:crit, done, 2019-01-06,24h</span><br><span class="line">        设计框架:crit, done, after des2, 2d</span><br><span class="line">        开发:crit, active, 3d</span><br><span class="line">        未来任务:crit, 5d</span><br><span class="line">        休息时间:2d</span><br><span class="line"></span><br><span class="line">        section 测试</span><br><span class="line">        功能测试:active, a1, after des3, 3d</span><br><span class="line">        压力测试:after a1, 20h</span><br><span class="line">        测试报告: 48h</span><br></pre></td></tr></table></figure>
+<h2 id="其他"><a class="header-anchor" href="#其他"></a>其他</h2>
+<ul>
+<li><code>Hexo</code>的<code>next</code>主题集成了<a target="_blank" rel="noopener" href="https://github.com/mermaid-js/mermaid">Mermaid</a>，支持更多的图表类语法。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/uploads/wechat.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Markdown/" rel="tag"># Markdown</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/1069057006.html" rel="prev" title="Markdown-基本语法">
+                  <i class="fa fa-chevron-left"></i> Markdown-基本语法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/2665394633.html" rel="next" title="Markdown-数学公式">
+                  Markdown-数学公式 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div><script src="/js/comments.js"></script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leithda</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">206k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:08</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+  <script class="next-config" data-name="chatra" type="application/json">{&quot;enable&quot;:true,&quot;async&quot;:true,&quot;id&quot;:&quot;FMc6WL5f5hGFsRhzz&quot;}</script>
+  <script src="/js/third-party/chat/chatra.js"></script>
+  <script async src="https://call.chatra.io/chatra.js"></script>
+
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{&quot;enable&quot;:true,&quot;theme&quot;:&quot;forest&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mermaid@8.9.3&#x2F;dist&#x2F;mermaid.min.js&quot;}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script class="next-config" data-name="nprogress" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;spinner&quot;:true}</script>
+  <script src="/js/third-party/nprogress.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="utterances" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;repo&quot;:&quot;leithda&#x2F;leithda.github.io&quot;,&quot;issue_term&quot;:&quot;pathname&quot;,&quot;theme&quot;:&quot;github-light&quot;}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>

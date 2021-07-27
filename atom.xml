@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Leithda&#39;s Blog</title>
+  <icon>https://leithda.github.io/icon.png</icon>
+  
+  <link href="https://leithda.github.io/atom.xml" rel="self"/>
+  
+  <link href="https://leithda.github.io/"/>
+  <updated>2021-07-27T15:36:32.023Z</updated>
+  <id>https://leithda.github.io/</id>
+  
+  <author>
+    <name>Leithda</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Kafka集群搭建</title>
+    <link href="https://leithda.github.io/posts/4141878322.html"/>
+    <id>https://leithda.github.io/posts/4141878322.html</id>
+    <published>2021-07-27T13:10:00.000Z</published>
+    <updated>2021-07-27T15:36:32.023Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Kafka搭建集群&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="知识点" scheme="https://leithda.github.io/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
+    
+    
+    <category term="Kafka" scheme="https://leithda.github.io/tags/Kafka/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux安装Zookeeper</title>
+    <link href="https://leithda.github.io/posts/549757466.html"/>
+    <id>https://leithda.github.io/posts/549757466.html</id>
+    <published>2021-07-27T12:50:00.000Z</published>
+    <updated>2021-07-27T15:36:36.450Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Linux 安装 Zookeeper&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="软件安装" scheme="https://leithda.github.io/categories/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/"/>
+    
+    
+    <category term="Zookeeper" scheme="https://leithda.github.io/tags/Zookeeper/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux安装JDK</title>
+    <link href="https://leithda.github.io/posts/1441854962.html"/>
+    <id>https://leithda.github.io/posts/1441854962.html</id>
+    <published>2021-07-27T11:00:00.000Z</published>
+    <updated>2021-07-27T13:21:20.760Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Linux 安装 JDK&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="软件安装" scheme="https://leithda.github.io/categories/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/"/>
+    
+    
+    <category term="jdk" scheme="https://leithda.github.io/tags/jdk/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Docker安装MySQL</title>
+    <link href="https://leithda.github.io/posts/728095789.html"/>
+    <id>https://leithda.github.io/posts/728095789.html</id>
+    <published>2021-07-15T14:00:00.000Z</published>
+    <updated>2021-07-26T00:29:10.855Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;CentOS上使用Docker安装MySQL&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="软件安装" scheme="https://leithda.github.io/categories/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/"/>
+    
+    
+    <category term="MySQL" scheme="https://leithda.github.io/tags/MySQL/"/>
+    
+    <category term="Docker" scheme="https://leithda.github.io/tags/Docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Seata完成2PC分布式事务</title>
+    <link href="https://leithda.github.io/posts/3721150893.html"/>
+    <id>https://leithda.github.io/posts/3721150893.html</id>
+    <published>2021-07-15T12:00:00.000Z</published>
+    <updated>2021-07-26T00:29:10.852Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Seata 2PC 分布式事务&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="知识点" scheme="https://leithda.github.io/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
+    
+    
+    <category term="分布式事务" scheme="https://leithda.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/"/>
+    
+    <category term="2PC" scheme="https://leithda.github.io/tags/2PC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ShardingSphere读写分离</title>
+    <link href="https://leithda.github.io/posts/450540427.html"/>
+    <id>https://leithda.github.io/posts/450540427.html</id>
+    <published>2021-07-14T14:00:00.000Z</published>
+    <updated>2021-07-27T12:40:59.327Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;SpringBoot+ShardingSphere+MySQL读写分离&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="知识点" scheme="https://leithda.github.io/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
+    
+    
+    <category term="SpringBoot" scheme="https://leithda.github.io/tags/SpringBoot/"/>
+    
+    <category term="数据库" scheme="https://leithda.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>搭建源码调试环境</title>
+    <link href="https://leithda.github.io/posts/2366354889.html"/>
+    <id>https://leithda.github.io/posts/2366354889.html</id>
+    <published>2021-07-14T14:00:00.000Z</published>
+    <updated>2021-07-27T12:40:59.327Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;万丈高楼平地起，让我们开始Tomcat源码的探索之路吧~&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="源码" scheme="https://leithda.github.io/categories/%E6%BA%90%E7%A0%81/"/>
+    
+    <category term="Tomcat" scheme="https://leithda.github.io/categories/%E6%BA%90%E7%A0%81/Tomcat/"/>
+    
+    
+    <category term="源码" scheme="https://leithda.github.io/tags/%E6%BA%90%E7%A0%81/"/>
+    
+    <category term="Tomcat" scheme="https://leithda.github.io/tags/Tomcat/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>基于Docker搭建ELK</title>
+    <link href="https://leithda.github.io/posts/1290338254.html"/>
+    <id>https://leithda.github.io/posts/1290338254.html</id>
+    <published>2021-07-10T10:00:00.000Z</published>
+    <updated>2021-07-27T13:21:20.759Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;span id=&quot;more&quot;&gt;&lt;/span&gt;
+&lt;h1&gt;Docker搭建ELK&lt;/h1&gt;
+&lt;h2 id=&quot;&quot;&gt;&lt;a class=&quot;header-anchor&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="知识点" scheme="https://leithda.github.io/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>SpringBoot读写分离</title>
+    <link href="https://leithda.github.io/posts/4234153870.html"/>
+    <id>https://leithda.github.io/posts/4234153870.html</id>
+    <published>2021-07-09T12:00:00.000Z</published>
+    <updated>2021-07-26T00:29:10.854Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;SpringBoot + Mybatis + MySQL 读写分离&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="知识点" scheme="https://leithda.github.io/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
+    
+    
+    <category term="SpringBoot" scheme="https://leithda.github.io/tags/SpringBoot/"/>
+    
+    <category term="数据库" scheme="https://leithda.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>搭建基础服务器</title>
+    <link href="https://leithda.github.io/posts/2556627931.html"/>
+    <id>https://leithda.github.io/posts/2556627931.html</id>
+    <published>2021-07-08T14:00:00.000Z</published>
+    <updated>2021-07-27T12:50:33.217Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;由于后续要搞各种分布式的实验，迫切希望快速搭建服务器集群的方法，故整理了这篇文章，主要介绍如何搭建一个基础版的虚拟机并通过导入导出快速完成服务器集群的建设。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="知识点" scheme="https://leithda.github.io/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
+    
+    
+    <category term="Linux" scheme="https://leithda.github.io/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MySQL主备</title>
+    <link href="https://leithda.github.io/posts/2814237590.html"/>
+    <id>https://leithda.github.io/posts/2814237590.html</id>
+    <published>2021-07-07T14:30:00.000Z</published>
+    <updated>2021-07-26T00:29:10.852Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;MySQL的主从一般用于读写分离，主要是为了提高数据库的读写性能，提高并发能力，本章介绍如何通过Docker搭建MySQL主从结构&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="知识点" scheme="https://leithda.github.io/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
+    
+    
+    <category term="MySQL" scheme="https://leithda.github.io/tags/MySQL/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Nginx基础</title>
+    <link href="https://leithda.github.io/posts/2814237589.html"/>
+    <id>https://leithda.github.io/posts/2814237589.html</id>
+    <published>2021-07-07T13:30:00.000Z</published>
+    <updated>2021-07-07T15:00:30.000Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Nginx (“engine x”) 是一个高性能的 &lt;strong&gt;HTTP&lt;/strong&gt; 和 &lt;strong&gt;反向代理&lt;/strong&gt; 服务器，也是一个 IMAP/POP3/SMTP 代理服务器。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="知识点" scheme="https://leithda.github.io/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
+    
+    
+    <category term="Nginx" scheme="https://leithda.github.io/tags/Nginx/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis设计与实现笔记_简单动态字符串</title>
+    <link href="https://leithda.github.io/posts/1542299328.html"/>
+    <id>https://leithda.github.io/posts/1542299328.html</id>
+    <published>2021-06-21T14:40:00.000Z</published>
+    <updated>2021-07-07T14:32:37.089Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Reids没有使用C语言传统的字符串表示，而是定义了一种结构用于表示字符串，即简单动态字符串（Simple Dynamic String，SDS），并将SDS作为Redis默认字符串表示&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
+    
+    
+    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>进程与线程基本概念</title>
+    <link href="https://leithda.github.io/posts/1200304233.html"/>
+    <id>https://leithda.github.io/posts/1200304233.html</id>
+    <published>2021-06-15T15:00:00.000Z</published>
+    <updated>2021-06-21T14:40:56.120Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;本章主要讲述进程与线程的起源、区别与作用。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="Java" scheme="https://leithda.github.io/categories/Java/"/>
+    
+    <category term="并发" scheme="https://leithda.github.io/categories/Java/%E5%B9%B6%E5%8F%91/"/>
+    
+    
+    <category term="并发" scheme="https://leithda.github.io/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis开发与运维笔记_总结</title>
+    <link href="https://leithda.github.io/posts/2279241279.html"/>
+    <id>https://leithda.github.io/posts/2279241279.html</id>
+    <published>2021-06-03T14:25:00.000Z</published>
+    <updated>2021-06-07T13:32:45.118Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;至此，已经将《Redis开发与运维》一书中的大部分内容整理并学习完毕，这篇文章将按照书中章节目录进行归纳总结，加深记忆。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
+    
+    
+    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis开发与运维笔记-缓存设计</title>
+    <link href="https://leithda.github.io/posts/3358854259.html"/>
+    <id>https://leithda.github.io/posts/3358854259.html</id>
+    <published>2021-06-02T13:15:00.000Z</published>
+    <updated>2021-06-02T13:35:49.764Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;缓存能够有效地加速应用的读写速度，同时也可以降低后端负载，对日常应用的开发至关重要。但是将缓存加入应用架构后也会带来一些问题，本 章将针对这些问题介绍缓存使用技巧和设计方案&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
+    
+    
+    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis开发与运维笔记-集群</title>
+    <link href="https://leithda.github.io/posts/ddc0d24d.html"/>
+    <id>https://leithda.github.io/posts/ddc0d24d.html</id>
+    <published>2021-06-02T13:15:00.000Z</published>
+    <updated>2021-06-02T13:35:49.765Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Redis Cluster是Redis的分布式解决方案，在3.0版本正式推出，有效地解决了Redis分布式方面的需求。当遇到单机内存、并发、流量等瓶颈时，可以采用Cluster架构方案达到负载均衡的目的。&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="数据库" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    <category term="Redis" scheme="https://leithda.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/"/>
+    
+    
+    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis集群搭建(Redis5.0版)</title>
+    <link href="https://leithda.github.io/posts/1044596185.html"/>
+    <id>https://leithda.github.io/posts/1044596185.html</id>
+    <published>2021-05-30T04:30:00.000Z</published>
+    <updated>2021-07-07T14:32:37.090Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;在Redis5中redis-trib.rb的功能被集成到了redis-cli中，大大简化了redis的集群部署，加快了进群部署的速度，也方便后期维护与扩容。此篇文章参考&lt;a href=&quot;https://redis.io/topics/cluster-tutorial&quot;&gt;官方文档&lt;/a&gt;搭建Redis集群。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注：Redis版本应在5.0及以上。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="知识点" scheme="https://leithda.github.io/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
+    
+    
+    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis集群搭建(Redis3.0版)</title>
+    <link href="https://leithda.github.io/posts/778231993.html"/>
+    <id>https://leithda.github.io/posts/778231993.html</id>
+    <published>2021-05-29T04:50:00.000Z</published>
+    <updated>2021-07-07T14:32:37.090Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;Redis Cluster是Redis的分布式解决方案，在3.0版本正式推出，有效地解决了Redis分布式方面的需求。在Redis5.0中redis-trib.rb的功能被集成到了redis-cli中。在此之前，需要使用redis-cli客户端或者redis-trib.rb进行redis集群的搭建.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注：使用redis-trib.rb方式需要有Ruby运行环境&lt;/strong&gt;&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="知识点" scheme="https://leithda.github.io/categories/%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
+    
+    
+    <category term="Redis" scheme="https://leithda.github.io/tags/Redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Markdown-数学公式</title>
+    <link href="https://leithda.github.io/posts/2665394633.html"/>
+    <id>https://leithda.github.io/posts/2665394633.html</id>
+    <published>2021-05-27T11:10:00.000Z</published>
+    <updated>2021-05-27T14:52:54.054Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
+&lt;p&gt;mathjax是一个开源的数学公式渲染器，通过特定语法可以输出不同的数学公式&lt;/p&gt;
+
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="工具" scheme="https://leithda.github.io/categories/%E5%B7%A5%E5%85%B7/"/>
+    
+    <category term="日常" scheme="https://leithda.github.io/categories/%E5%B7%A5%E5%85%B7/%E6%97%A5%E5%B8%B8/"/>
+    
+    <category term="Markdown" scheme="https://leithda.github.io/categories/%E5%B7%A5%E5%85%B7/%E6%97%A5%E5%B8%B8/Markdown/"/>
+    
+    
+    <category term="Markdown" scheme="https://leithda.github.io/tags/Markdown/"/>
+    
+  </entry>
+  
+</feed>

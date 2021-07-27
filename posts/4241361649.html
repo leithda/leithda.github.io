@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css">
+  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;leithda.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:&quot;enable&quot;,&quot;bookmark&quot;:{&quot;enable&quot;:&quot;enable&quot;,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:&quot;utterances&quot;,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null,&quot;activeClass&quot;:&quot;utterances&quot;},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;},&quot;path&quot;:&quot;&#x2F;search.xml&quot;,&quot;localsearch&quot;:{&quot;enable&quot;:true,&quot;trigger&quot;:&quot;auto&quot;,&quot;top_n_per_article&quot;:1,&quot;unescape&quot;:false,&quot;preload&quot;:false}}</script>
+<meta name="description" content="Redis提供了5种数据结构，理解每种数据结构的特点对于Redis开发运维非常重要，同时掌握Redis的单线程命令处理机制，会使数据结构和命令的选择事半功倍">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis开发与运维笔记_API的理解和使用">
+<meta property="og:url" content="https://leithda.github.io/posts/4241361649.html">
+<meta property="og:site_name" content="Leithda&#39;s Blog">
+<meta property="og:description" content="Redis提供了5种数据结构，理解每种数据结构的特点对于Redis开发运维非常重要，同时掌握Redis的单线程命令处理机制，会使数据结构和命令的选择事半功倍">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://leithda.github.io/posts/4241361649/redis%E7%9A%84%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png">
+<meta property="og:image" content="https://leithda.github.io/posts/4241361649/Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E5%86%85%E9%83%A8%E7%BC%96%E7%A0%81.png">
+<meta property="article:published_time" content="2021-05-25T14:25:00.000Z">
+<meta property="article:modified_time" content="2021-06-01T12:39:25.002Z">
+<meta property="article:author" content="Leithda">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://leithda.github.io/posts/4241361649/redis%E7%9A%84%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png">
+
+
+<link rel="canonical" href="https://leithda.github.io/posts/4241361649.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;leithda.github.io&#x2F;posts&#x2F;4241361649.html&quot;,&quot;path&quot;:&quot;posts&#x2F;4241361649.html&quot;,&quot;title&quot;:&quot;Redis开发与运维笔记_API的理解和使用&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>Redis开发与运维笔记_API的理解和使用 | Leithda's Blog</title><script src="/js/config.js"></script>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?3540567b868217169a5241159ab1e032"></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Leithda's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Leithda's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-guide"><a href="/guide/" rel="section"><i class="fa fa-bars fa-fw"></i>导航</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">API的理解和使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%84%E5%A4%87"><span class="nav-number">1.1.</span> <span class="nav-text">预备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E5%91%BD%E4%BB%A4"><span class="nav-number">1.1.1.</span> <span class="nav-text">全局命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E5%86%85%E9%83%A8%E7%BC%96%E7%A0%81"><span class="nav-number">1.1.2.</span> <span class="nav-text">数据结构和内部编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%9E%B6%E6%9E%84"><span class="nav-number">1.1.3.</span> <span class="nav-text">单线程架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">单线程模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8D%95%E7%BA%BF%E7%A8%8B%E8%BF%99%E4%B9%88%E5%BF%AB"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">为什么单线程这么快</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">1.2.</span> <span class="nav-text">字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4"><span class="nav-number">1.2.1.</span> <span class="nav-text">命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">不常用命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E9%83%A8%E7%BC%96%E7%A0%81"><span class="nav-number">1.2.2.</span> <span class="nav-text">内部编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.2.3.</span> <span class="nav-text">典型使用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%88%E5%B8%8C"><span class="nav-number">1.3.</span> <span class="nav-text">哈希</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4-2"><span class="nav-number">1.3.1.</span> <span class="nav-text">命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%97%E8%A1%A8"><span class="nav-number">1.4.</span> <span class="nav-text">列表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4-3"><span class="nav-number">1.4.1.</span> <span class="nav-text">命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">添加</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5"><span class="nav-number">1.4.1.2.</span> <span class="nav-text">查</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4"><span class="nav-number">1.4.1.3.</span> <span class="nav-text">删除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9"><span class="nav-number">1.4.1.4.</span> <span class="nav-text">修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%BB%E5%A1%9E%E6%93%8D%E4%BD%9C"><span class="nav-number">1.4.1.5.</span> <span class="nav-text">阻塞操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E9%83%A8%E7%BC%96%E7%A0%81-2"><span class="nav-number">1.4.2.</span> <span class="nav-text">内部编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.4.3.</span> <span class="nav-text">使用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E5%90%88"><span class="nav-number">1.5.</span> <span class="nav-text">集合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4-4"><span class="nav-number">1.5.1.</span> <span class="nav-text">命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%86%E5%90%88%E5%86%85%E6%93%8D%E4%BD%9C"><span class="nav-number">1.5.1.1.</span> <span class="nav-text">集合内操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%86%E5%90%88%E9%97%B4%E6%93%8D%E4%BD%9C"><span class="nav-number">1.5.1.2.</span> <span class="nav-text">集合间操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E9%83%A8%E7%BC%96%E7%A0%81-3"><span class="nav-number">1.5.2.</span> <span class="nav-text">内部编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF-2"><span class="nav-number">1.5.3.</span> <span class="nav-text">使用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88"><span class="nav-number">1.6.</span> <span class="nav-text">有序集合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4-5"><span class="nav-number">1.6.1.</span> <span class="nav-text">命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%86%E5%90%88%E5%86%85"><span class="nav-number">1.6.1.1.</span> <span class="nav-text">集合内</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%86%E5%90%88%E9%97%B4"><span class="nav-number">1.6.1.2.</span> <span class="nav-text">集合间</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E9%83%A8%E7%BC%96%E7%A0%81-4"><span class="nav-number">1.6.2.</span> <span class="nav-text">内部编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF-3"><span class="nav-number">1.6.3.</span> <span class="nav-text">使用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%94%AE%E7%AE%A1%E7%90%86"><span class="nav-number">1.7.</span> <span class="nav-text">键管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E4%B8%AA%E9%94%AE%E7%AE%A1%E7%90%86"><span class="nav-number">1.7.1.</span> <span class="nav-text">单个键管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E9%94%AE"><span class="nav-number">1.7.2.</span> <span class="nav-text">遍历键</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%A8%E9%87%8F%E9%81%8D%E5%8E%86%E9%94%AE"><span class="nav-number">1.7.2.1.</span> <span class="nav-text">全量遍历键</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B8%90%E8%BF%9B%E5%BC%8F%E9%81%8D%E5%8E%86"><span class="nav-number">1.7.2.2.</span> <span class="nav-text">渐进式遍历</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86"><span class="nav-number">1.7.3.</span> <span class="nav-text">数据库管理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E8%8A%82%E5%86%85%E5%AE%B9%E5%9B%9E%E9%A1%BE"><span class="nav-number">1.8.</span> <span class="nav-text">本节内容回顾</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Leithda"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">Leithda</p>
+  <div class="site-description" itemprop="description">Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="sidebar-button site-overview-item animated">
+    <a onclick="Chatra('openChat', true);"><i class="fa fa-comment"></i>
+    Chat
+  </a>
+  </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/leithda" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:leithda@163.com" title="邮箱 → mailto:leithda@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>邮箱</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.yuque.com/leithda" title="语雀 → https:&#x2F;&#x2F;www.yuque.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>语雀</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dbreset.github.io/" title="https:&#x2F;&#x2F;dbreset.github.io" rel="noopener" target="_blank">DbReset</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://leithda.github.io/posts/4241361649.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Leithda">
+      <meta itemprop="description" content="Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leithda's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis开发与运维笔记_API的理解和使用
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-05-25 22:25:00" itemprop="dateCreated datePublished" datetime="2021-05-25T22:25:00+08:00">2021-05-25</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-06-01 20:39:25" itemprop="dateModified" datetime="2021-06-01T20:39:25+08:00">2021-06-01</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>9.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote class="blockquote-center">
+<p>Redis提供了5种数据结构，理解每种数据结构的特点对于Redis开发运维非常重要，同时掌握Redis的单线程命令处理机制，会使数据结构和命令的选择事半功倍</p>
+
+</blockquote>
+<span id="more"></span>
+<p>参考书籍：<a target="_blank" rel="noopener" href="https://book.douban.com/subject/26971561/">Redis开发与运维</a></p>
+<hr>
+<h1>API的理解和使用</h1>
+<h2 id="预备"><a class="header-anchor" href="#预备"></a>预备</h2>
+<h3 id="全局命令"><a class="header-anchor" href="#全局命令"></a>全局命令</h3>
+<ol>
+<li>查看所有键</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keys *</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>键总数</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dbsize</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>dbsize</code>命令直接获取Redis内置的键总数，复杂度是<strong>O(1)</strong>。<code>keys</code>会获取所有键，复杂度是<strong>O(n)</strong>,当Redis中保存大量键时，线上环境应禁止使用。</p>
+</blockquote>
+<ol start="3">
+<li>检查键是否存在</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exists key</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>删除键</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">del key [key ...]</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>键过期</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expire key seconds</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>ttl</code>命令会返回键的过期时间。返回结果有以下几种：</p>
+<ul>
+<li><strong>大于等于0的整数</strong>：键剩余的过期时间</li>
+<li><strong>-1</strong>：键没有设置过期时间</li>
+<li><strong>-2</strong>：键不存在</li>
+</ul>
+</blockquote>
+<ol start="6">
+<li>键的数据结构类型</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span> key</span><br></pre></td></tr></table></figure>
+<h3 id="数据结构和内部编码"><a class="header-anchor" href="#数据结构和内部编码"></a>数据结构和内部编码</h3>
+<blockquote>
+<p>type命令返回的是当前键的数据结构，它们分别是：<code>string、hash、list、set、zset</code><br>
+实际上，每种数据结构都有自己底层的内部编码实现。<br>
+可以使用<code>object encoding key</code>命令获取当前键使用的内部编码。</p>
+</blockquote>
+<img src="/posts/4241361649/redis%E7%9A%84%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png" class="" title="redis的五种数据结构">
+<img src="/posts/4241361649/Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E5%86%85%E9%83%A8%E7%BC%96%E7%A0%81.png" class="" title="Redis数据结构和内部编码">
+<p>Redis这样设计有两点好处：1）改进内部编码时，对外的数据结构和命令没有影响。2）不同的内部编码具有不同的优势。如:ziplist比较节省内存。</p>
+<h3 id="单线程架构"><a class="header-anchor" href="#单线程架构"></a>单线程架构</h3>
+<blockquote>
+<p>Redis使用了单线程架构和<strong>I/O多路复用模型</strong><sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>来实现高性能的内存数据库服务</p>
+</blockquote>
+<h4 id="单线程模型"><a class="header-anchor" href="#单线程模型"></a>单线程模型</h4>
+<p>Redis使用单线程处理命令，所以不会存在两条命令同时执行的情况，避免了并发问题。</p>
+<h4 id="为什么单线程这么快"><a class="header-anchor" href="#为什么单线程这么快"></a>为什么单线程这么快</h4>
+<p>通常来讲，单线程处理能力要比多线程差，为什么Redis这么快？</p>
+<ol>
+<li>纯内存访问</li>
+<li>非阻塞I/O，Redis使用<strong>epoll</strong><sup class="footnote-ref"><a href="#fn2" id="fnref2">[2]</a></sup>作为I/O多路复用技术的实现</li>
+<li>单线程避免了线程切换和竞争产生的消耗</li>
+</ol>
+<blockquote>
+<p>单线程简化了数据结构和算法的实现，避免了线程切换和线程竞争的消耗。但是存在如下问题：单线程模型对每条命令的执行时间是有要求的。如果某个命令执行时间过长，会造成其他命令的阻塞。</p>
+</blockquote>
+<h2 id="字符串"><a class="header-anchor" href="#字符串"></a>字符串</h2>
+<blockquote>
+<p>字符串是Redis最基本的数据结构，字符串类型的值实际可以是字符串(简单的字符串、复杂的字符串[如Json、xml等]、数字[整数、浮点数]、甚至是二进制[图片、音频、视频])，但是值最大不能超过512M</p>
+</blockquote>
+<h3 id="命令"><a class="header-anchor" href="#命令"></a>命令</h3>
+<h4 id="常用命令"><a class="header-anchor" href="#常用命令"></a>常用命令</h4>
+<ol>
+<li>设置值</li>
+</ol>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SET key value [expiration EX seconds|PX milliseconds] [NX|XX]</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>EX seconds</strong>：秒级过期时间，功能等同<code>SETEX key seconds value</code>命令</li>
+<li><strong>PX milliseconds</strong>：毫秒级过期时间</li>
+<li><strong>NX</strong>：键不存在则设置成功，功能等同<code>SETNX key value</code>命令</li>
+<li><strong>XX</strong>：键存在则设置成功</li>
+</ul>
+<blockquote>
+<p><code>setnx</code>在多个客户端执行时，只有一个客户端才能成功，可以作为分布式锁的一种实现方式。<a target="_blank" rel="noopener" href="https://redis.io/topics/distlock">Redis官方方案</a>。</p>
+</blockquote>
+<ol start="2">
+<li>获取值</li>
+</ol>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET key</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果键不存在，返回<code>nil</code></p>
+</blockquote>
+<ol start="3">
+<li>批量设置值</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MSET key value [key value ...]</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>批量获取值</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MGET key [key ...]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>批量操作可以节省网络开销时间。</p>
+</blockquote>
+<ol start="5">
+<li>计数</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">INCR key</span><br><span class="line">INCRBY key increment</span><br><span class="line">DECR key</span><br><span class="line">DECRBY key decrement</span><br><span class="line">INCRBYFLOAT key increment</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>编程语言中常用CAS机制实现计数功能，存在一定CPU开销。Redis使用单线程机制则不存在这个问题</p>
+</blockquote>
+<h4 id="不常用命令"><a class="header-anchor" href="#不常用命令"></a>不常用命令</h4>
+<ol>
+<li>追加值 <code>APPEND key value</code></li>
+<li>字符串长度 <code>STRLEN key</code></li>
+<li>设置并返回值 <code>GETSET key value</code></li>
+<li>设置指定位置的字符 <code>SETRANGE key offset value</code></li>
+<li>获取部分字符串 <code>GETRANGE key start end</code></li>
+</ol>
+<h3 id="内部编码"><a class="header-anchor" href="#内部编码"></a>内部编码</h3>
+<blockquote>
+<p>字符串的内部编码有三种：</p>
+<ol>
+<li><strong>int</strong>：8个字节的长整型</li>
+<li><strong>embstr</strong>：小于等于39个字节的字符串</li>
+<li><strong>raw</strong>：大于39个字节的字符串</li>
+</ol>
+</blockquote>
+<h3 id="典型使用场景"><a class="header-anchor" href="#典型使用场景"></a>典型使用场景</h3>
+<ol>
+<li>缓存功能</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">UserInfo <span class="title">getUserInfo</span><span class="params">(<span class="keyword">long</span> id)</span></span>&#123;</span><br><span class="line">  String userInfoKey = <span class="string">&quot;user:info&quot;</span> + id;</span><br><span class="line">  String value = redis.get(userInfoKey);</span><br><span class="line">  UserInfo userInfo;</span><br><span class="line">  <span class="keyword">if</span>(value != <span class="keyword">null</span>)&#123;</span><br><span class="line">    userInfo = deserialize(value);</span><br><span class="line">  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    userInfo = mysql.get(id);</span><br><span class="line">    <span class="keyword">if</span>(userInfo != <span class="keyword">null</span>)&#123;</span><br><span class="line">      redis.setex(userInfoKey, <span class="number">3600</span>, serialize(userInfo));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> userInfo;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>计数</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">incrVideoCount</span><span class="params">(<span class="keyword">long</span> id)</span></span>&#123;</span><br><span class="line">  key = <span class="string">&quot;video:playCount:&quot;</span> + id;</span><br><span class="line">  <span class="keyword">return</span> redis.incr(key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>共享Session</li>
+</ol>
+<p>将Session保存在Redis实现多端共享。</p>
+<ol start="4">
+<li>限速</li>
+</ol>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 60s内短信发送不得超过5次</span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">phoneVerify</span><span class="params">(String phoneNumber)</span></span>&#123;</span><br><span class="line">  key = <span class="string">&quot;shortMsg:limit:&quot;</span> + phoneNumber;</span><br><span class="line">  isExists = redis.set(key,<span class="number">1</span>,<span class="string">&quot;EX 60&quot;</span>,<span class="string">&quot;NX&quot;</span>);</span><br><span class="line">  <span class="keyword">if</span>(isExists != <span class="keyword">null</span> || redis.incr(key) &lt;= <span class="number">5</span>)&#123;</span><br><span class="line">    <span class="comment">// 通过 </span></span><br><span class="line">  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="comment">// 限速 </span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="哈希"><a class="header-anchor" href="#哈希"></a>哈希</h2>
+<h3 id="命令-2"><a class="header-anchor" href="#命令-2"></a>命令</h3>
+<ol>
+<li>设置值</li>
+<li>获取值 <code>HGET key field</code></li>
+<li>删除field  <code>HDEL key field [field ...]</code></li>
+<li>计算field个数 <code>HLEN key</code></li>
+<li>批量设置或获取field-value</li>
+</ol>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HMGET key field [field ...]</span><br><span class="line">HMSET key field value [field value ...]</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>判断field是否存在 <code>HEXISTS key field</code></li>
+<li>获取所有的field <code>HKEYS key</code></li>
+<li>获取所有的value <code>HVALS key</code></li>
+<li>获取所有的field-value  <code>HGETALL key</code></li>
+<li>hincrby hincrbyfloat</li>
+</ol>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HINCRBY key field increment</span><br><span class="line">HINCRBYFLOAT key field increment</span><br></pre></td></tr></table></figure>
+<ol start="11">
+<li>计算value的字符串长度 <code>HSTRLEN key field</code></li>
+</ol>
+<h2 id="列表"><a class="header-anchor" href="#列表"></a>列表</h2>
+<h3 id="命令-3"><a class="header-anchor" href="#命令-3"></a>命令</h3>
+<table>
+<thead>
+<tr>
+<th>操作类型</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>添加</td>
+<td><code>rpush</code>、<code>rpushx</code>、<code>lpush</code>、<code>lpushx</code>、<code>linsert</code></td>
+</tr>
+<tr>
+<td>查</td>
+<td><code>lrange</code>、<code>lindex</code>、<code>llen</code></td>
+</tr>
+<tr>
+<td>删除</td>
+<td><code>lpop</code>、<code>rpop</code>、<code>lrem</code>、<code>ltrim</code></td>
+</tr>
+<tr>
+<td>修改</td>
+<td><code>lset</code></td>
+</tr>
+<tr>
+<td>阻塞操作</td>
+<td><code>blpop</code>、<code>brpop</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="添加"><a class="header-anchor" href="#添加"></a>添加</h4>
+<ul>
+<li>从列表右侧添加：<code> RPUSH key value [value ...]</code></li>
+<li>当列表存在时，从右侧添加：<code>RPUSHX key value</code></li>
+<li>在首个指定元素pivot(前/后)添加元素:<code>LINSERT key BEFORE|AFTER pivot value</code></li>
+</ul>
+<h4 id="查"><a class="header-anchor" href="#查"></a>查</h4>
+<ul>
+<li>获取指定范围内的列表元素:<code>LRANGE key start stop</code></li>
+<li>根据索引获取元素:<code>LINDEX key index</code></li>
+<li>获取列表长度:<code>LLEN key</code></li>
+</ul>
+<h4 id="删除"><a class="header-anchor" href="#删除"></a>删除</h4>
+<ul>
+<li>从列表左侧弹出元素:<code>LPOP key</code></li>
+<li>删除指定元素:<code>LREM key count value</code>
+<ul>
+<li><strong>count = 0</strong>:删除所有等于指定值的元素</li>
+<li><strong>count &lt; 0</strong>:从右到左删除count个元素</li>
+<li><strong>count &gt; 0</strong>:从左到右删除count个元素</li>
+</ul>
+</li>
+<li>删除指定范围之外的元素:<code>LTRIM key start stop</code></li>
+</ul>
+<h4 id="修改"><a class="header-anchor" href="#修改"></a>修改</h4>
+<ul>
+<li>修改指定索引的元素:<code>LSET key index value</code></li>
+</ul>
+<h4 id="阻塞操作"><a class="header-anchor" href="#阻塞操作"></a>阻塞操作</h4>
+<ul>
+<li><code>BLPOP key [key ...] timeout</code></li>
+<li><code>BRPOP key [key ...] timeout</code>
+<ul>
+<li><code>lpop/rpop</code>的阻塞版本，当列表内无元素时，客户端会阻塞等待，直到有元素可以弹出</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<ul>
+<li>如果是多个键，brpop会从左到右遍历键，一旦有一个键可以弹出元素，客户端立即返回。</li>
+<li>多个客户端阻塞获取同一个key，最先执行获取的最先获取到</li>
+</ul>
+</blockquote>
+<h3 id="内部编码-2"><a class="header-anchor" href="#内部编码-2"></a>内部编码</h3>
+<p>列表类型的内部编码有两种：</p>
+<ul>
+<li><code>ziplist(压缩列表)</code>：元素个数小于<code>list-max-ziplist-entries(512)</code>,同时列表中每个元素的值都小于<code>list-max-ziplist-value(64字节)</code>，Redis会使用<code>ziplist</code>作为<code>list</code>的内部编码来减少内存的使用。</li>
+<li><code>linkedlist(链表)</code>: 不满足ziplist的条件时，使用<code>linkedlist</code>作为<code>list</code>的内部编码实现</li>
+</ul>
+<blockquote>
+<p>Redis3.2版本提供了quicklist内部编码，简单地说它是以一个ziplist为节点的linkedlist，它结合了ziplist和linkedlist两者的优势，为列表类型提供了一 种更为优秀的内部编码实现，它的设计原理可以参考Redis的另一个作者 <strong>Matt Stancliff的博客</strong><sup class="footnote-ref"><a href="#fn3" id="fnref3">[3]</a></sup></p>
+</blockquote>
+<h3 id="使用场景"><a class="header-anchor" href="#使用场景"></a>使用场景</h3>
+<ol>
+<li>
+<p>消息队列</p>
+</li>
+<li>
+<p>文章列表</p>
+<ol>
+<li>文章有三个属性：title、timestamp、content</li>
+</ol>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hmset acticle:1 title xx timestamp 1476536196 content xxxx</span><br><span class="line">...</span><br><span class="line">hmset acticle:k title yy timestamp 1476512536 content yyyy</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>添加文章，key是<code>user:&#123;id&#125;:articles</code></li>
+</ol>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lpush user:1:acticles article:1 article:3</span><br><span class="line">...</span><br><span class="line">lpush user:k:acticles article:5</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>分页获取文章,获取id为1的前10篇文章</li>
+</ol>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">articles = lrange user:1:articles 0 9</span><br><span class="line"><span class="keyword">for</span> article <span class="keyword">in</span> &#123;articles&#125;</span><br><span class="line">  hgetall &#123;article&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<blockquote>
+<ul>
+<li>分页获取文章个数过多时，多次hgetall可能存在性能问题</li>
+<li><code>lrange</code> 在列表两端时性能较好，列表数据过大时，可以考虑做二次拆分减小列表长度</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>列表使用场景可参考以下口诀：</p>
+<ul>
+<li>lpush+lpop=Stack(栈)</li>
+<li>lpush+rpop=Queue(队列)</li>
+<li>lpsh+ltrim=Capped Collection(有限集合)</li>
+<li>lpush+brpop=Message Queue(消息队列)</li>
+</ul>
+</blockquote>
+<h2 id="集合"><a class="header-anchor" href="#集合"></a>集合</h2>
+<h3 id="命令-4"><a class="header-anchor" href="#命令-4"></a>命令</h3>
+<h4 id="集合内操作"><a class="header-anchor" href="#集合内操作"></a>集合内操作</h4>
+<ol>
+<li>添加元素 <code>SADD key member [member ...]</code></li>
+<li>删除元素 <code>SREM key member [member ...]</code></li>
+<li>计算元素个数 <code>SCARD key</code></li>
+<li>判断元素是否在集合中 <code>SISMEMBER key member</code></li>
+<li>随机从集合中返回指定个数元素 <code>SRANDMEMBER key [count]</code></li>
+<li>从集合随机弹出元素 <code>SPOP key [count]</code></li>
+<li>获取所有元素 <code>SMEMBERS key</code>
+<ul>
+<li>元素过多存在阻塞可能，可以使用<code>SSCAN key cursor [MATCH pattern] [COUNT count]</code>来完成</li>
+</ul>
+</li>
+</ol>
+<h4 id="集合间操作"><a class="header-anchor" href="#集合间操作"></a>集合间操作</h4>
+<ol>
+<li>求多个集合的交集: <code>SINTER key [key ...]</code></li>
+<li>求多个集合的并集: <code>SUINON key [key ...]</code></li>
+<li>求多个集合的差集: <code>SDIFF key [key ...]</code></li>
+<li>将交集、并集、差集的结果保存: <code>SINTERSTORE/SUINONSTORE/SDIFFSTORE destination key [key ...]</code></li>
+</ol>
+<h3 id="内部编码-3"><a class="header-anchor" href="#内部编码-3"></a>内部编码</h3>
+<ul>
+<li><code>intset(整数集合)</code>: 集合中元素为整数且个数小于<code>set-max-intset-entries(512)</code>时</li>
+<li><code>hashtable(哈希表)</code></li>
+</ul>
+<h3 id="使用场景-2"><a class="header-anchor" href="#使用场景-2"></a>使用场景</h3>
+<p>集合类型比较经典的使用场景是标签(tag)。</p>
+<ol>
+<li>给用户添加标签</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sadd user:1:tags tag1 tag2 tag5</span><br><span class="line">sadd user:2:tags tag2 tag3 tag5</span><br><span class="line">...</span><br><span class="line">sadd user:k:tags tag1 tag2 tag4</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>给标签添加用户</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sadd tag1:users user:1 user:3</span><br><span class="line">sadd tag2:users user:1 user:2 user:3</span><br><span class="line">...</span><br><span class="line">sadd tagk:users user:1 user:2</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>用户和标签的关系应该在一个事务内执行。</p>
+</blockquote>
+<ol start="3">
+<li>删除用户下的标签</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">srem user:1:tags tag1 tag5</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>删除标签下的用户</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">srem tag1:users user:1</span><br><span class="line">srem tag5:users user:1</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>计算用户共同感兴趣的标签</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sinter user:1:tags user:2:tags</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>集合使用场景可以按照如下方法判断：</p>
+<ul>
+<li>sadd=Tagging(标签)</li>
+<li>spop/srandmember=Random item(生成随机数，比如抽奖)</li>
+<li>sadd+sinter=Social Graph(社交需求)</li>
+</ul>
+</blockquote>
+<h2 id="有序集合"><a class="header-anchor" href="#有序集合"></a>有序集合</h2>
+<blockquote>
+<p>和集合不同是，Sorted Set为每个元素设置一个<code>score</code>作为排序的依据。</p>
+</blockquote>
+<blockquote>
+<p>列表、集合和有序集合的区别：</p>
+</blockquote>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th>数据结构</th>
+<th>是否允许重复</th>
+<th>是否有序</th>
+<th>有序实现方式</th>
+<th>应用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>列表</td>
+<td>是</td>
+<td>是</td>
+<td>索引下标</td>
+<td>时间轴、消息队列等</td>
+</tr>
+<tr>
+<td>集合</td>
+<td>否</td>
+<td>否</td>
+<td>无</td>
+<td>标签、社交等</td>
+</tr>
+<tr>
+<td>有序集合</td>
+<td>否</td>
+<td>是</td>
+<td>分值</td>
+<td>排行榜系统、社交等</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<h3 id="命令-5"><a class="header-anchor" href="#命令-5"></a>命令</h3>
+<h4 id="集合内"><a class="header-anchor" href="#集合内"></a>集合内</h4>
+<ol>
+<li>添加成员 <code>zadd key score member [score member ...]</code></li>
+<li>计算成员个数 <code>zcard key</code></li>
+<li>计算某元素分数 <code>zscore key member</code></li>
+<li>计算成员的排名</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">zrank key member</span><br><span class="line">zrevrank key member</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>删除成员 <code>zrem key member [member ...]</code></li>
+<li>增加成员的分数 <code>zincrby key increment member</code></li>
+<li>返回指定排名范围的成员</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">zrange key start end [withscores] <span class="comment"># 从低到高</span></span><br><span class="line">zrevrange key start end [withscores]  <span class="comment"># 从高到低</span></span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>返回指定分数范围的成员</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">zrangebyscore key min max [withscores] [<span class="built_in">limit</span> offset count] <span class="comment"># 从低到高</span></span><br><span class="line">zrevrangebyscore key max min [withscores] [<span class="built_in">limit</span> offset count]  <span class="comment"># 从高到低</span></span><br></pre></td></tr></table></figure>
+<ol start="9">
+<li>返回指定分数范围成员个数 <code>zcount key min max</code></li>
+<li>删除指定排名内的升序元素 <code>zremrangebyrank key start end</code></li>
+<li>删除指定分数范围的成员 <code>zremrangebyscore key min max</code></li>
+</ol>
+<h4 id="集合间"><a class="header-anchor" href="#集合间"></a>集合间</h4>
+<ol>
+<li>
+<p>交集 <code>zinterstore destination numkeys key [key ...] [weights weight [weight ...]] [aggregate sum|min|max]</code></p>
+<ul>
+<li><strong>destination</strong>:交集计算结果保存到这个键</li>
+<li><strong>numkeys</strong>:需要做交集计算键的个数</li>
+<li><strong>key[key…]</strong>:需要做交集计算的键</li>
+<li><strong>weights weight[weight…]</strong>:每个键的权重，在做交集计算时，每个键中的每个member会将自己分数乘以这个权重，每个键的权重默认是1</li>
+<li><strong>aggregate sum|min|max</strong>:计算成员交集后，分值可以按照sum(和)、 min(最小值)、max(最大值)做汇总，默认值是sum</li>
+</ul>
+</li>
+<li>
+<p>并集 <code>zunionstore destination numkeys key [key ...] [weights weight [weight ...]] [aggregate sum|min|max]</code></p>
+</li>
+</ol>
+<ul>
+<li>参数与交集参数一致。</li>
+</ul>
+<h3 id="内部编码-4"><a class="header-anchor" href="#内部编码-4"></a>内部编码</h3>
+<ul>
+<li><code>ziplist(压缩列表)</code></li>
+<li><code>skiplist(跳跃表)</code></li>
+</ul>
+<h3 id="使用场景-3"><a class="header-anchor" href="#使用场景-3"></a>使用场景</h3>
+<p>排序集合典型的应用场景就是排行榜系统。例如视频网站需要对用户上传的视频做排行榜，榜单的维度可能是多个方面的:按照时间、按照播放数量、按照获得的赞数。</p>
+<ol>
+<li>添加用户赞数</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">zadd user:ranking:2016_03_15 mike 3 <span class="comment"># mike 上传视频 获得了3个赞</span></span><br><span class="line">zincrby user:ranking:2016_03_15 mike 1 <span class="comment"># mike的视频后续又获得了一个赞</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>取消用户赞数</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zrem user:ranking:2016_03_15 mike <span class="comment"># 用户mike视频注销了</span></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>展示获取赞数最多的十个用户</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zrevrangebyrank user:ranking:2016_03_15 0 9</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>展示用户信息以及用户分数</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hgetall user:info:tom</span><br><span class="line">zscore user:ranking:2016_03_15 tom </span><br><span class="line">zrank user:ranking:2016_03_15 tom</span><br></pre></td></tr></table></figure>
+<h2 id="键管理"><a class="header-anchor" href="#键管理"></a>键管理</h2>
+<h3 id="单个键管理"><a class="header-anchor" href="#单个键管理"></a>单个键管理</h3>
+<ol>
+<li>键重命名 <code>rename key newkey</code></li>
+</ol>
+<ul>
+<li>键的新名称存在时，值会被覆盖，可以使用<code>renamenx key newkey</code>命令避免</li>
+<li>重命名期间会执行<code>del</code>命令删除旧的键，当键对应的值比较大时存在阻塞风险</li>
+</ul>
+<ol start="2">
+<li>随机返回一个键 <code>randomkey</code></li>
+<li>键过期<br>
+除了expire、ttl命令以外，Redis还提供了 expireat、pexpire、pexpireat、pttl、persist等一系列命令</li>
+</ol>
+<ul>
+<li><strong>expire key seconds</strong>:键在seconds秒后过期</li>
+<li><strong>expireat key timestamp</strong>:键在秒级时间戳timestamp后过期</li>
+<li><strong>pttl</strong>: 查询键的剩余时间(毫秒级)</li>
+<li><strong>pexpire key milliseconds</strong>:键在milliseconds毫秒后过期</li>
+<li><strong>pexpireat key milliseconds-timestamp</strong>键在毫秒级时间戳timestamp后过期</li>
+<li>关于Redis相关过期命令，需要注意以下几点：
+<ul>
+<li>如果expire key的键不存在，返回结果为0</li>
+<li>如果过期时间为负值，键会立即被删除，犹如使用del命令一样</li>
+<li>persist命令可以将键的过期时间清除</li>
+<li>对于字符串类型键，执行set命令会去掉过期时间，这个问题很容易在开发中被忽视</li>
+<li>Redis不支持二级数据结构(例如哈希、列表)内部元素的过期功能</li>
+<li>setex命令作为set+expire的组合，不但是原子执行，同时减少了一次网络通讯的时间</li>
+</ul>
+</li>
+</ul>
+<ol start="4">
+<li>迁移键</li>
+</ol>
+<ul>
+<li>move <code>move key db</code></li>
+<li>dump+restore
+<ul>
+<li>在源Redis上，执行<code>dump key</code>将对应键值序列化，格式采用RDB格式</li>
+<li>在目标Redis上，restore命令将上面序列化的值进行复原，其中ttl参数代表过期时间，如果ttl=0代表没有过期时间</li>
+<li>整个过程非原子操作。且开启了两个客户端分别进行操作</li>
+</ul>
+</li>
+<li>migrate <code>migrate host port key|&quot;&quot; destination-db timeout [copy] [replace] [keys key [key ...]]</code>
+<ul>
+<li><strong>host</strong>:目标Redis的IP地址</li>
+<li><strong>port</strong>:目标Redis的端口</li>
+<li><strong>key|“”</strong>:Redis3.0.6后，支持迁移多个键，此处填<code>&quot;&quot;</code></li>
+<li><strong>destination-db</strong>:目标Redis的数据库索引</li>
+<li><strong>timeout</strong>:迁移的超时时间(单位为毫秒)</li>
+<li><strong>[copy]</strong>:如果添加此选项，迁移后并不删除源键</li>
+<li><strong>[replace]</strong>:如果添加此选项，migrate不管目标Redis是否存在该键都会 正常迁移进行数据覆盖</li>
+<li><strong>[keys key[key…]]</strong>:迁移多个键，例如要迁移key1、key2、key3，此处填 写<code>keys key1 key2 key3</code></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>move、dump+restore、migrate三个命令比较</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用域</th>
+<th>原子性</th>
+<th>支持多个键</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>move</td>
+<td>Redis实例内部</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>dump + restore</td>
+<td>Redis实例之间</td>
+<td>否</td>
+<td>否</td>
+</tr>
+<tr>
+<td>migrate</td>
+<td>Redis实例之间</td>
+<td>是</td>
+<td>是</td>
+</tr>
+</tbody>
+</table>
+<h3 id="遍历键"><a class="header-anchor" href="#遍历键"></a>遍历键</h3>
+<h4 id="全量遍历键"><a class="header-anchor" href="#全量遍历键"></a>全量遍历键</h4>
+<blockquote>
+<p><code>keys pattern</code><br>
+pattern支持glob风格的通配符</p>
+<ul>
+<li><strong>*</strong>：匹配任意字符</li>
+<li><strong>.</strong>：匹配一个字符</li>
+<li><strong>[]</strong>:匹配部分字符,<code>[1,3]</code>代表1或3，<code>[1-10]</code>代表匹配1-10中任意一个数字</li>
+<li><strong>\x</strong>:用来做转义，例如要匹配<code>*</code>、<code>.</code>等</li>
+</ul>
+</blockquote>
+<h4 id="渐进式遍历"><a class="header-anchor" href="#渐进式遍历"></a>渐进式遍历</h4>
+<blockquote>
+<p><code>scan cursor [match pattern] [count number]</code></p>
+<ul>
+<li><strong>cursor</strong>:游标，从0开始，遍历至游标为0结束。每次遍历会返回当前游标的值<br>
+<strong>match pattern</strong>:可选参数，它的作用的是做模式的匹配，这点和keys的 模式匹配很像<br>
+<strong>count number</strong>:可选参数，它的作用是表明每次要遍历的键个数，默认值是10，此参数可以适当增大</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>除了<code>scan</code>外，Redis还提供了面向哈希类型、集合类型、有序集合的扫 描遍历命令，<code>hscan、sscan、zscan</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">String key = <span class="string">&quot;myset&quot;</span>;</span><br><span class="line"><span class="comment">// 定义 pattern</span></span><br><span class="line">String pattern = <span class="string">&quot;old:user*&quot;</span>;</span><br><span class="line"><span class="comment">// 游标每次从0开始</span></span><br><span class="line">String cursor = <span class="string">&quot;0&quot;</span></span><br><span class="line"><span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">      ScanResult scanResult = redis.sscan(key,cursor,pattern);</span><br><span class="line">      List elements = scanResult.getResult();</span><br><span class="line">      <span class="keyword">if</span>(elements != <span class="keyword">null</span> &amp;&amp; element.size() &gt; <span class="number">0</span> )&#123;</span><br><span class="line">            <span class="comment">// 批量删除</span></span><br><span class="line">            redis.srem(key,elements)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 获取新的游标</span></span><br><span class="line">      cursor = scanResult.getStringCursor();</span><br><span class="line">      <span class="comment">// 如果游标为0表示遍历结束</span></span><br><span class="line">      <span class="keyword">if</span>(<span class="string">&quot;0&quot;</span>.equals(cursor))&#123;</span><br><span class="line">      	<span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>当scan过程中，如果发生键值的修改、删除、增加等，可能会发生问题。</li>
+</ul>
+</blockquote>
+<h3 id="数据库管理"><a class="header-anchor" href="#数据库管理"></a>数据库管理</h3>
+<ol>
+<li>切换数据库 <code>select dbIndex</code></li>
+<li>清除数据库 <code>flushdb/flushall</code></li>
+</ol>
+<h2 id="本节内容回顾"><a class="header-anchor" href="#本节内容回顾"></a>本节内容回顾</h2>
+<ol>
+<li>Redis提供了5种数据结构，每种数据结构都有多种内部编码实现</li>
+<li>纯内存存储、IO多路复用技术、单线程架构是造就Redis高性能的三个因素</li>
+<li>由于Redis的单线程架构，所以需要每个命令能被快速执行完，否则会存在阻塞Redis的可能，理解Redis单线程命令处理机制是开发和运维Redis的核心之一</li>
+<li>批量操作(例如mget、mset、hmset等)能够有效提高命令执行的效率，但要注意每次批量操作的个数和字节数</li>
+<li>了解每个命令的时间复杂度在开发中至关重要，例如在使用keys、hgetall、smembers、zrange等时间复杂度较高的命令时，需要考虑数据规模对于Redis的影响</li>
+<li>persist命令可以删除任意类型键的过期时间，但是set命令也会删除字符串类型键的过期时间，这在开发时容易被忽视</li>
+<li>move、dump+restore、migrate是Redis发展过程中三种迁移键的方式，其中move命令基本废弃，migrate命令用原子性的方式实现了dump+restore，并且支持批量操作，是Redis Cluster实现水平扩容的重要工具。</li>
+<li>scan命令可以解决keys命令可能带来的阻塞问题，同时Redis还提供了hscan、sscan、zscan渐进式地遍历hash、set、zset。</li>
+</ol>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>I/O多路复用模型详见 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/john8169/p/9780484.html">Redis 和 IO 多路复用</a> <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn2" class="footnote-item"><p>epoll模型详见 <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/epoll/10738144?fr=aladdin">epoll</a> <a href="#fnref2" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn3" class="footnote-item"><p><a target="_blank" rel="noopener" href="https://matt.sh/redis-quicklist">https://matt.sh/redis-quicklist</a> <a href="#fnref3" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/uploads/wechat.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/1097430507.html" rel="prev" title="Redis开发与运维笔记_初识Redis">
+                  <i class="fa fa-chevron-left"></i> Redis开发与运维笔记_初识Redis
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/2425201134.html" rel="next" title="Redis开发与运维笔记_小功能大用处">
+                  Redis开发与运维笔记_小功能大用处 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div><script src="/js/comments.js"></script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leithda</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">206k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:08</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+  <script class="next-config" data-name="chatra" type="application/json">{&quot;enable&quot;:true,&quot;async&quot;:true,&quot;id&quot;:&quot;FMc6WL5f5hGFsRhzz&quot;}</script>
+  <script src="/js/third-party/chat/chatra.js"></script>
+  <script async src="https://call.chatra.io/chatra.js"></script>
+
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{&quot;enable&quot;:true,&quot;theme&quot;:&quot;forest&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mermaid@8.9.3&#x2F;dist&#x2F;mermaid.min.js&quot;}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script class="next-config" data-name="nprogress" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;spinner&quot;:true}</script>
+  <script src="/js/third-party/nprogress.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="utterances" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;repo&quot;:&quot;leithda&#x2F;leithda.github.io&quot;,&quot;issue_term&quot;:&quot;pathname&quot;,&quot;theme&quot;:&quot;github-light&quot;}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>

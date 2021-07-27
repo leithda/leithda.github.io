@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css">
+  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;leithda.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:&quot;enable&quot;,&quot;bookmark&quot;:{&quot;enable&quot;:&quot;enable&quot;,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:&quot;utterances&quot;,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null,&quot;activeClass&quot;:&quot;utterances&quot;},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;},&quot;path&quot;:&quot;&#x2F;search.xml&quot;,&quot;localsearch&quot;:{&quot;enable&quot;:true,&quot;trigger&quot;:&quot;auto&quot;,&quot;top_n_per_article&quot;:1,&quot;unescape&quot;:false,&quot;preload&quot;:false}}</script>
+<meta name="description" content="缓存能够有效地加速应用的读写速度，同时也可以降低后端负载，对日常应用的开发至关重要。但是将缓存加入应用架构后也会带来一些问题，本 章将针对这些问题介绍缓存使用技巧和设计方案">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis开发与运维笔记-缓存设计">
+<meta property="og:url" content="https://leithda.github.io/posts/3358854259.html">
+<meta property="og:site_name" content="Leithda&#39;s Blog">
+<meta property="og:description" content="缓存能够有效地加速应用的读写速度，同时也可以降低后端负载，对日常应用的开发至关重要。但是将缓存加入应用架构后也会带来一些问题，本 章将针对这些问题介绍缓存使用技巧和设计方案">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-02T13:15:00.000Z">
+<meta property="article:modified_time" content="2021-06-02T13:35:49.764Z">
+<meta property="article:author" content="Leithda">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://leithda.github.io/posts/3358854259.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;leithda.github.io&#x2F;posts&#x2F;3358854259.html&quot;,&quot;path&quot;:&quot;posts&#x2F;3358854259.html&quot;,&quot;title&quot;:&quot;Redis开发与运维笔记-缓存设计&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>Redis开发与运维笔记-缓存设计 | Leithda's Blog</title><script src="/js/config.js"></script>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?3540567b868217169a5241159ab1e032"></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Leithda's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Leithda's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-guide"><a href="/guide/" rel="section"><i class="fa fa-bars fa-fw"></i>导航</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">缓存设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E7%9A%84%E6%94%B6%E7%9B%8A%E4%B8%8E%E6%88%90%E6%9C%AC"><span class="nav-number">1.1.</span> <span class="nav-text">缓存的收益与成本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E6%9B%B4%E6%96%B0%E7%AD%96%E7%95%A5"><span class="nav-number">1.2.</span> <span class="nav-text">缓存更新策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LRU-LFU-FIFO%E7%AE%97%E6%B3%95%E5%89%94%E9%99%A4"><span class="nav-number">1.2.1.</span> <span class="nav-text">LRU&#x2F;LFU&#x2F;FIFO算法剔除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B6%85%E6%97%B6%E5%89%94%E9%99%A4"><span class="nav-number">1.2.2.</span> <span class="nav-text">超时剔除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%8A%A8%E6%9B%B4%E6%96%B0"><span class="nav-number">1.2.3.</span> <span class="nav-text">主动更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">1.2.4.</span> <span class="nav-text">最佳实践</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E7%B2%92%E5%BA%A6%E6%8E%A7%E5%88%B6"><span class="nav-number">1.3.</span> <span class="nav-text">缓存粒度控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A9%BF%E9%80%8F%E4%BC%98%E5%8C%96"><span class="nav-number">1.4.</span> <span class="nav-text">穿透优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E7%A9%BA%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.4.1.</span> <span class="nav-text">缓存空对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="nav-number">1.4.2.</span> <span class="nav-text">布隆过滤器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E5%BA%95%E6%B4%9E%E4%BC%98%E5%8C%96"><span class="nav-number">1.5.</span> <span class="nav-text">无底洞优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%B2%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">1.5.1.</span> <span class="nav-text">串行命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%B2%E8%A1%8CIO"><span class="nav-number">1.5.2.</span> <span class="nav-text">串行IO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E8%A1%8CIO"><span class="nav-number">1.5.3.</span> <span class="nav-text">并行IO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hash-tag"><span class="nav-number">1.5.4.</span> <span class="nav-text">hash_tag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E7%A7%8D%E6%96%B9%E6%A1%88%E5%AF%B9%E6%AF%94"><span class="nav-number">1.5.5.</span> <span class="nav-text">四种方案对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%AA%E5%B4%A9%E4%BC%98%E5%8C%96"><span class="nav-number">1.6.</span> <span class="nav-text">雪崩优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%9D%E8%AF%81%E7%BC%93%E5%AD%98%E5%B1%82%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="nav-number">1.6.1.</span> <span class="nav-text">保证缓存层高可用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E9%9A%94%E7%A6%BB%E7%BB%84%E4%BB%B6%E4%B8%BA%E5%90%8E%E7%AB%AF%E9%99%90%E6%B5%81%E5%B9%B6%E9%99%8D%E7%BA%A7"><span class="nav-number">1.6.2.</span> <span class="nav-text">使用隔离组件为后端限流并降级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E5%89%8D%E6%BC%94%E7%BB%83"><span class="nav-number">1.6.3.</span> <span class="nav-text">提前演练</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%83%AD%E7%82%B9key%E9%87%8D%E5%BB%BA%E4%BC%98%E5%8C%96"><span class="nav-number">1.7.</span> <span class="nav-text">热点key重建优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%92%E6%96%A5%E9%94%81"><span class="nav-number">1.7.1.</span> <span class="nav-text">互斥锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B0%B8%E8%BF%9C%E4%B8%8D%E8%BF%87%E6%9C%9F"><span class="nav-number">1.7.2.</span> <span class="nav-text">永远不过期</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E7%AB%A0%E9%87%8D%E7%82%B9%E5%9B%9E%E9%A1%BE"><span class="nav-number">1.8.</span> <span class="nav-text">本章重点回顾</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Leithda"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">Leithda</p>
+  <div class="site-description" itemprop="description">Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="sidebar-button site-overview-item animated">
+    <a onclick="Chatra('openChat', true);"><i class="fa fa-comment"></i>
+    Chat
+  </a>
+  </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/leithda" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:leithda@163.com" title="邮箱 → mailto:leithda@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>邮箱</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.yuque.com/leithda" title="语雀 → https:&#x2F;&#x2F;www.yuque.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>语雀</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dbreset.github.io/" title="https:&#x2F;&#x2F;dbreset.github.io" rel="noopener" target="_blank">DbReset</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://leithda.github.io/posts/3358854259.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Leithda">
+      <meta itemprop="description" content="Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leithda's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis开发与运维笔记-缓存设计
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-06-02 21:15:00 / 修改时间：21:35:49" itemprop="dateCreated datePublished" datetime="2021-06-02T21:15:00+08:00">2021-06-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote class="blockquote-center">
+<p>缓存能够有效地加速应用的读写速度，同时也可以降低后端负载，对日常应用的开发至关重要。但是将缓存加入应用架构后也会带来一些问题，本 章将针对这些问题介绍缓存使用技巧和设计方案</p>
+
+</blockquote>
+<span id="more"></span>
+<h1>缓存设计</h1>
+<h2 id="缓存的收益与成本"><a class="header-anchor" href="#缓存的收益与成本"></a>缓存的收益与成本</h2>
+<p>缓存收益：</p>
+<ul>
+<li>加速读写</li>
+<li>降低后端负载</li>
+</ul>
+<p>缓存成本：</p>
+<ul>
+<li>数据不一致</li>
+<li>代码维护成本</li>
+<li>维护成本</li>
+</ul>
+<h2 id="缓存更新策略"><a class="header-anchor" href="#缓存更新策略"></a>缓存更新策略</h2>
+<h3 id="LRU-LFU-FIFO算法剔除"><a class="header-anchor" href="#LRU-LFU-FIFO算法剔除"></a>LRU/LFU/FIFO算法剔除</h3>
+<p>清理数据由算法决定，一致性无法得到保障。算法无需开发人员实现，根据业务场景选择合适算法即可。</p>
+<h3 id="超时剔除"><a class="header-anchor" href="#超时剔除"></a>超时剔除</h3>
+<p>通过给键设置过期时间，过期期间内数据可能存在数据不一致问题。</p>
+<h3 id="主动更新"><a class="header-anchor" href="#主动更新"></a>主动更新</h3>
+<p>对数据一致性要求高，需要在真实数据更新后通过消息或其他方式通知立即更新缓存。一致性最高，但如果主动更新发生了问题，那么这条数据很可能很长时间不会更新，所以建议结合超时剔除一起使用效果会更好。维护成本会比较高，开发者需要自己来完成更新，并保证更新操作的正确性。</p>
+<table>
+<thead>
+<tr>
+<th>策略</th>
+<th>一致性</th>
+<th>维护成本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LRU/LFU/FIFO算法剔除</td>
+<td>最差</td>
+<td>低</td>
+</tr>
+<tr>
+<td>超时剔除</td>
+<td>较差</td>
+<td>较低</td>
+</tr>
+<tr>
+<td>主动更新</td>
+<td>强</td>
+<td>高</td>
+</tr>
+</tbody>
+</table>
+<h3 id="最佳实践"><a class="header-anchor" href="#最佳实践"></a>最佳实践</h3>
+<ul>
+<li>低一致性业务建议配置最大内存和淘汰策略的方式使用</li>
+<li>高一致性业务可以结合使用超时剔除和主动更新，这样即使主动更新出了问题，也能保证数据过期时间后删除脏数据</li>
+</ul>
+<h2 id="缓存粒度控制"><a class="header-anchor" href="#缓存粒度控制"></a>缓存粒度控制</h2>
+<p>缓存粒度需要在空间以及时间上进行取舍，决定时需要综合数据通用性、空间占用比、代码维护性三点进行取舍</p>
+<h2 id="穿透优化"><a class="header-anchor" href="#穿透优化"></a>穿透优化</h2>
+<p>缓存穿透是指查询一个根本不存在的数据，缓存层和存储层都不会命中，通常出于容错的考虑，如果从存储层查不到数据则不写入缓存层。</p>
+<h3 id="缓存空对象"><a class="header-anchor" href="#缓存空对象"></a>缓存空对象</h3>
+<p>存储层不命中时，仍然将空对象保存到缓存层。这样下次查询会命中缓存层。这样解决会导致以下两个问题：</p>
+<ul>
+<li>
+<p>空值进行缓存，浪费了内存</p>
+<p>通常要设置一个较短的过期时间，过期后剔除缓存。</p>
+</li>
+<li>
+<p>数据不一致，过期时间内，当前缓存与储存层存在数据不一致现象</p>
+<p>存储层修改时，主动更新缓存层数据。</p>
+</li>
+</ul>
+<h3 id="布隆过滤器"><a class="header-anchor" href="#布隆过滤器"></a>布隆过滤器</h3>
+<p>有关布隆过滤器的相关知识，可以参考：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Bloom_filter%E5%8F%AF%E4%BB%A5%E5%88%A9%E7%94%A8Redis%E7%9A%84Bitmaps%E5%AE%9E%E7%8E%B0%E5%B8%83">https://en.wikipedia.org/wiki/Bloom_filter可以利用Redis的Bitmaps实现布</a> 隆过滤器，GitHub上已经开源了类似的方案，读者可以进行参 考：<a target="_blank" rel="noopener" href="https://github.com/erikdubbelboer/redis-lua-scaling-bloom-filter%E3%80%82">https://github.com/erikdubbelboer/redis-lua-scaling-bloom-filter。</a></p>
+<blockquote>
+<p>这种方法适用于数据命中不高、数据相对固定、实时性低（通常是数据集较大）的应用场景，代码维护较为复杂，但是缓存空间占用少</p>
+</blockquote>
+<h2 id="无底洞优化"><a class="header-anchor" href="#无底洞优化"></a>无底洞优化</h2>
+<p>分布式服务节点过多时，数据分布到的节点数更多，一次批量操作的数据可能分布在n个节点上，操作的时间为<code>n*网络+n*命令</code>，常见的优化思路如下：</p>
+<h3 id="串行命令"><a class="header-anchor" href="#串行命令"></a>串行命令</h3>
+<p>执行n次get命令，Jedis客户端示例如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">List&lt;String&gt; <span class="title">serialMGet</span><span class="params">(List&lt;String&gt; keys)</span> </span>&#123; </span><br><span class="line">    <span class="comment">// 结果集 </span></span><br><span class="line">    List&lt;String&gt; values = <span class="keyword">new</span> ArrayList&lt;String&gt;(); </span><br><span class="line">    <span class="comment">// n次串行get </span></span><br><span class="line">    <span class="keyword">for</span> (String key : keys) </span><br><span class="line">    &#123; </span><br><span class="line">        String value = jedisCluster.get(key); </span><br><span class="line">        values.add(value);</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span> values;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="串行IO"><a class="header-anchor" href="#串行IO"></a>串行IO</h3>
+<p>使用Smart客户端，将映射到相同槽（节点）的key合并为一个集合，之后对每个节点执行mget或pipeline命令。它的操作时间=node次网络时间+n次命令时间，如果节点数过多，还是存在性能问题。Jedis客户端示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Map&lt;String, String&gt; <span class="title">serialIOMget</span><span class="params">(List&lt;String&gt; keys)</span> </span>&#123; </span><br><span class="line">    <span class="comment">// 结果集 </span></span><br><span class="line">    Map&lt;String, String&gt; keyValueMap = <span class="keyword">new</span> HashMap&lt;String, String&gt;(); </span><br><span class="line">    <span class="comment">// 属于各个节点的key列表,JedisPool要提供基于ip和port的hashcode方法 </span></span><br><span class="line">    Map&lt;JedisPool, List&lt;String&gt;&gt; nodeKeyListMap = <span class="keyword">new</span> HashMap&lt;JedisPool, List&lt;String&gt;&gt;(); </span><br><span class="line">    <span class="comment">// 遍历所有的key</span></span><br><span class="line">    <span class="keyword">for</span> (String key : keys) &#123; </span><br><span class="line">        <span class="comment">// 使用CRC16本地计算每个key的slot </span></span><br><span class="line">        <span class="keyword">int</span> slot = JedisClusterCRC16.getSlot(key); </span><br><span class="line">        <span class="comment">// 通过jedisCluster本地slot-&gt;node映射获取slot对应的node </span></span><br><span class="line">        JedisPool jedisPool = jedisCluster.getConnectionHandler().getJedisPoolFromSlot(slot);</span><br><span class="line">        <span class="comment">// 归档 </span></span><br><span class="line">        <span class="keyword">if</span> (nodeKeyListMap.containsKey(jedisPool)) &#123; </span><br><span class="line">            nodeKeyListMap.get(jedisPool).add(key);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">            List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;String&gt;(); </span><br><span class="line">            list.add(key); </span><br><span class="line">            nodeKeyListMap.put(jedisPool, list);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="comment">// 从每个节点上批量获取，这里使用mget也可以使用pipeline </span></span><br><span class="line">    <span class="keyword">for</span> (Entry&lt;JedisPool, List&lt;String&gt;&gt; entry : nodeKeyListMap.entrySet()) &#123;</span><br><span class="line">        JedisPool jedisPool = entry.getKey(); </span><br><span class="line">        List&lt;String&gt; nodeKeyList = entry.getValue(); </span><br><span class="line">        <span class="comment">// 列表变为数组 </span></span><br><span class="line">        String[] nodeKeyArray = nodeKeyList.toArray(<span class="keyword">new</span> String[nodeKeyList.size()]); </span><br><span class="line">        <span class="comment">// 批量获取，可以使用mget或者Pipeline </span></span><br><span class="line">        List&lt;String&gt; nodeValueList = jedisPool.getResource().mget(nodeKeyArray); </span><br><span class="line">        <span class="comment">// 归档 </span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nodeKeyList.size(); i++) &#123; </span><br><span class="line">            keyValueMap.put(nodeKeyList.get(i), nodeValueList.get(i));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span> keyValueMap;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="并行IO"><a class="header-anchor" href="#并行IO"></a>并行IO</h3>
+<p>将方案2中的改为多线程执行。由于改为多线程，网络时间变为O(1)，这种方案会增加编程的复杂度。</p>
+<h3 id="hash-tag"><a class="header-anchor" href="#hash-tag"></a>hash_tag</h3>
+<p>hash_tag可以将多个key强制分配到同一个槽(节点)上，它的操作时间=1次网络时间+n次命令时间</p>
+<h3 id="四种方案对比"><a class="header-anchor" href="#四种方案对比"></a>四种方案对比</h3>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>优点</th>
+<th>缺点</th>
+<th>网络IO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>串行命令</td>
+<td>1）编程简单<br/>2）如果少量keys，性能可以满足要求</td>
+<td>大量keys请求延迟严重</td>
+<td>O(keys)</td>
+</tr>
+<tr>
+<td>串行IO</td>
+<td>1）编程简单<br/>2）少量节点，性能满足要求</td>
+<td>大量node延迟严重</td>
+<td>O(nodes)</td>
+</tr>
+<tr>
+<td>并行IO</td>
+<td>利用并行特性，延迟取决于最慢的节点</td>
+<td>1）编程复杂<br/>2）多线程，定位问题比较难</td>
+<td>O(max_slow(nodes))</td>
+</tr>
+<tr>
+<td>hash_tag</td>
+<td>性能最高</td>
+<td>1）业务维护成本较高<br/>2）容易出现数据倾斜</td>
+<td>O(1)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="雪崩优化"><a class="header-anchor" href="#雪崩优化"></a>雪崩优化</h2>
+<p>缓存层由于某些原因不能提供服务或大量键同时过期，导致大量的请求发送到存储层，造成级联宕机的情况。</p>
+<h3 id="保证缓存层高可用"><a class="header-anchor" href="#保证缓存层高可用"></a>保证缓存层高可用</h3>
+<p>使用<code>Redis Sentinel</code> 或 <code>Redis Cluster</code>架构增强可用性</p>
+<h3 id="使用隔离组件为后端限流并降级"><a class="header-anchor" href="#使用隔离组件为后端限流并降级"></a>使用隔离组件为后端限流并降级</h3>
+<p>对重要资源进行隔离，让每种资源都运行在各自的线程池中，避免因个别服务出现问题导致的全体服务不可用。这部分可以查看<a target="_blank" rel="noopener" href="https://github.com/netflix/hystrix">Hystrix</a>，注意的是Hystrix只适用于Java。</p>
+<h3 id="提前演练"><a class="header-anchor" href="#提前演练"></a>提前演练</h3>
+<p>上线前对各种情况进行演练，包括但不限于，数据库宕机，缓存不可用，大量并发涌入系统等。</p>
+<h2 id="热点key重建优化"><a class="header-anchor" href="#热点key重建优化"></a>热点key重建优化</h2>
+<p>当一个热点key的并发量非常大，并且更新缓存不能在短时间内完成时，缓存失效到重建期间，大量请求的话，会导致大量线程重建缓存，增加后端负载。要解决这个问题可以减少重建缓存的次数。</p>
+<h3 id="互斥锁"><a class="header-anchor" href="#互斥锁"></a>互斥锁</h3>
+<p>只允许一个线程重建缓存，其他线程等待重建缓存的线程执行完，从缓存中获取数据即可。使用redis的setnx实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">String <span class="title">get</span><span class="params">(String key)</span> </span>&#123; </span><br><span class="line">    <span class="comment">// 从Redis中获取数据 </span></span><br><span class="line">    String value = redis.get(key); </span><br><span class="line">    <span class="comment">// 如果value为空，则开始重构缓存 </span></span><br><span class="line">    <span class="keyword">if</span> (value == <span class="keyword">null</span>) &#123; </span><br><span class="line">        <span class="comment">// 只允许一个线程重构缓存，使用nx，并设置过期时间ex </span></span><br><span class="line">        String mutexKey = <span class="string">&quot;mutext:key:&quot;</span> + key; </span><br><span class="line">        <span class="keyword">if</span> (redis.set(mutexKey, <span class="string">&quot;1&quot;</span>, <span class="string">&quot;ex 180&quot;</span>, <span class="string">&quot;nx&quot;</span>)) &#123; </span><br><span class="line">            <span class="comment">// 从数据源获取数据 </span></span><br><span class="line">            value = db.get(key); </span><br><span class="line">            <span class="comment">// 回写Redis，并设置过期时间 </span></span><br><span class="line">            redis.setex(key, timeout, value); </span><br><span class="line">            <span class="comment">// 删除key_mutex </span></span><br><span class="line">            redis.delete(mutexKey);</span><br><span class="line">        &#125; </span><br><span class="line">        <span class="comment">// 其他线程休息50毫秒后重试 </span></span><br><span class="line">        <span class="keyword">else</span> &#123; </span><br><span class="line">            Thread.sleep(<span class="number">50</span>); </span><br><span class="line">            get(key);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span> value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="永远不过期"><a class="header-anchor" href="#永远不过期"></a>永远不过期</h3>
+<p>缓存中不设置过期时间，过期时间由业务系统来维护。业务系统发现缓存过期后，通过单独的线程去重建缓存。此种方法在重建缓存期间会存在数据不一致情况。</p>
+<h2 id="本章重点回顾"><a class="header-anchor" href="#本章重点回顾"></a>本章重点回顾</h2>
+<ol>
+<li>缓存的使用带来的收益是能够加速读写，降低后端存储负载。</li>
+<li>缓存的使用带来的成本是缓存和存储数据不一致性，代码维护成本增大，架构复杂度增大。</li>
+<li>比较推荐的缓存更新策略是结合剔除、超时、主动更新三种方案共同完成。</li>
+<li>穿透问题：使用缓存空对象和布隆过滤器来解决，注意它们各自的使用场景和局限性。</li>
+<li>无底洞问题：分布式缓存中，有更多的机器不保证有更高的性能。有四种批量操作方式：串行命令、串行IO、并行IO、hash_tag。</li>
+<li>雪崩问题：缓存层高可用、客户端降级、提前演练是解决雪崩问题的重要方法。</li>
+<li>热点key问题：互斥锁、“永远不过期”能够在一定程度上解决热点key问题，开发人员在使用时要了解它们各自的使用成本。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/uploads/wechat.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/ddc0d24d.html" rel="prev" title="Redis开发与运维笔记-集群">
+                  <i class="fa fa-chevron-left"></i> Redis开发与运维笔记-集群
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/2279241279.html" rel="next" title="Redis开发与运维笔记_总结">
+                  Redis开发与运维笔记_总结 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div><script src="/js/comments.js"></script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leithda</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">206k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:08</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+  <script class="next-config" data-name="chatra" type="application/json">{&quot;enable&quot;:true,&quot;async&quot;:true,&quot;id&quot;:&quot;FMc6WL5f5hGFsRhzz&quot;}</script>
+  <script src="/js/third-party/chat/chatra.js"></script>
+  <script async src="https://call.chatra.io/chatra.js"></script>
+
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{&quot;enable&quot;:true,&quot;theme&quot;:&quot;forest&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mermaid@8.9.3&#x2F;dist&#x2F;mermaid.min.js&quot;}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script class="next-config" data-name="nprogress" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;spinner&quot;:true}</script>
+  <script src="/js/third-party/nprogress.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="utterances" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;repo&quot;:&quot;leithda&#x2F;leithda.github.io&quot;,&quot;issue_term&quot;:&quot;pathname&quot;,&quot;theme&quot;:&quot;github-light&quot;}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>

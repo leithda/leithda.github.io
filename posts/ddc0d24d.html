@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css">
+  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;leithda.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:&quot;enable&quot;,&quot;bookmark&quot;:{&quot;enable&quot;:&quot;enable&quot;,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:&quot;utterances&quot;,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null,&quot;activeClass&quot;:&quot;utterances&quot;},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;},&quot;path&quot;:&quot;&#x2F;search.xml&quot;,&quot;localsearch&quot;:{&quot;enable&quot;:true,&quot;trigger&quot;:&quot;auto&quot;,&quot;top_n_per_article&quot;:1,&quot;unescape&quot;:false,&quot;preload&quot;:false}}</script>
+<meta name="description" content="Redis Cluster是Redis的分布式解决方案，在3.0版本正式推出，有效地解决了Redis分布式方面的需求。当遇到单机内存、并发、流量等瓶颈时，可以采用Cluster架构方案达到负载均衡的目的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis开发与运维笔记-集群">
+<meta property="og:url" content="https://leithda.github.io/posts/ddc0d24d.html">
+<meta property="og:site_name" content="Leithda&#39;s Blog">
+<meta property="og:description" content="Redis Cluster是Redis的分布式解决方案，在3.0版本正式推出，有效地解决了Redis分布式方面的需求。当遇到单机内存、并发、流量等瓶颈时，可以采用Cluster架构方案达到负载均衡的目的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://leithda.github.io/posts/ddc0d24d/Smart%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%93%8D%E4%BD%9C%E6%B5%81%E7%A8%8B.png">
+<meta property="article:published_time" content="2021-06-02T13:15:00.000Z">
+<meta property="article:modified_time" content="2021-06-02T13:35:49.765Z">
+<meta property="article:author" content="Leithda">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://leithda.github.io/posts/ddc0d24d/Smart%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%93%8D%E4%BD%9C%E6%B5%81%E7%A8%8B.png">
+
+
+<link rel="canonical" href="https://leithda.github.io/posts/ddc0d24d.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;leithda.github.io&#x2F;posts&#x2F;ddc0d24d.html&quot;,&quot;path&quot;:&quot;posts&#x2F;ddc0d24d.html&quot;,&quot;title&quot;:&quot;Redis开发与运维笔记-集群&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>Redis开发与运维笔记-集群 | Leithda's Blog</title><script src="/js/config.js"></script>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?3540567b868217169a5241159ab1e032"></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Leithda's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Leithda's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-guide"><a href="/guide/" rel="section"><i class="fa fa-bars fa-fw"></i>导航</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">集群</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E5%B8%83"><span class="nav-number">1.1.</span> <span class="nav-text">数据分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E6%95%B0%E6%8D%AE%E5%88%86%E5%B8%83"><span class="nav-number">1.1.1.</span> <span class="nav-text">Redis数据分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4%E5%8A%9F%E8%83%BD%E9%99%90%E5%88%B6"><span class="nav-number">1.1.2.</span> <span class="nav-text">Redis分布式集群功能限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E9%80%9A%E4%BF%A1"><span class="nav-number">1.2.</span> <span class="nav-text">节点通信</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Gossip%E6%B6%88%E6%81%AF"><span class="nav-number">1.2.1.</span> <span class="nav-text">Gossip消息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E9%9B%86%E7%BE%A4"><span class="nav-number">1.3.</span> <span class="nav-text">搭建集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E8%B7%AF%E7%94%B1"><span class="nav-number">1.4.</span> <span class="nav-text">请求路由</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-number">1.4.1.</span> <span class="nav-text">请求重定向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hash-tag"><span class="nav-number">1.4.2.</span> <span class="nav-text">hash_tag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Smart%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">1.4.3.</span> <span class="nav-text">Smart客户端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASK%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-number">1.4.4.</span> <span class="nav-text">ASK重定向</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">1.5.</span> <span class="nav-text">故障转移</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E5%8F%91%E7%8E%B0"><span class="nav-number">1.5.1.</span> <span class="nav-text">故障发现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BB%E8%A7%82%E4%B8%8B%E7%BA%BF"><span class="nav-number">1.5.1.1.</span> <span class="nav-text">主观下线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%A2%E8%A7%82%E4%B8%8B%E7%BA%BF"><span class="nav-number">1.5.1.2.</span> <span class="nav-text">客观下线</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D"><span class="nav-number">1.5.2.</span> <span class="nav-text">故障恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B5%84%E6%A0%BC%E6%A3%80%E6%9F%A5"><span class="nav-number">1.5.2.1.</span> <span class="nav-text">资格检查</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E9%80%89%E4%B8%BE%E6%97%B6%E9%97%B4"><span class="nav-number">1.5.2.2.</span> <span class="nav-text">准备选举时间</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%91%E8%B5%B7%E9%80%89%E4%B8%BE"><span class="nav-number">1.5.2.3.</span> <span class="nav-text">发起选举</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E4%B8%BE%E6%8A%95%E7%A5%A8"><span class="nav-number">1.5.2.4.</span> <span class="nav-text">选举投票</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2%E4%B8%BB%E8%8A%82%E7%82%B9"><span class="nav-number">1.5.2.5.</span> <span class="nav-text">替换主节点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB%E6%97%B6%E9%97%B4"><span class="nav-number">1.5.3.</span> <span class="nav-text">故障转移时间</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E8%BF%90%E7%BB%B4"><span class="nav-number">1.6.</span> <span class="nav-text">集群运维</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E5%AE%8C%E6%95%B4%E6%80%A7"><span class="nav-number">1.6.1.</span> <span class="nav-text">集群完整性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%A6%E5%AE%BD%E6%B6%88%E8%80%97"><span class="nav-number">1.6.2.</span> <span class="nav-text">带宽消耗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pub-Sub%E5%B9%BF%E6%92%AD%E9%97%AE%E9%A2%98"><span class="nav-number">1.6.3.</span> <span class="nav-text">Pub&#x2F;Sub广播问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E5%80%BE%E6%96%9C"><span class="nav-number">1.6.4.</span> <span class="nav-text">集群倾斜</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%80%BE%E6%96%9C"><span class="nav-number">1.6.4.1.</span> <span class="nav-text">数据倾斜</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E5%80%BE%E6%96%9C"><span class="nav-number">1.6.4.2.</span> <span class="nav-text">请求倾斜</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">1.6.5.</span> <span class="nav-text">手动故障转移</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB"><span class="nav-number">1.6.6.</span> <span class="nav-text">数据迁移</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E7%AB%A0%E9%87%8D%E7%82%B9%E5%9B%9E%E9%A1%BE"><span class="nav-number">1.7.</span> <span class="nav-text">本章重点回顾</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Leithda"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">Leithda</p>
+  <div class="site-description" itemprop="description">Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="sidebar-button site-overview-item animated">
+    <a onclick="Chatra('openChat', true);"><i class="fa fa-comment"></i>
+    Chat
+  </a>
+  </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/leithda" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:leithda@163.com" title="邮箱 → mailto:leithda@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>邮箱</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.yuque.com/leithda" title="语雀 → https:&#x2F;&#x2F;www.yuque.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>语雀</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dbreset.github.io/" title="https:&#x2F;&#x2F;dbreset.github.io" rel="noopener" target="_blank">DbReset</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://leithda.github.io/posts/ddc0d24d.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Leithda">
+      <meta itemprop="description" content="Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leithda's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis开发与运维笔记-集群
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-06-02 21:15:00 / 修改时间：21:35:49" itemprop="dateCreated datePublished" datetime="2021-06-02T21:15:00+08:00">2021-06-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote class="blockquote-center">
+<p>Redis Cluster是Redis的分布式解决方案，在3.0版本正式推出，有效地解决了Redis分布式方面的需求。当遇到单机内存、并发、流量等瓶颈时，可以采用Cluster架构方案达到负载均衡的目的。</p>
+
+</blockquote>
+<span id="more"></span>
+<blockquote>
+<p>参考书籍：<a target="_blank" rel="noopener" href="https://book.douban.com/subject/26971561/">Redis开发与运维</a></p>
+</blockquote>
+<hr>
+<h1>集群</h1>
+<h2 id="数据分布"><a class="header-anchor" href="#数据分布"></a>数据分布</h2>
+<h3 id="Redis数据分布"><a class="header-anchor" href="#Redis数据分布"></a>Redis数据分布</h3>
+<p>Redis Cluser采用虚拟槽分区，所有的键根据哈希函数映射到0~16383整数槽内，计算公式：<code>slot=CRC16（key）&amp;16383</code></p>
+<p>Redis虚拟槽分区的特点：</p>
+<ul>
+<li>解耦数据和节点之间的关系，简化了节点扩容和收缩难度。</li>
+<li>节点自身维护槽的映射关系，不需要客户端或者代理服务维护槽分区元数据。</li>
+<li>支持节点、槽、键之间的映射查询，用于数据路由、在线伸缩等场景</li>
+</ul>
+<h3 id="Redis分布式集群功能限制"><a class="header-anchor" href="#Redis分布式集群功能限制"></a>Redis分布式集群功能限制</h3>
+<ol>
+<li>key批量操作支持有限。如mset、mget，目前只支持具有相同slot值的key执行批量操作。对于映射为不同slot值的key由于执行mget、mget等操作可 能存在于多个节点上因此不被支持。</li>
+<li>key事务操作支持有限。同理只支持多key在同一节点上的事务操作，当多个key分布在不同的节点上时无法使用事务功能。</li>
+<li>key作为数据分区的最小粒度，因此不能将一个大的键值对象如hash、list等映射到不同的节点。</li>
+<li>不支持多数据库空间。单机下的Redis可以支持16个数据库，集群模式下只能使用一个数据库空间，即db0。</li>
+<li>复制结构只支持一层，从节点只能复制主节点，不支持嵌套树状复制结构</li>
+</ol>
+<h2 id="节点通信"><a class="header-anchor" href="#节点通信"></a>节点通信</h2>
+<p>​	Redis集群采用P2P的Gossip（流言）协议， Gossip协议工作原理就是节点彼此不断通信交换信息，一段时间后所有的节 点都会知道集群完整的信息，这种方式类似流言传播。</p>
+<h3 id="Gossip消息"><a class="header-anchor" href="#Gossip消息"></a>Gossip消息</h3>
+<p>常用的Goosip消息分为：ping消息、pong消息、meet消息、fail消息等</p>
+<ul>
+<li>meet消息：用于通知新节点加入</li>
+<li>ping消息：每个节点向其他多个节点发送ping消息，消息中含有节点自身及其他部分节点的状态数据。</li>
+<li>pong消息：接收到meet、ping消息时作为返回数据，封装自身状态信息。也可以广播pong消息用于通知其他节点更新当前节点状态。</li>
+<li>fail消息：当节点判定其他节点下线时，会向集群内广播fail消息，其他节点收到消息后将标记节点设置为下线状态。</li>
+</ul>
+<h2 id="搭建集群"><a class="header-anchor" href="#搭建集群"></a>搭建集群</h2>
+<p>搭建集群需要以下三个步骤：</p>
+<ol>
+<li>准备节点</li>
+<li>节点握手</li>
+<li>分配槽</li>
+</ol>
+<p>搭建集群以及集群伸缩部分可以参考如下文章：</p>
+<ul>
+<li><a href="./778231993">Redis集群搭建(Redis3.0版)</a></li>
+<li><a href="./1044596185">Redis集群搭建(Redis5.0版)</a></li>
+</ul>
+<h2 id="请求路由"><a class="header-anchor" href="#请求路由"></a>请求路由</h2>
+<h3 id="请求重定向"><a class="header-anchor" href="#请求重定向"></a>请求重定向</h3>
+<p>​	在集群模式下，Redis接收任何键相关命令时首先计算键对应的槽，再根据槽找出所对应的节点，如果节点是自身，则处理键命令；否则回复 MOVED重定向错误，通知客户端请求正确的节点。这个过程称为MOVED重定向。</p>
+<h3 id="hash-tag"><a class="header-anchor" href="#hash-tag"></a>hash_tag</h3>
+<p>​	如果键值包含<code>&#123;hash_tag&#125;</code>，计算键值对应的槽时会使用大括号内的内容进行计算，可以利用此特性保持业务相关性强的内容分不到同一个槽内。</p>
+<blockquote>
+<p>Pipeline同样可以受益于hash_tag，由于Pipeline只能向一个节点批量发送执行命令，而相同slot必然会对应到唯一的节点，降低了集群使用Pipeline的门槛</p>
+</blockquote>
+<h3 id="Smart客户端"><a class="header-anchor" href="#Smart客户端"></a>Smart客户端</h3>
+<p>​	客户端通过缓存槽与节点映射关系来进行命令的执行，当出现Move重定向错误时，向正确的节点发送命令并更新本地缓存。流程如下：</p>
+<img src="/posts/ddc0d24d/Smart%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%93%8D%E4%BD%9C%E6%B5%81%E7%A8%8B.png" class="" title="Smart客户端操作流程">
+<blockquote>
+<p>针对高并发的场景，客户端与Redis实例通信这里是绝对的热点代码。集群协议通过Smart客户端全面高效的支持需要一个过程，因此用户在选择Smart客户端时要重点审核集群交互代码，防止线上踩坑。必要时可以自行优化修改客户端源码。</p>
+</blockquote>
+<h3 id="ASK重定向"><a class="header-anchor" href="#ASK重定向"></a>ASK重定向</h3>
+<p>当一个slot数据从源节点迁移到目标节点时，期间可能出现一部分数据在源节点，而另一部分在目标节点。</p>
+<ol>
+<li>当集群进行槽迁移时，客户端根据本地缓存发送命令到源节点，如果源节点存在数据则直接返回</li>
+<li>如果键对象不存在，可能在目标节点中，节点返回ASK重定向错误，格式为<code>(error)ASK &#123;slot&#125; &#123;targetIP&#125; : &#123;targetPort&#125;</code></li>
+<li>客户端提取目标节点信息，发送<code>asking</code>命令打开客户端连接标识，再执行键命令，如果存在则执行，不存在则返回不存在信息。</li>
+</ol>
+<ul>
+<li>ASK和MOVE虽然都返回目标节点，但是意义不同，ASK返回表示当前正在迁移键，不确定何时能完成，客户端此时不需要更新本地缓存。而MOVE重定向表示当前键已经在其他节点，需要更新本地缓存。</li>
+</ul>
+<blockquote>
+<p>集群环境下对于使用批量操作的场景，建议优先使用Pipeline方式，在客户端实现对ASK重定向的正确处理，这样既可以受益于批量操作的IO优化，又可以兼容slot迁移场景。</p>
+</blockquote>
+<h2 id="故障转移"><a class="header-anchor" href="#故障转移"></a>故障转移</h2>
+<h3 id="故障发现"><a class="header-anchor" href="#故障发现"></a>故障发现</h3>
+<p>集群内通过ping/pong来进行节点通信，消息可以传播槽信息、主从状态、节点故障等。</p>
+<h4 id="主观下线"><a class="header-anchor" href="#主观下线"></a>主观下线</h4>
+<p>如果其他节点在<code>cluster-node-timeout</code>时间内没有回复自己发出的ping请求，会将此节点标记为<code>pfail</code>状态。</p>
+<h4 id="客观下线"><a class="header-anchor" href="#客观下线"></a>客观下线</h4>
+<p>当节点被客观下线后，其状态会随消息在进群内散播。当<code>cluster-node-timeout*2</code>时间内有超过半数的节点认为该节点下线，集群会删除该节点。</p>
+<blockquote>
+<p>下线的有效期为<code>cluster-node-timeout*2</code>，如果到达时间时没有超过半数节点认为该节点下线，那么故障节点将不会下线导致故障转移失败。应根据实际情况适当调大<code>cluster-node-timeout</code>配置。</p>
+</blockquote>
+<h3 id="故障恢复"><a class="header-anchor" href="#故障恢复"></a>故障恢复</h3>
+<p>下线主节点的从节点发现自身复制的主节点下线时，进行故障恢复工作。</p>
+<h4 id="资格检查"><a class="header-anchor" href="#资格检查"></a>资格检查</h4>
+<p>从节点与主节点断线时间超过<code>cluster-node-time*cluster-slavevalidity-factor</code>时，该从节点不具备故障转移资格。</p>
+<h4 id="准备选举时间"><a class="header-anchor" href="#准备选举时间"></a>准备选举时间</h4>
+<p>各个从节点根据自身偏移量设置不同的延时选举时间，偏移量大的节点优先发起选举。</p>
+<h4 id="发起选举"><a class="header-anchor" href="#发起选举"></a>发起选举</h4>
+<p>当从节点定时任务发现到达故障选举时间<code>failover_auth_time</code>到达后，发起选举，流程如下：</p>
+<ol>
+<li>更新配置纪元</li>
+<li>广播选举消息</li>
+</ol>
+<h4 id="选举投票"><a class="header-anchor" href="#选举投票"></a>选举投票</h4>
+<p>持有槽的主节点会处理故障选举消息，当一个从节点在<code>cluster-node-timeout*2</code>时间内获取N/2+1个投票时，该从节点会晋升为主节点。</p>
+<h4 id="替换主节点"><a class="header-anchor" href="#替换主节点"></a>替换主节点</h4>
+<p>当从节点收集到足够的选票之后，触发替换主节点操作：</p>
+<ol>
+<li>当前从节点取消复制变为主节点</li>
+<li>执行cluster DelSlot操作撤销故障主节点负责的槽，并执行cluster AddSlot把这些槽委派给自己。</li>
+<li>向集群广播自己的pong消息，通知集群内所有节点当前从节点变为主节点并接管故障主节点的槽信息。</li>
+</ol>
+<h3 id="故障转移时间"><a class="header-anchor" href="#故障转移时间"></a>故障转移时间</h3>
+<p>估算故障转移时间</p>
+<ol>
+<li>主观下线(pfail)识别时间 =<code> cluster-node-timeout</code></li>
+<li>主观下线状态消息传播时间&lt;=cluster-node-timeout/2。消息通信机制对超过<code>cluster-node-timeout/2</code>未通信节点会发起ping消息，消息体在选择包含 哪些节点时会优先选取下线状态节点，所以通常这段时间内能够收集到半数 以上主节点的pfail报告从而完成故障发现</li>
+<li>从节点转移时间&lt;=1000毫秒。由于存在延迟发起选举机制，偏移量最大的从节点会最多延迟1秒发起选举。通常第一次选举就会成功，所以从 节点执行转移时间在1秒以内</li>
+</ol>
+<blockquote>
+<p>根据以上分析可以预估出故障转移时间，如下：</p>
+<p><code>failover-time(毫秒) ≤ cluster-node-timeout + cluster-node-timeout/2 + 1000</code></p>
+<p>因此，故障转移时间和<code>cluster-node-timeout</code>参数息息相关，默认15s</p>
+</blockquote>
+<h2 id="集群运维"><a class="header-anchor" href="#集群运维"></a>集群运维</h2>
+<h3 id="集群完整性"><a class="header-anchor" href="#集群完整性"></a>集群完整性</h3>
+<p>参数<code>cluster-require-full-coverage</code>控制集群槽未完成分配时，集群是否可用，默认为<code>false</code>。大多数业务应设置为<code>ture</code></p>
+<h3 id="带宽消耗"><a class="header-anchor" href="#带宽消耗"></a>带宽消耗</h3>
+<p>集群内Gossip消息通信会消耗带宽，官方建议集群最大规模在1000以内。</p>
+<p>建议：</p>
+<ol>
+<li>在满足业务要求的前提下避免大集群。可以根据业务场景拆分为多个小集群</li>
+<li>适度提高<code>cluster-node-timeout</code>降低消息发送频率，但是同时会导致故障转移速度变慢，应根据业务场景平衡二者。</li>
+<li>条件允许部署在多个机器上。</li>
+</ol>
+<h3 id="Pub-Sub广播问题"><a class="header-anchor" href="#Pub-Sub广播问题"></a>Pub/Sub广播问题</h3>
+<p>集群模式下，频繁应用Pub/Sub功能时，会严重消耗集群带宽。针对这种情况建议使用Sentinel结构专门用于Pub/Sub功能，从而规避这一问题。</p>
+<h3 id="集群倾斜"><a class="header-anchor" href="#集群倾斜"></a>集群倾斜</h3>
+<h4 id="数据倾斜"><a class="header-anchor" href="#数据倾斜"></a>数据倾斜</h4>
+<ul>
+<li>节点和槽分配严重不均，使用如下命令查看并处理</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[blog@localhost ~]$ redis-cli --cluster info 127.0.0.1:6379 <span class="comment"># 查看集群槽分配情况</span></span><br><span class="line">127.0.0.1:6379 (e8e05250...) -&gt; 0 keys | 5461 slots | 1 slaves.</span><br><span class="line">127.0.0.1:6381 (fcceb74f...) -&gt; 0 keys | 5461 slots | 1 slaves.</span><br><span class="line">127.0.0.1:6380 (e34482fb...) -&gt; 0 keys | 5462 slots | 1 slaves.</span><br><span class="line">[OK] 0 keys <span class="keyword">in</span> 3 masters.</span><br><span class="line">0.00 keys per slot on average.</span><br><span class="line">[blog@localhost ~]$ redis-cli --cluster rebalance 127.0.0.1:6379 <span class="comment"># 重新平衡槽</span></span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:6379)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check <span class="keyword">for</span> open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line">*** No rebalancing needed! All nodes are within the 2.00% threshold.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>不同槽对应键数量差异过大</p>
+<p>过度使用<code>&#123;hash_tag&#125;</code>时，会导致槽对应的键数量分布不均匀。通过<code>cluster countkeysinslot &#123;slot&#125;</code>可以查看槽内对应的键数量，再使用<code>cluster countkeysinslot &#123;slot&#125; &#123;count&#125;</code>循环迭代出槽下所有的键，进而发现过度使用{hash_tag}的键。</p>
+</li>
+<li>
+<p>集合对象包含大量元素</p>
+<p>大对象可以使用<code>redis-cli --bigkeys</code>命令查找，找到后应根据业务进行拆分，另外，集群槽数据迁移通过对键执行<code>migrate</code>操作完成，键过大可能导致<code>migrate</code>超时导致数据迁移失败。</p>
+</li>
+<li>
+<p>内存相关配置不一致</p>
+<p>主要指<code>hash-max-ziplist-value</code>、<code>set-max-inset-entries</code>等压缩数据结构配置。当集群大量使用hash、set等数据结构，配置不同可能导致集群内节点占用内存不同，导致内存量倾斜。</p>
+</li>
+</ul>
+<h4 id="请求倾斜"><a class="header-anchor" href="#请求倾斜"></a>请求倾斜</h4>
+<p>集群内请求量过大并且集中在少部分节点时将导致集群负载不均。常出现在热点键场景，当键命令消耗较低时影响有限，当使用复杂命令如<code>hgetall</code>、<code>smembers</code>时影响很大。避免方式如下：</p>
+<ol>
+<li>合理设计键，热点大集合拆分或使用<code>hmget</code>代替<code>hgetall</code>避免整体读取</li>
+<li>不要使用热点key作为hash_tag，避免热点key映射到同一个节点</li>
+<li>对于一致性要求不高的场景，客户端使用本地缓存代替热键调用</li>
+</ol>
+<h3 id="手动故障转移"><a class="header-anchor" href="#手动故障转移"></a>手动故障转移</h3>
+<p>在从节点上执行<code>cluster failover</code>会发起手动故障转移流程，如下：</p>
+<ol>
+<li>从节点通知主节点停止处理所有客户端请求</li>
+<li>主节点发送对应从节点延迟复制的数据</li>
+<li>从节点处理延迟复制的数据，直到与主节点偏移量一致</li>
+<li>从节点立刻发起选举投票，选举成功后断开复制成为主节点，之后向集群内广播pong消息，</li>
+<li>旧主节点接收消息后更新自身配置变为从节点，解除客户端请求阻塞，重定向到新主节点上执行请求。</li>
+<li>旧主节点变为从节点后，向新的主节点发起全量复制流程</li>
+</ol>
+<ul>
+<li><code>cluster failover force</code>: 从节点直接进行选举，不需要确认和主节点偏移量，用于主节点宕机的场景。</li>
+<li><code>cluster failover takeover</code>: 从节点直接更新配置纪元并替换主节点，用于无法完成选举的情况：超过半数节点故障，网络不通畅导致规定时间内无法完成选举，导致当前节点失去选举资格(断线时间超过<code>cluster-node-time*cluster-slavevalidity-factor</code>)</li>
+</ul>
+<blockquote>
+<p>手动故障转移时，在满足当前需求的情况下建议优先级：cluster failver&gt;cluster failover force&gt;cluster failover takeover</p>
+</blockquote>
+<h3 id="数据迁移"><a class="header-anchor" href="#数据迁移"></a>数据迁移</h3>
+<p>redis提供了迁移数据的命令，<code>redis-cli --cluster import host:port --from &lt;arg&gt; --copy --replace</code>，命令内部采用批量scan和migrate的方式迁移数据。其缺点如下：</p>
+<ol>
+<li>迁移只能从单机节点向集群环境导入数据</li>
+<li>不支持在线迁移数据，迁移数据时应用方必须停写，无法平滑迁移数据</li>
+<li>迁移过程中途如果出现超时等错误，不支持断点续传只能重新全量导入</li>
+<li>使用单线程进行数据迁移，大数据量迁移速度过慢</li>
+</ol>
+<blockquote>
+<p>这里推荐使用唯品会开发的<code>redis-migrate-tool</code>，该工具可满足大多数Redis迁移需求，特点如下：</p>
+<ul>
+<li>支持单机、Twemproxy、Redis Cluster、RDB/AOF等多种类型的数据迁移</li>
+<li>工具模拟成从节点基于复制流迁移数据，从而支持在线迁移数据，业务方不需要停写</li>
+<li>采用多线程加速数据迁移过程且提供数据校验和查看迁移状态等功能</li>
+</ul>
+<p>更多细节见GitHub：<a target="_blank" rel="noopener" href="https://github.com/vipshop/redis-migrate-tool%E3%80%82">https://github.com/vipshop/redis-migrate-tool。</a></p>
+</blockquote>
+<h2 id="本章重点回顾"><a class="header-anchor" href="#本章重点回顾"></a>本章重点回顾</h2>
+<ol>
+<li>Redis集群数据分区规则采用虚拟槽方式，所有的键映射到16384个槽中，每个节点负责一部分槽和相关数据，实现数据和请求的负载均衡</li>
+<li>搭建集群划分三个步骤：准备节点，节点握手，分配槽。可以使用<code>redis-trib.rb create</code>或者<code>redis-cli --cluster</code>命令快速搭建集群</li>
+<li>集群内部节点通信采用Gossip协议彼此发送消息，消息类型分为：ping消息、pong消息、meet消息、fail消息等。节点定期不断发送和接受 ping/pong消息来维护更新集群的状态。消息内容包括节点自身数据和部分其他节点的状态数据</li>
+<li>集群伸缩通过在节点之间移动槽和相关数据实现。扩容时根据槽迁移计划把槽从源节点迁移到目标节点，源节点负责的槽相比之前变少从而达 到集群扩容的目的，收缩时如果下线的节点有负责的槽需要迁移到其他节 点，再通过cluster forget命令让集群内其他节点忘记被下线节点</li>
+<li>使用Smart客户端操作集群达到通信效率最大化，客户端内部负责计算维护键→槽→节点的映射，用于快速定位键命令到目标节点。集群协议通 过Smart客户端全面高效的支持需要一个过程，用户在选择Smart客户端时建 议review下集群交互代码如：异常判定和重试逻辑，更新槽的并发控制等。 节点接收到键命令时会判断相关的槽是否由自身节点负责，如果不是则返回 重定向信息。重定向分为MOVED和ASK，ASK说明集群正在进行槽数据迁 移，客户端只在本次请求中做临时重定向，不会更新本地槽缓存。MOVED 重定向说明槽已经明确分派到另一个节点，客户端需要更新槽节点缓存</li>
+<li>集群自动故障转移过程分为故障发现和故障恢复。节点下线分为主观下线和客观下线，当超过半数主节点认为故障节点为主观下线时标记它为 客观下线状态。从节点负责对客观下线的主节点触发故障恢复流程，保证集群的可用性</li>
+<li>开发和运维集群过程中常见问题包括：超大规模集群带宽消耗， pub/sub广播问题，集群节点倾斜问题，手动故障转移，在线迁移数据等</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/uploads/wechat.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/atom.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/1044596185.html" rel="prev" title="Redis集群搭建(Redis5.0版)">
+                  <i class="fa fa-chevron-left"></i> Redis集群搭建(Redis5.0版)
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/3358854259.html" rel="next" title="Redis开发与运维笔记-缓存设计">
+                  Redis开发与运维笔记-缓存设计 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div><script src="/js/comments.js"></script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leithda</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">206k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:08</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+  <script class="next-config" data-name="chatra" type="application/json">{&quot;enable&quot;:true,&quot;async&quot;:true,&quot;id&quot;:&quot;FMc6WL5f5hGFsRhzz&quot;}</script>
+  <script src="/js/third-party/chat/chatra.js"></script>
+  <script async src="https://call.chatra.io/chatra.js"></script>
+
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{&quot;enable&quot;:true,&quot;theme&quot;:&quot;forest&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mermaid@8.9.3&#x2F;dist&#x2F;mermaid.min.js&quot;}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script class="next-config" data-name="nprogress" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;spinner&quot;:true}</script>
+  <script src="/js/third-party/nprogress.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="utterances" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;repo&quot;:&quot;leithda&#x2F;leithda.github.io&quot;,&quot;issue_term&quot;:&quot;pathname&quot;,&quot;theme&quot;:&quot;github-light&quot;}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>

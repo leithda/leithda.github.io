@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css">
+  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;leithda.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Muse&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:&quot;enable&quot;,&quot;bookmark&quot;:{&quot;enable&quot;:&quot;enable&quot;,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:&quot;utterances&quot;,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null,&quot;activeClass&quot;:&quot;utterances&quot;},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;},&quot;path&quot;:&quot;&#x2F;search.xml&quot;,&quot;localsearch&quot;:{&quot;enable&quot;:true,&quot;trigger&quot;:&quot;auto&quot;,&quot;top_n_per_article&quot;:1,&quot;unescape&quot;:false,&quot;preload&quot;:false}}</script>
+<meta name="description" content="导航 计算机基础 操作系统 计算机网络原理   计算机网络-概述  计算机网络-物理层  计算机网络-数据链路层  计算机网络-网络层  计算机网络-传输层  计算机网络-应用层  计算机网络-网络安全  数据库原理   数据库简介  关系模型  结构化查询语言  数据建模  数据库设计  数据库管理  数据结构与算法 数据结构  数组 栈 队列 链表 树  二叉树 查找树 平衡树 线索数   散">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Leithda&#39;s Blog">
+<meta property="og:url" content="https://leithda.github.io/guide/index.html">
+<meta property="og:site_name" content="Leithda&#39;s Blog">
+<meta property="og:description" content="导航 计算机基础 操作系统 计算机网络原理   计算机网络-概述  计算机网络-物理层  计算机网络-数据链路层  计算机网络-网络层  计算机网络-传输层  计算机网络-应用层  计算机网络-网络安全  数据库原理   数据库简介  关系模型  结构化查询语言  数据建模  数据库设计  数据库管理  数据结构与算法 数据结构  数组 栈 队列 链表 树  二叉树 查找树 平衡树 线索数   散">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-21T14:40:56.125Z">
+<meta property="article:modified_time" content="2021-06-21T14:40:56.125Z">
+<meta property="article:author" content="Leithda">
+<meta property="article:tag" content="leithda">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://leithda.github.io/guide/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:false,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;leithda.github.io&#x2F;guide&#x2F;index.html&quot;,&quot;path&quot;:&quot;guide&#x2F;index.html&quot;,&quot;title&quot;:&quot;&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title> | Leithda's Blog
+</title><script src="/js/config.js"></script>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?3540567b868217169a5241159ab1e032"></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Leithda's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Leithda's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-guide"><a href="/guide/" rel="section"><i class="fa fa-bars fa-fw"></i>导航</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">导航</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80"><span class="nav-number">1.1.</span> <span class="nav-text">计算机基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.1.</span> <span class="nav-text">操作系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.1.2.</span> <span class="nav-text">计算机网络原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86"><span class="nav-number">1.1.3.</span> <span class="nav-text">数据库原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95"><span class="nav-number">1.1.4.</span> <span class="nav-text">数据结构与算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%97%E6%B3%95"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E9%A2%98"><span class="nav-number">1.1.4.3.</span> <span class="nav-text">算法题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80"><span class="nav-number">1.2.</span> <span class="nav-text">编程语言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java"><span class="nav-number">1.2.1.</span> <span class="nav-text">Java</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">基础</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">并发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">多线程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JavaScript"><span class="nav-number">1.2.2.</span> <span class="nav-text">JavaScript</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80-2"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">基础</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Vue"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">Vue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#React"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">React</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python"><span class="nav-number">1.2.3.</span> <span class="nav-text">Python</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.3.</span> <span class="nav-text">数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.3.1.</span> <span class="nav-text">关系型数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MySQL"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">MySQL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Oracle"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">Oracle</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SQL-Server"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">SQL Server</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NoSQL"><span class="nav-number">1.3.2.</span> <span class="nav-text">NoSQL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E6%A1%A3%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">文档型数据库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Key-Value%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">Key-Value型数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Redis"><span class="nav-number">1.3.2.2.1.</span> <span class="nav-text">Redis</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#etcd"><span class="nav-number">1.3.2.2.2.</span> <span class="nav-text">etcd</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#memcached"><span class="nav-number">1.3.2.2.3.</span> <span class="nav-text">memcached</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">搜索引擎数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ElasticSearch"><span class="nav-number">1.3.2.3.1.</span> <span class="nav-text">ElasticSearch</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Solr"><span class="nav-number">1.3.2.3.2.</span> <span class="nav-text">Solr</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%90%86%E8%AE%BA"><span class="nav-number">1.4.</span> <span class="nav-text">理论</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.4.1.</span> <span class="nav-text">设计模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-2"><span class="nav-number">1.4.2.</span> <span class="nav-text">Java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E6%80%9D%E6%83%B3"><span class="nav-number">1.4.3.</span> <span class="nav-text">算法思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%90%86%E8%AE%BA"><span class="nav-number">1.4.4.</span> <span class="nav-text">分布式理论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AA%E5%88%86%E7%B1%BB"><span class="nav-number">1.4.5.</span> <span class="nav-text">未分类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%86%E6%9E%B6%E5%8F%8A%E4%B8%AD%E9%97%B4%E4%BB%B6"><span class="nav-number">1.5.</span> <span class="nav-text">框架及中间件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SpringBoot"><span class="nav-number">1.5.1.</span> <span class="nav-text">SpringBoot</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80-3"><span class="nav-number">1.5.1.1.</span> <span class="nav-text">基础</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SpringCloud"><span class="nav-number">1.5.2.</span> <span class="nav-text">SpringCloud</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RocketMQ"><span class="nav-number">1.5.3.</span> <span class="nav-text">RocketMQ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kafka"><span class="nav-number">1.5.4.</span> <span class="nav-text">Kafka</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RabbitMQ"><span class="nav-number">1.5.5.</span> <span class="nav-text">RabbitMQ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx"><span class="nav-number">1.5.6.</span> <span class="nav-text">Nginx</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E7%A0%81"><span class="nav-number">1.6.</span> <span class="nav-text">源码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JDK"><span class="nav-number">1.6.1.</span> <span class="nav-text">JDK</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7%E7%B1%BB"><span class="nav-number">1.6.1.1.</span> <span class="nav-text">工具类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%86%E5%90%88"><span class="nav-number">1.6.1.2.</span> <span class="nav-text">集合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E9%9B%86%E5%90%88"><span class="nav-number">1.6.1.3.</span> <span class="nav-text">并发集合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B-2"><span class="nav-number">1.6.1.4.</span> <span class="nav-text">多线程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%94%81"><span class="nav-number">1.6.1.5.</span> <span class="nav-text">锁</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tomcat"><span class="nav-number">1.6.2.</span> <span class="nav-text">Tomcat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mybatis"><span class="nav-number">1.6.3.</span> <span class="nav-text">Mybatis</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7"><span class="nav-number">1.7.</span> <span class="nav-text">工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E8%BD%AF%E4%BB%B6"><span class="nav-number">1.7.1.</span> <span class="nav-text">常用软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7"><span class="nav-number">1.7.2.</span> <span class="nav-text">编程工具</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#IntelliJ-IDEA"><span class="nav-number">1.7.2.1.</span> <span class="nav-text">IntelliJ IDEA</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Visual-Studio-Code"><span class="nav-number">1.7.2.2.</span> <span class="nav-text">Visual Studio Code</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6"><span class="nav-number">1.7.3.</span> <span class="nav-text">版本控制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Git"><span class="nav-number">1.7.3.1.</span> <span class="nav-text">Git</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Svn"><span class="nav-number">1.7.3.2.</span> <span class="nav-text">Svn</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA"><span class="nav-number">1.7.4.</span> <span class="nav-text">项目构建</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Maven"><span class="nav-number">1.7.4.1.</span> <span class="nav-text">Maven</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Gradle"><span class="nav-number">1.7.4.2.</span> <span class="nav-text">Gradle</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%B8%B8"><span class="nav-number">1.7.5.</span> <span class="nav-text">日常</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Markdown"><span class="nav-number">1.7.5.1.</span> <span class="nav-text">Markdown</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">1.8.</span> <span class="nav-text">其他</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E6%95%B0%E6%8D%AE"><span class="nav-number">1.8.1.</span> <span class="nav-text">大数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Hadoop"><span class="nav-number">1.8.1.1.</span> <span class="nav-text">Hadoop</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hive"><span class="nav-number">1.8.1.2.</span> <span class="nav-text">Hive</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HBase"><span class="nav-number">1.8.1.3.</span> <span class="nav-text">HBase</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Flume"><span class="nav-number">1.8.1.4.</span> <span class="nav-text">Flume</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sqoop"><span class="nav-number">1.8.1.5.</span> <span class="nav-text">sqoop</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Nifi"><span class="nav-number">1.8.1.6.</span> <span class="nav-text">Nifi</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spark"><span class="nav-number">1.8.1.7.</span> <span class="nav-text">Spark</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Flink"><span class="nav-number">1.8.1.8.</span> <span class="nav-text">Flink</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Kylin"><span class="nav-number">1.8.1.9.</span> <span class="nav-text">Kylin</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cloudera"><span class="nav-number">1.8.1.10.</span> <span class="nav-text">cloudera</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MaxCompute"><span class="nav-number">1.8.1.11.</span> <span class="nav-text">MaxCompute</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.8.2.</span> <span class="nav-text">机器学习</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Leithda"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">Leithda</p>
+  <div class="site-description" itemprop="description">Java, SpringBoot, SpringCloud, Nginx, Redis, ElasticSearch...</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="sidebar-button site-overview-item animated">
+    <a onclick="Chatra('openChat', true);"><i class="fa fa-comment"></i>
+    Chat
+  </a>
+  </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/leithda" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:leithda@163.com" title="邮箱 → mailto:leithda@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>邮箱</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.yuque.com/leithda" title="语雀 → https:&#x2F;&#x2F;www.yuque.com&#x2F;leithda" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>语雀</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://dbreset.github.io/" title="https:&#x2F;&#x2F;dbreset.github.io" rel="noopener" target="_blank">DbReset</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner page posts-expand">
+  
+  
+
+
+    
+    
+    
+    <div class="post-block" lang="zh-CN"><header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">
+</h1>
+
+<div class="post-meta-container">
+</div>
+
+</header>
+
+      
+      
+      <div class="post-body">
+          <h1>导航</h1>
+<h2 id="计算机基础"><a class="header-anchor" href="#计算机基础"></a>计算机基础</h2>
+<h3 id="操作系统"><a class="header-anchor" href="#操作系统"></a>操作系统</h3>
+<h3 id="计算机网络原理"><a class="header-anchor" href="#计算机网络原理"></a>计算机网络原理</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">计算机网络-概述</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">计算机网络-物理层</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">计算机网络-数据链路层</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">计算机网络-网络层</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">计算机网络-传输层</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">计算机网络-应用层</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">计算机网络-网络安全</a></li>
+</ul>
+<h3 id="数据库原理"><a class="header-anchor" href="#数据库原理"></a>数据库原理</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">数据库简介</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">关系模型</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">结构化查询语言</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">数据建模</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">数据库设计</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">数据库管理</a></li>
+</ul>
+<h3 id="数据结构与算法"><a class="header-anchor" href="#数据结构与算法"></a>数据结构与算法</h3>
+<h4 id="数据结构"><a class="header-anchor" href="#数据结构"></a>数据结构</h4>
+<ul>
+<li><a href="">数组</a></li>
+<li><a href="">栈</a></li>
+<li><a href="">队列</a></li>
+<li><a href="">链表</a></li>
+<li><a href="">树</a>
+<ul>
+<li><a href="">二叉树</a></li>
+<li><a href="">查找树</a></li>
+<li><a href="">平衡树</a></li>
+<li><a href="">线索数</a></li>
+</ul>
+</li>
+<li><a href="">散列表</a></li>
+<li><a href="">堆</a></li>
+<li><a href="">图</a></li>
+</ul>
+<h4 id="算法"><a class="header-anchor" href="#算法"></a>算法</h4>
+<h4 id="算法题"><a class="header-anchor" href="#算法题"></a>算法题</h4>
+<ul>
+<li><a href="">排序算法总结</a></li>
+</ul>
+<h2 id="编程语言"><a class="header-anchor" href="#编程语言"></a>编程语言</h2>
+<h3 id="Java"><a class="header-anchor" href="#Java"></a>Java</h3>
+<h4 id="基础"><a class="header-anchor" href="#基础"></a>基础</h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">java8 处理日期和时间</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Java-IO</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Java-网络编程-基础</a></li>
+</ul>
+<h4 id="并发"><a class="header-anchor" href="#并发"></a>并发</h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/1200304233">进程与线程基本概念</a></li>
+</ul>
+<h4 id="多线程"><a class="header-anchor" href="#多线程"></a>多线程</h4>
+<h3 id="JavaScript"><a class="header-anchor" href="#JavaScript"></a>JavaScript</h3>
+<h4 id="基础-2"><a class="header-anchor" href="#基础-2"></a>基础</h4>
+<h4 id="Vue"><a class="header-anchor" href="#Vue"></a><a target="_blank" rel="noopener" href="https://cn.vuejs.org/">Vue</a></h4>
+<h4 id="React"><a class="header-anchor" href="#React"></a><a target="_blank" rel="noopener" href="https://zh-hans.reactjs.org/">React</a></h4>
+<h3 id="Python"><a class="header-anchor" href="#Python"></a>Python</h3>
+<h2 id="数据库"><a class="header-anchor" href="#数据库"></a>数据库</h2>
+<h3 id="关系型数据库"><a class="header-anchor" href="#关系型数据库"></a>关系型数据库</h3>
+<h4 id="MySQL"><a class="header-anchor" href="#MySQL"></a>MySQL</h4>
+<h4 id="Oracle"><a class="header-anchor" href="#Oracle"></a>Oracle</h4>
+<h4 id="SQL-Server"><a class="header-anchor" href="#SQL-Server"></a>SQL Server</h4>
+<h3 id="NoSQL"><a class="header-anchor" href="#NoSQL"></a>NoSQL</h3>
+<h4 id="文档型数据库"><a class="header-anchor" href="#文档型数据库"></a>文档型数据库</h4>
+<h4 id="Key-Value型数据库"><a class="header-anchor" href="#Key-Value型数据库"></a>Key-Value型数据库</h4>
+<h5 id="Redis"><a class="header-anchor" href="#Redis"></a><a target="_blank" rel="noopener" href="https://redis.io/">Redis</a></h5>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26971561/">Redis开发与运维(豆瓣)</a></p>
+</blockquote>
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/1097430507">Redis开发与运维笔记-初识Redis</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/4241361649">Redis开发与运维笔记-API的理解和使用</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/2425201134">Redis开发与运维笔记-小功能大用处</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/3206834815">Redis开发与运维笔记-客户端</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/1023191841">Redis开发与运维笔记-持久化</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/3460365957">Redis开发与运维笔记-复制</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/3586754738">Redis开发与运维笔记-Redis的噩梦-阻塞</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/1495994843">Redis开发与运维笔记-理解内存</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/2400819807">Redis开发与运维笔记-哨兵</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/ddc0d24d">Redis开发与运维笔记-集群</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/3358854259">Redis开发与运维笔记-缓存设计</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/2279241279">Redis开发与运维笔记-总结</a></li>
+</ul>
+<h5 id="etcd"><a class="header-anchor" href="#etcd"></a><a target="_blank" rel="noopener" href="https://etcd.io/">etcd</a></h5>
+<h5 id="memcached"><a class="header-anchor" href="#memcached"></a><a target="_blank" rel="noopener" href="http://memcached.org/">memcached</a></h5>
+<h4 id="搜索引擎数据库"><a class="header-anchor" href="#搜索引擎数据库"></a>搜索引擎数据库</h4>
+<h5 id="ElasticSearch"><a class="header-anchor" href="#ElasticSearch"></a><a target="_blank" rel="noopener" href="https://www.elastic.co/cn/elasticsearch/">ElasticSearch</a></h5>
+<h5 id="Solr"><a class="header-anchor" href="#Solr"></a><a target="_blank" rel="noopener" href="https://solr.apache.org/">Solr</a></h5>
+<h2 id="理论"><a class="header-anchor" href="#理论"></a>理论</h2>
+<h3 id="设计模式"><a class="header-anchor" href="#设计模式"></a>设计模式</h3>
+<ul>
+<li>创建型
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/4049607742">Single Pattern[单例模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/1417187187">Factory Pattern[工厂模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/2506759259">Abstract Factory Pattern[抽象工厂]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/3898751754">Builder Pattern[建造者模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/153761970">Prototype Pattern[原型模式]</a></li>
+</ul>
+</li>
+<li>行为型
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/1644716670">Chain of Responsibility Pattern[责任链模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/256138576">Command Pattern[命令模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/1940214718">Interpreter Pattern[解释器模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/1151138151">Iterator Pattern[迭代器模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/83831917">Mediator Pattern[中介者模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/400445220">Memento Pattern[备忘录模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/2586075670">Observer Pattern[观察者模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/307019047">State Pattern[状态模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/3932426784">Strategy Pattern[策略模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/2374608698">Template Pattern[模板模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/2960930216">Visitor Pattern[访问者模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/3159547075">Null Object Pattern[空对象模式]</a></li>
+</ul>
+</li>
+<li>结构型
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/4123342314">Adapter Pattern[适配器模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/3468020877">Bridge Pattern[桥接模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/3277476179">Filter Pattern[过滤器模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/1191195587">Composite Pattern[组合模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/1942064508">Decorator Pattern[装饰器模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/4158556840">Facade Pattern[外观模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/2031750427">Flyweight Pattern[享元模式]</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/3822496321">Proxy Pattern[代理模式]</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="Java-2"><a class="header-anchor" href="#Java-2"></a>Java</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Java-面向对象思想</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Java-引用类型</a></li>
+</ul>
+<h3 id="算法思想"><a class="header-anchor" href="#算法思想"></a>算法思想</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">递推法</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">递归法</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">穷举法</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">贪心算法</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">分治法</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">动态规划法</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">分支界限法</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">回溯法</a></li>
+</ul>
+<h3 id="分布式理论"><a class="header-anchor" href="#分布式理论"></a>分布式理论</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">CAP理论</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Base理论</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">分布式事务</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">分布式系统一致性</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">分布式存储</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">分布式计算</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">分布式ID生成策略</a></li>
+</ul>
+<h3 id="未分类"><a class="header-anchor" href="#未分类"></a>未分类</h3>
+<h2 id="框架及中间件"><a class="header-anchor" href="#框架及中间件"></a><a target="_blank" rel="noopener" href="https://github.com/leithda/FrameWork-Labs">框架及中间件</a></h2>
+<h3 id="SpringBoot"><a class="header-anchor" href="#SpringBoot"></a>SpringBoot</h3>
+<h4 id="基础-3"><a class="header-anchor" href="#基础-3"></a>基础</h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">spting-boot-web</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">spring-boot-swagger</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">spring-boot-jdbc-template</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">spring-boot-jpa</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">spring-boot-mybatis-plus</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">spring-boot-redis</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">spring-boot-security</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">spring-boot-shiro</a></li>
+</ul>
+<h3 id="SpringCloud"><a class="header-anchor" href="#SpringCloud"></a>SpringCloud</h3>
+<h3 id="RocketMQ"><a class="header-anchor" href="#RocketMQ"></a>RocketMQ</h3>
+<h3 id="Kafka"><a class="header-anchor" href="#Kafka"></a>Kafka</h3>
+<h3 id="RabbitMQ"><a class="header-anchor" href="#RabbitMQ"></a>RabbitMQ</h3>
+<h3 id="Nginx"><a class="header-anchor" href="#Nginx"></a>Nginx</h3>
+<h2 id="源码"><a class="header-anchor" href="#源码"></a><a target="_blank" rel="noopener" href="https://github.com/leithda/SourceCodeAnalysis">源码</a></h2>
+<h3 id="JDK"><a class="header-anchor" href="#JDK"></a><a target="_blank" rel="noopener" href="https://github.com/leithda/jdk8">JDK</a></h3>
+<h4 id="工具类"><a class="header-anchor" href="#工具类"></a>工具类</h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Arrays</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Collections</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Objects</a></li>
+</ul>
+<h4 id="集合"><a class="header-anchor" href="#集合"></a>集合</h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">概述</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">接口类介绍</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">抽象类介绍</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">ArrayList</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">LinkedList</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">HashMap</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">TreeMap和LinkedHashMap</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">HashSet和TreeSet</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">LinkedBlockingQueue</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">SynchronousQueue</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">DelayQueue</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">ArrayBlockingQueue</a></li>
+</ul>
+<h4 id="并发集合"><a class="header-anchor" href="#并发集合"></a>并发集合</h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">CopyOnWriteArrayList</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">ConcurrentHashMap</a></li>
+</ul>
+<h4 id="多线程-2"><a class="header-anchor" href="#多线程-2"></a>多线程</h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Thread</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Future、ExecutorService</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">ThreadLocal</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">ThreadPoolExecutor</a></li>
+</ul>
+<h4 id="锁"><a class="header-anchor" href="#锁"></a>锁</h4>
+<h3 id="Tomcat"><a class="header-anchor" href="#Tomcat"></a><a href="">Tomcat</a></h3>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://book.douban.com/subject/10426640">HowTomcatWorks(豆瓣)</a>
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">编码前准备</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">一个简单的Web服务器</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">一个简单的Servlet容器</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">连接器</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">tomcat的默认连接器</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">容器</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">生命周期</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">日志系统</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">加载器</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">session管理</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">安全</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">StandardWrapper</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">StandardContext</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">主机(host)和引擎(engine)</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">服务器和服务</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Digester</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">关闭钩子</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Tomcat 启动</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">部署器</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">管理 Servlet</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">JMX-Based Management</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="Mybatis"><a class="header-anchor" href="#Mybatis"></a>Mybatis</h3>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://svip.iocoder.cn/categories/MyBatis/">芋道源码-Mybatis源码解析</a>
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-概览</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-解析器模块</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-反射模块</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-异常模块</a>)</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-数据源模块</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-事务模块</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-缓存模块</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-类型模块</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-IO模块</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-日志</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-注解</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-Binding</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-MyBatis 初始化（一）之加载 mybatis-config</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-MyBatis 初始化（二）之加载 Mapper 映射配置文件</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-MyBatis 初始化（三）之加载 Statement 配置</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-MyBatis 初始化（四）之加载注解配置</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-SQL 初始化（上）之 SqlNode</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-SQL 初始化（下）之 SqlSource</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-SQL 执行（二）之 StatementHandler</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-SQL 执行（五）之延迟加载</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-会话 SqlSession</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-插件体系（一）之原理</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-插件体系（二）之 PageHelper</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-Spring 集成（一）之调试环境搭建</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-Spring 集成（二）之初始化</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-Spring 集成（二）之初始化</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-Spring 集成（三）之 SqlSession</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-Spring 集成（四）之事务</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> <a href="">Mybatis源码解析-Spring 集成（五）之批处理</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="工具"><a class="header-anchor" href="#工具"></a>工具</h2>
+<h3 id="常用软件"><a class="header-anchor" href="#常用软件"></a>常用软件</h3>
+<ul>
+<li><a href="">IntelliJ IDEA</a></li>
+<li><a href="">Typora</a></li>
+<li><a href="">VS Code</a></li>
+<li><a href="">语雀</a></li>
+</ul>
+<h3 id="编程工具"><a class="header-anchor" href="#编程工具"></a>编程工具</h3>
+<h4 id="IntelliJ-IDEA"><a class="header-anchor" href="#IntelliJ-IDEA"></a>IntelliJ IDEA</h4>
+<h4 id="Visual-Studio-Code"><a class="header-anchor" href="#Visual-Studio-Code"></a>Visual Studio Code</h4>
+<h3 id="版本控制"><a class="header-anchor" href="#版本控制"></a>版本控制</h3>
+<h4 id="Git"><a class="header-anchor" href="#Git"></a>Git</h4>
+<h4 id="Svn"><a class="header-anchor" href="#Svn"></a>Svn</h4>
+<h3 id="项目构建"><a class="header-anchor" href="#项目构建"></a>项目构建</h3>
+<h4 id="Maven"><a class="header-anchor" href="#Maven"></a>Maven</h4>
+<h4 id="Gradle"><a class="header-anchor" href="#Gradle"></a>Gradle</h4>
+<h3 id="日常"><a class="header-anchor" href="#日常"></a>日常</h3>
+<h4 id="Markdown"><a class="header-anchor" href="#Markdown"></a><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/markdown/3245829?fr=aladdin">Markdown</a></h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/1069057006">Markdown-基本语法</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/3540196146">Markdown-流程图</a></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> <a href="../posts/2665394633">Markdown-数学公式</a></li>
+</ul>
+<h2 id="其他"><a class="header-anchor" href="#其他"></a>其他</h2>
+<h3 id="大数据"><a class="header-anchor" href="#大数据"></a>大数据</h3>
+<h4 id="Hadoop"><a class="header-anchor" href="#Hadoop"></a><a target="_blank" rel="noopener" href="http://hadoop.apache.org/">Hadoop</a></h4>
+<h4 id="Hive"><a class="header-anchor" href="#Hive"></a><a target="_blank" rel="noopener" href="https://hive.apache.org/">Hive</a></h4>
+<h4 id="HBase"><a class="header-anchor" href="#HBase"></a><a target="_blank" rel="noopener" href="https://hbase.apache.org/">HBase</a></h4>
+<h4 id="Flume"><a class="header-anchor" href="#Flume"></a><a target="_blank" rel="noopener" href="http://flume.apache.org/">Flume</a></h4>
+<h4 id="sqoop"><a class="header-anchor" href="#sqoop"></a><a target="_blank" rel="noopener" href="https://sqoop.apache.org/">sqoop</a></h4>
+<h4 id="Nifi"><a class="header-anchor" href="#Nifi"></a><a target="_blank" rel="noopener" href="http://nifi.apache.org/">Nifi</a></h4>
+<h4 id="Spark"><a class="header-anchor" href="#Spark"></a><a target="_blank" rel="noopener" href="http://spark.apache.org/">Spark</a></h4>
+<h4 id="Flink"><a class="header-anchor" href="#Flink"></a><a target="_blank" rel="noopener" href="https://flink.apache.org/">Flink</a></h4>
+<h4 id="Kylin"><a class="header-anchor" href="#Kylin"></a><a target="_blank" rel="noopener" href="http://kylin.apache.org/cn/">Kylin</a></h4>
+<h4 id="cloudera"><a class="header-anchor" href="#cloudera"></a><a target="_blank" rel="noopener" href="https://www.cloudera.com/">cloudera</a></h4>
+<h4 id="MaxCompute"><a class="header-anchor" href="#MaxCompute"></a><a target="_blank" rel="noopener" href="https://help.aliyun.com/product/27797">MaxCompute</a></h4>
+<h3 id="机器学习"><a class="header-anchor" href="#机器学习"></a>机器学习</h3>
+
+      </div>
+      
+      
+      
+    </div>
+
+    
+    
+
+
+    <div class="comments utterances-container"></div><script src="/js/comments.js"></script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leithda</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">206k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:08</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+  <script class="next-config" data-name="chatra" type="application/json">{&quot;enable&quot;:true,&quot;async&quot;:true,&quot;id&quot;:&quot;FMc6WL5f5hGFsRhzz&quot;}</script>
+  <script src="/js/third-party/chat/chatra.js"></script>
+  <script async src="https://call.chatra.io/chatra.js"></script>
+
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{&quot;enable&quot;:true,&quot;theme&quot;:&quot;forest&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mermaid@8.9.3&#x2F;dist&#x2F;mermaid.min.js&quot;}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script class="next-config" data-name="nprogress" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;spinner&quot;:true}</script>
+  <script src="/js/third-party/nprogress.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="utterances" type="application/json">{&quot;enable&quot;:&quot;enable&quot;,&quot;repo&quot;:&quot;leithda&#x2F;leithda.github.io&quot;,&quot;issue_term&quot;:&quot;pathname&quot;,&quot;theme&quot;:&quot;github-light&quot;}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>
