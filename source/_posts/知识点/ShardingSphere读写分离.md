@@ -377,7 +377,7 @@ ShardingSphere-SQL                       : SQL: ${select语句} ::: DataSources:
 ```bash
 c.l.service.impl.SysUserServiceImpl      : 修改后deptId: 6484464052586093700
 ShardingSphere-SQL                       : Rule Type: master-slave
-ShardingSphere-SQL                       : SQL: update语句 ::: DataSources: master
+ShardingSphere-SQL                       : SQL: ${update语句} ::: DataSources: master
 ShardingSphere-SQL                       : Rule Type: master-slave
 ShardingSphere-SQL                       : SQL: ${select语句} ::: DataSources: master
 ```
